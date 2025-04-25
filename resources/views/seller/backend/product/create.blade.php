@@ -1,0 +1,288 @@
+@extends('seller.layouts.app')
+@section('title', 'Create Products')
+@section('content')
+    <div class="w-full h-full flex flex-col gap-4">
+        <!-- Header Section -->
+        <div class="flex flex-col bg-white shadow rounded md:p-6 p-4 md:gap-1 gap-3">
+            <div class="flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Products</h2>
+                <a href="{{ route('seller.products.index') }}"
+                    class="block md:hidden bg-teal-500 text-white px-4 py-2 rounded text-sm font-medium hover:bg-teal-600 transition">
+                    All Products
+                </a>
+            </div>
+            <div class="flex justify-between items-center text-gray-600 text-sm">
+                <p>
+                    <a href="{{ route('seller.dashboard') }}" class="text-blue-600 hover:underline">Home</a> / Products /
+                    Create
+                </p>
+                <a href="{{ route('seller.products.index') }}"
+                    class="hidden md:block bg-teal-500 text-white px-4 py-2 rounded text-sm font-medium hover:bg-teal-600 transition">
+                    All Products
+                </a>
+            </div>
+        </div>
+
+        <!-- Form Container -->
+        <div class="w-full bg-white rounded md:px-6 px-3">
+            <form action="{{ route('seller.products.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                <!-- Success & Error Messages -->
+                @if (session('success'))
+                    <div class="bg-green-600 text-white px-4 py-3 rounded flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="white" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-5-5 1.41-1.41L11 14.17l6.59-6.59L19 9l-8 8z">
+                            </path>
+                        </svg>
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="bg-red-600 text-white px-4 py-3 rounded flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="white" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-5-5 1.41-1.41L11 14.17l6.59-6.59L19 9l-8 8z">
+                            </path>
+                        </svg>
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                <!-- Product Name -->
+                <div class="mb-6 mt-6">
+                    <label for="product_name" class="block text-gray-700 font-medium">Product Name<span
+                            class="text-red-400"> *</span></label>
+                    <input type="text" name="product_name" id="product_name" placeholder="Product Name"
+                        class="w-full mt-2 p-2 border rounded border-gray-300 text-gray-700"
+                        value="{{ old('product_name') }}">
+                    @error('product_name')
+                        <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Description -->
+                <div class="mb-6">
+                    <label for="product_description" class="block text-gray-700 font-medium">Description<span
+                            class="text-red-400"> *</span></label>
+                    <textarea name="product_description" id="product_description"
+                        class="w-full mt-2 p-2 border rounded border-gray-300 text-gray-700" placeholder="Description">{{ old('product_description') }}</textarea>
+                    @error('product_description')
+                        <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Price Input -->
+                <div class="mb-6">
+                    <label for="product_price" class="block text-gray-700 font-medium">Price <span
+                            class="text-red-400">*</span></label>
+                    <input type="number" name="product_price" id="product_price" placeholder="Enter Price"
+                        class="w-full mt-2 p-2 border rounded border-gray-300 text-gray-700"
+                        value="{{ old('product_price') }}" step="0.01">
+                    @error('product_price')
+                        <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Quantity Input -->
+                <div class="mb-6">
+                    <label for="product_quantity" class="block text-gray-700 font-medium">Quantity <span
+                            class="text-red-400">*</span></label>
+                    <input type="number" name="product_quantity" id="product_quantity" placeholder="Enter Quantity"
+                        class="w-full mt-2 p-2 border rounded border-gray-300 text-gray-700"
+                        value="{{ old('product_quantity') }}">
+                    @error('product_quantity')
+                        <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Category Select -->
+                <div class="mb-6">
+                    <label for="category" class="block text-gray-700 font-medium">Select Category <span
+                            class="text-red-400">*</span></label>
+                    <select name="category_id" id="category"
+                        class="w-full mt-2 p-2 border rounded border-gray-300 text-gray-700">
+                        <option value="">-- Select Category --</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                        @endforeach
+                    </select>
+                    @error('category_id')
+                        <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- SubCategory Select -->
+                <div class="mb-6">
+                    <label for="subcategory" class="block text-gray-700 font-medium">Select Subcategory <span
+                            class="text-red-400">*</span></label>
+                    <select name="subcategory_id" id="subcategory"
+                        class="w-full mt-2 p-2 border rounded border-gray-300 text-gray-700">
+                        <option value="">-- Select Subcategory --</option>
+                    </select>
+                    @error('subcategory_id')
+                        <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Product Size Input -->
+                <div class="mb-6">
+                    <label for="product_size" class="block text-gray-700 font-medium">Product Size</label>
+                    <div id="size-container" class="flex flex-wrap gap-2">
+                        <input type="number" id="size-input" placeholder="Product Size"
+                            class="flex-1 mt-2 outline-none rounded border-gray-300">
+                    </div>
+                    <input type="hidden" name="product_size" class="mt-2" id="product_size_hidden"
+                        value="{{ old('product_size') }}">
+                    @error('product_size')
+                        <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Meta Tags Input -->
+                <div class="mb-6">
+                    <label for="meta_tags" class="block text-gray-700 font-medium">Meta Tags</label>
+                    <div id="tag-container" class="flex flex-wrap gap-2 mt-2">
+                        <input type="text" id="tag-input" placeholder="Enter tags and press comma (,)"
+                            class="flex-1 outline-none rounded border-gray-300">
+                    </div>
+                    <input type="hidden" name="meta_tags" id="meta_tags_hidden" class="mt-2"
+                        value="{{ old('meta_tags') }}">
+                    @error('meta_tags')
+                        <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Image Input -->
+                <div class="mb-6">
+                    <label for="image" class="block text-gray-700 font-medium">Image<span class="text-red-400">
+                            *</span></label>
+                    <input type="file" name="image" id="image" class="w-full mt-2 p-2 border rounded">
+                    @error('image')
+                        <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Multiple Image Input -->
+                <div class="mb-6">
+                    <label for="multiple_image" class="block text-gray-700 font-medium">
+                        Multiple Image<span class="text-red-400"></span>
+                    </label>
+                    <input type="file" name="multiple_image[]" id="multiple_image"
+                        class="w-full mt-2 p-2 border rounded" multiple accept="image/*">
+
+                    @error('multiple_image.*')
+                        <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-end mb-6">
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+                        Create
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+@endsection
+@push('scripts')
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <!-- JavaScript for Handling Multi Tags -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const sizeInput = document.getElementById("size-input");
+            const sizeContainer = document.getElementById("size-container");
+            const sizeHiddenInput = document.getElementById("product_size_hidden");
+
+            const tagInput = document.getElementById("tag-input");
+            const tagContainer = document.getElementById("tag-container");
+            const tagHiddenInput = document.getElementById("meta_tags_hidden");
+
+            function createTagElement(value, container, hiddenInput) {
+                if (!value.trim()) return;
+
+                let tagValues = hiddenInput.value ? hiddenInput.value.split(",") : [];
+
+                if (!tagValues.includes(value.trim())) {
+                    tagValues.push(value.trim());
+                    hiddenInput.value = tagValues.join(",");
+
+                    const tagElement = document.createElement("div");
+                    tagElement.classList.add("bg-gray-200", "px-2", "py-1", "rounded", "flex", "items-center",
+                        "gap-1");
+
+                    tagElement.innerHTML = `
+                ${value.trim()}
+                <button type="button" class="text-red-500 text-sm font-bold ml-2 remove-tag" data-value="${value.trim()}">
+                    X
+                </button>
+            `;
+                    container.insertBefore(tagElement, container.querySelector("input"));
+                }
+            }
+
+            function handleTagInput(event, input, container, hiddenInput) {
+                if (event.key === "," || event.key === "Enter") {
+                    event.preventDefault();
+                    createTagElement(input.value.replace(",", ""), container, hiddenInput);
+                    input.value = "";
+                }
+            }
+
+            function handleRemoveTag(event, container, hiddenInput) {
+                if (event.target.classList.contains("remove-tag")) {
+                    const valueToRemove = event.target.getAttribute("data-value");
+                    let tagValues = hiddenInput.value.split(",");
+
+                    tagValues = tagValues.filter(value => value !== valueToRemove);
+                    hiddenInput.value = tagValues.join(",");
+
+                    event.target.parentElement.remove();
+                }
+            }
+
+            // Size input handling
+            sizeInput.addEventListener("keydown", (event) => handleTagInput(event, sizeInput, sizeContainer,
+                sizeHiddenInput));
+            sizeContainer.addEventListener("click", (event) => handleRemoveTag(event, sizeContainer,
+                sizeHiddenInput));
+
+            // Tag input handling
+            tagInput.addEventListener("keydown", (event) => handleTagInput(event, tagInput, tagContainer,
+                tagHiddenInput));
+            tagContainer.addEventListener("click", (event) => handleRemoveTag(event, tagContainer, tagHiddenInput));
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#category').on('change', function() {
+                var category_id = $(this).val();
+                if (category_id) {
+                    $.ajax({
+                        url: "{{ route('seller.get.subcategories', ':id') }}".replace(':id',
+                            category_id),
+                        type: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                            $('#subcategory').empty();
+                            $('#subcategory').append(
+                                '<option value="">-- Select Subcategory --</option>');
+                            $.each(data, function(key, subcategory) {
+                                $('#subcategory').append('<option value="' + subcategory
+                                    .id + '">' + subcategory.subcategory_name +
+                                    '</option>');
+                            });
+                        }
+                    });
+                } else {
+                    $('#subcategory').empty();
+                    $('#subcategory').append('<option value="">-- Select Subcategory --</option>');
+                }
+            });
+        });
+    </script>
+@endpush
