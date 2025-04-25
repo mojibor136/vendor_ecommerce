@@ -6,6 +6,7 @@ use App\Http\Controllers\Seller\Backend\Category\CategoryController as SellerCat
 use App\Http\Controllers\Seller\Backend\SubCategory\SubCategoryController as SellerSubCategoryController;
 use App\Http\Controllers\Seller\Backend\Product\ProductController as SellerProductController;
 use App\Http\Controllers\Seller\Backend\Order\OrderController as SellerOrderController;
+use App\Http\Controllers\Seller\Backend\Analytics\AnalyticsController as SellerAnalyticsController;
 // Admin Back-End Routes
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\Backend\Category\CategoryController;
@@ -216,6 +217,12 @@ Route::prefix('seller')->middleware('seller')->group(function(){
         Route::get('/products/show/{id}', 'show')->name('seller.products.show');
         Route::post('/products/update', 'update')->name('seller.products.update');
         Route::get('/products/destroy/{id}', 'destroy')->name('seller.products.destroy');
+    });
+
+    // 🔹 SellerAnalyticsController CRUD Routes
+    Route::controller(SellerAnalyticsController::class)->group(function () {
+        Route::get('/sales-seller-location' , 'salesSellerLocation')->name('sales.seller.location');
+        Route::get('/seller-get-sales-location' , 'getSellerSalesLocation')->name('get.seller.sales.location');
     });
 });
 

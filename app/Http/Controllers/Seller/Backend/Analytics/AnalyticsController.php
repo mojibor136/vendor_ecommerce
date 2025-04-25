@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Backend\Analytics;
+namespace App\Http\Controllers\Seller\Backend\Analytics;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -14,103 +14,43 @@ use App\Models\Backend\Location\Division;
 use Illuminate\Support\Facades\Log;
 
 class AnalyticsController extends Controller {
-
-    // The index method where the sellers' data is fetched
-
-    public function index() {
-        return view('admin.backend.analytics.seller-order.index');
-    }
-    
-    public function getSellersData(Request $request){
-        $search = $request->input('search');
-    
-        $sellers = Seller::select('id', 'name', 'shop_name')
-        ->withCount([
-            'orders as delivered_orders_count' => function ($q) {
-                $q->where('order_status', 'delivered')
-                  ->where('role', 'seller');
-            },
-            'orders as pending_orders_count' => function ($q) {
-                $q->where('order_status', 'pending')
-                  ->where('role', 'seller');
-            },
-            'orders as canceled_orders_count' => function ($q) {
-                $q->where('order_status', 'canceled')
-                  ->where('role', 'seller');
-            },
-        ])
-        ->with(['products.approvedRatings'])
-        ->when($search, function($q) use ($search) {
-            $q->where('shop_name', 'LIKE', "%{$search}%");
-        })
-        ->paginate(10);      
-    
-        $sellers->getCollection()->transform(function ($seller) {
-            $totalRating = 0;
-            $ratingCount = 0;
-    
-            foreach ($seller->products as $product) {
-                foreach ($product->approvedRatings as $rating) {
-                    $totalRating += $rating->rating;
-                    $ratingCount++;
-                }
-            }
-    
-            $seller->average_rating = $ratingCount > 0 ? round($totalRating / $ratingCount, 2) : null;
-            return $seller;
-        });
-    
-        return response()->json($sellers);
-    }    
-
-    public function showSellerOrders($shop_name , $sellerId) {
-        $seller = Seller::findOrFail($sellerId);
-
-        $orders = Order::with(['orderItems.product', 'orderItems.product.approvedRatings', 'shipping'])
-        ->where('author_id', $sellerId)
-        ->orderByDesc('id')
-        ->paginate(10);
-
-        return view('admin.backend.analytics.seller-order.show', compact('seller', 'orders'));
-    }
-    
-    public function salesLocation(){
+    public function salesSellerLocation() {
         $countries = Country::all();
-        return view('admin.backend.analytics.sales-location.index', compact('countries'));
+        return view( 'seller.backend.analytics.sales-location.index', compact( 'countries' ) );
     }
-    
-    public function getSalesLocation(Request $request){
+
+    public function getSellerSalesLocation( Request $request ) {
         $countryId = $request->country_id;
         $divisionId = $request->division_id;
-    
+
         $divisionCoords = [
-            'Dhaka' => ['lat' => 23.7643863, 'lng' => 90.3890144],
-            'Chattogram' => ['lat' => 22.333778, 'lng' => 91.8344348],
-            'Khulna' => ['lat' => 22.9372087, 'lng' => 89.2852741],
-            'Barisal' => ['lat' => 22.4934035, 'lng' => 90.3548015],
-            'Rajshahi' => ['lat' => 24.6285432, 'lng' => 89.0376862],
-            'Rangpur' => ['lat' => 25.7439, 'lng' => 89.2752],
-            'Sylhet' => ['lat' => 24.8949, 'lng' => 91.8687],
-            'Mymensingh' => ['lat' => 24.7471, 'lng' => 90.4203],
+            'Dhaka' => [ 'lat' => 23.7643863, 'lng' => 90.3890144 ],
+            'Chattogram' => [ 'lat' => 22.333778, 'lng' => 91.8344348 ],
+            'Khulna' => [ 'lat' => 22.9372087, 'lng' => 89.2852741 ],
+            'Barisal' => [ 'lat' => 22.4934035, 'lng' => 90.3548015 ],
+            'Rajshahi' => [ 'lat' => 24.6285432, 'lng' => 89.0376862 ],
+            'Rangpur' => [ 'lat' => 25.7439, 'lng' => 89.2752 ],
+            'Sylhet' => [ 'lat' => 24.8949, 'lng' => 91.8687 ],
+            'Mymensingh' => [ 'lat' => 24.7471, 'lng' => 90.4203 ],
         ];
 
         $districtCoords = [
-            'Dhaka' => ['lat' => 23.7643863, 'lng' => 90.3890144],
-            'Chattogram' => ['lat' => 22.333778, 'lng' => 91.8344348],
-            'Khulna' => ['lat' => 22.9372087, 'lng' => 89.2852741],
-            'Barisal' => ['lat' => 22.4934035, 'lng' => 90.3548015],
-            'Rajshahi' => ['lat' => 24.6285432, 'lng' => 89.0376862],
-            'Rangpur' => ['lat' => 25.7439, 'lng' => 89.2752],
-            'Sylhet' => ['lat' => 24.8949, 'lng' => 91.8687],
-            'Mymensingh' => ['lat' => 24.7471, 'lng' => 90.4203],
-            'Bagerhat' => ['lat' => 22.7038, 'lng' => 89.8000],
-            'Bandarban' => ['lat' => 22.2199, 'lng' => 92.1927],
-            'Barisal' => ['lat' => 22.7010, 'lng' => 90.3535],
-            'Bhola' => ['lat' => 22.6812, 'lng' => 90.6488],
-            'Bogra' => ['lat' => 24.8454, 'lng' => 89.3487],
-            'Chandpur' => ['lat' => 23.2232, 'lng' => 90.8323],
-            'Chuadanga' => ['lat' => 23.9577, 'lng' => 88.6794],
-            'Comilla' => ['lat' => 23.4620, 'lng' => 91.1834],
+            'Dhaka' => [ 'lat' => 23.7643863, 'lng' => 90.3890144 ],
+            'Chattogram' => [ 'lat' => 22.333778, 'lng' => 91.8344348 ],
+            'Khulna' => [ 'lat' => 22.9372087, 'lng' => 89.2852741 ],
+            'Barisal' => [ 'lat' => 22.4934035, 'lng' => 90.3548015 ],
+            'Rajshahi' => [ 'lat' => 24.6285432, 'lng' => 89.0376862 ],
+            'Rangpur' => [ 'lat' => 25.7439, 'lng' => 89.2752 ],
+            'Sylhet' => [ 'lat' => 24.8949, 'lng' => 91.8687 ],
+            'Mymensingh' => [ 'lat' => 24.7471, 'lng' => 90.4203 ],
+            'Bagerhat' => [ 'lat' => 22.7038, 'lng' => 89.8000 ],
+            'Bandarban' => [ 'lat' => 22.2199, 'lng' => 92.1927 ],
+            'Barisal' => [ 'lat' => 22.7010, 'lng' => 90.3535 ],
+            'Bhola' => [ 'lat' => 22.6812, 'lng' => 90.6488 ],
+            'Bogra' => [ 'lat' => 24.8454, 'lng' => 89.3487 ],
+            'Chandpur' => [ 'lat' => 23.2232, 'lng' => 90.8323 ],
+            'Chuadanga' => [ 'lat' => 23.9577, 'lng' => 88.6794 ],
+            'Comilla' => [ 'lat' => 23.4620, 'lng' => 91.1834 ],
             'Cox\'s Bazar' => ['lat' => 21.4513, 'lng' => 92.0043],
             'Dhaka' => ['lat' => 23.8103, 'lng' => 90.4125],
             'Dinajpur' => ['lat' => 25.4667, 'lng' => 88.6250],
@@ -159,15 +99,19 @@ class AnalyticsController extends Controller {
             'Noakhali' => ['lat' => 22.9579, 'lng' => 91.0791],
         ];  
     
-        // When a division is selected
         if ($divisionId) {
             $districts = District::where('division_id', $divisionId)->get();
-    
-            $salesByDistrict = Shipping::selectRaw('shipping_district_id, COUNT(*) as total_sales')
+        
+            $salesByDistrict = Shipping::with('order')
                 ->where('shipping_division_id', $divisionId)
+                ->whereHas('order', function ($query) {
+                    $query->where('role', 'seller')
+                          ->where('author_id', auth()->guard('seller')->id());
+                })
+                ->selectRaw('shipping_district_id, COUNT( * ) as total_sales')
                 ->groupBy('shipping_district_id')
                 ->pluck('total_sales', 'shipping_district_id');
-    
+        
             $Data = [];
             foreach ($districts as $district) {
                 $coords = $districtCoords[$district->name] ?? ['lat' => null, 'lng' => null];
@@ -178,25 +122,28 @@ class AnalyticsController extends Controller {
                     'lng' => $coords['lng'],
                 ];
             }
-    
+        
             return response()->json(['Data' => $Data]);
-        }
+        }        
       
     
         if ($countryId) {
             $divisions = Division::where('country_id', $countryId)->get();
-    
-            $salesByDivision = Shipping::selectRaw('shipping_division_id, COUNT(*) as total_sales')
-                ->where('shipping_country_id', $countryId)
+        
+            $salesByDivision = Shipping::with('order')
+                ->whereHas('order', function ($query) {
+                    $query->where('role', 'seller')
+                          ->where('author_id', auth()->guard('seller')->id());
+                })
+                ->selectRaw('shipping_division_id, COUNT( * ) as total_sales')
                 ->groupBy('shipping_division_id')
                 ->pluck('total_sales', 'shipping_division_id');
-    
+        
             $Data = [];
             foreach ($divisions as $division) {
                 $salesCount = $salesByDivision[$division->id] ?? 0;
-    
                 $coords = $divisionCoords[$division->name] ?? ['lat' => null, 'lng' => null];
-    
+        
                 $Data[] = [
                     'name' => $division->name,
                     'sales' => $salesCount,
@@ -204,14 +151,13 @@ class AnalyticsController extends Controller {
                     'lng' => $coords['lng'],
                 ];
             }
-    
+        
             return response()->json([
                 'divisions' => $divisions,
                 'Data' => $Data
             ]);
-        }
+        }        
     
-        return response()->json(['Data' => []]);
+        return response()->json(['Data' => [] ] );
+        }
     }
-
-}

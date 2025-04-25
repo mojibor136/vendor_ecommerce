@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
         rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <style>
     body {
@@ -164,7 +165,7 @@
                             </a>
                             <ul class="submenu pl-2 {{ request()->is('setting/*') ? 'open' : '' }}">
                                 <li>
-                                    <a href=""
+                                    <a href="{{ route('sales.seller.location') }}"
                                         class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Sales Location
                                     </a>
