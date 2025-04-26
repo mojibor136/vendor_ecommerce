@@ -149,6 +149,37 @@
                             </a>
                         </li>
 
+                        <!-- Payment -->
+                        <li>
+                            <a href="#"
+                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 text-gray-800 hover:bg-blue-500 hover:text-white rounded transition duration-200 submenu-toggle {{ request()->is('setting/*') ? 'active' : '' }}"
+                                data-menu-key="analytics">
+                                <i class="ri-bar-chart-line mr-1"></i>
+                                <span class="text-[15px]">Payment</span>
+                                <i class="ri-arrow-down-s-line ml-auto mr-4 transition-transform duration-200"></i>
+                            </a>
+                            <ul class="submenu pl-2 {{ request()->is('analytics/*') ? 'open' : '' }}">
+                                <li>
+                                    <a href="{{ route('sales.location') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        Seller payment
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('sales.report') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        Order payment
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('sales.location') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        Subscription payment
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
                         <!-- Subscription -->
                         <li class="group">
                             <a href="{{ route('subscription.index') }}"
@@ -236,7 +267,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href=""
+                                    <a href="{{ route('seller.location') }}"
                                         class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.size') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Seller Location
                                     </a>
@@ -244,37 +275,29 @@
                             </ul>
                         </li>
 
-                        <!-- Notification  -->
-                        <li class="group">
-                            <a href="{{ route('user.index') }}"
-                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 rounded transition duration-200
-                                                       {{ request()->routeIs('user.index', 'user.show') ? 'bg-blue-500 text-white' : 'text-gray-800 group-hover:text-white group-hover:bg-blue-500' }}">
-                                <i
-                                    class="ri-notification-2-line mr-1 {{ request()->routeIs('user.index', 'user.show') ? 'text-white' : 'text-gray-700 group-hover:text-white' }}"></i>
-                                <span class="text-[15px]">Notification</span>
-                            </a>
-                        </li>
-
-                        <!-- Email Configuration  -->
-                        <li class="group">
-                            <a href="{{ route('user.index') }}"
-                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 rounded transition duration-200
-                                                           {{ request()->routeIs('user.index', 'user.show') ? 'bg-blue-500 text-white' : 'text-gray-800 group-hover:text-white group-hover:bg-blue-500' }}">
-                                <i
-                                    class="ri-mail-line mr-1 {{ request()->routeIs('user.index', 'user.show') ? 'text-white' : 'text-gray-700 group-hover:text-white' }}"></i>
-                                <span class="text-[15px]">Email Configuration</span>
-                            </a>
-                        </li>
-
                         <!-- Settings -->
-                        <li class="group">
-                            <a href="{{ route('user.index') }}"
-                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 rounded transition duration-200
-                                                       {{ request()->routeIs('user.index', 'user.show') ? 'bg-blue-500 text-white' : 'text-gray-800 group-hover:text-white group-hover:bg-blue-500' }}">
-                                <i
-                                    class="ri-settings-2-line mr-1 {{ request()->routeIs('user.index', 'user.show') ? 'text-white' : 'text-gray-700 group-hover:text-white' }}"></i>
+                        <li>
+                            <a href="#"
+                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 text-gray-800 hover:bg-blue-500 hover:text-white rounded transition duration-200 submenu-toggle {{ request()->is('setting/*') ? 'active' : '' }}"
+                                data-menu-key="settings">
+                                <i class="ri-settings-2-line mr-1"></i>
                                 <span class="text-[15px]">Settings</span>
+                                <i class="ri-arrow-down-s-line ml-auto mr-4 transition-transform duration-200"></i>
                             </a>
+                            <ul class="submenu pl-2 {{ request()->is('settings/*') ? 'open' : '' }}">
+                                <li>
+                                    <a href="{{ route('payment-gateway.index') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        Payment gateway
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('sales.location') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        Email configuration
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
 
                         <!-- Logout -->

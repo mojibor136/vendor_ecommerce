@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\Backend\Location\DivisionController;
 use App\Http\Controllers\Admin\Backend\Location\DistrictController;
 use App\Http\Controllers\Admin\Backend\Location\CountryController;
 use App\Http\Controllers\Admin\Backend\Analytics\AnalyticsController;
+use App\Http\Controllers\Admin\Backend\Payment\PaymentGatewayController;
 // Front-End Routes
 use App\Http\Controllers\FrontEnd\HomeController;
 
@@ -105,7 +106,18 @@ Route::prefix('admin')->middleware('admin')->group(function(){
         Route::get('/order/status/{id}' , 'status')->name('order.status');
         Route::get('/order/show/{shop_name}/{id}', 'show')->name('order.show');
         Route::get('/order/destroy/{id}', 'destroy')->name('order.destroy');
-    });   
+    });
+
+    
+    // 🔹 PaymentGatewayController CRUD Routes
+    Route::controller(PaymentGatewayController::class)->group(function () {
+        Route::get('/payment-gateway', 'index')->name('payment-gateway.index');
+        Route::get('/payment-gateway/create', 'create')->name('payment-gateway.create');
+        Route::post('/payment-gateway/store', 'store')->name('payment-gateway.store');
+        Route::get('/payment-gateway/edit/{id}', 'edit')->name('payment-gateway.edit');
+        Route::post('/payment-gateway/update/{id}', 'update')->name('payment-gateway.update');
+        Route::get('/payment-gateway/destroy/{id}', 'destroy')->name('payment-gateway.destroy');
+    });
 
     // 🔹 UserController CRUD Routes
     Route::controller(UserController::class)->group(function () {
@@ -166,6 +178,8 @@ Route::prefix('admin')->middleware('admin')->group(function(){
     // 🔹 AnalyticsController CRUD Routes
     Route::controller(AnalyticsController::class)->group(function () {
         Route::get('/sales-report', 'index')->name('sales.report');
+        Route::get('/seller-location' , 'sellerLocation')->name('seller.location');
+        Route::get('/get-seller-location' , 'getSellerLocation')->name('get.seller.location');
         Route::get('/sales-location' , 'salesLocation')->name('sales.location');
         Route::get('/get-sales-location' , 'getSalesLocation')->name('get.sales.location');
         Route::get('/sales-report/data' , 'getSellersData')->name('sales.report.data');
