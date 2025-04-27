@@ -5,16 +5,30 @@
         <!-- Header Section -->
         <div class="p-3 flex items-center justify-between gap-4 flex-wrap">
             <!-- Search Box -->
-            <div
-                class="flex items-center md:w-[250px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-9.5">
-                <i class="ri-search-line text-gray-500 ml-2 text-lg"></i>
-                <input id="searchInput" type="text" placeholder="Search..." name="search"
-                    class="flex-1 px-0 bg-transparent text-gray-700 outline-none border-none focus:ring-0 focus:outline-none h-full">
+            <div class="flex flex-wrap md:flex-nowrap md:w-auto w-full items-center gap-3">
+                <!-- Search Input -->
+                <div
+                    class="flex items-center md:w-[250px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-10">
+                    <i class="ri-search-line text-gray-500 ml-2 text-lg"></i>
+                    <input id="searchInput" type="text" placeholder="Search" name="search"
+                        class="flex-1 px-0 bg-transparent text-gray-700 outline-none border-none focus:ring-0 focus:outline-none h-full text-sm">
+                </div>
+
+                <!-- Status Filter Dropdown -->
+                <div
+                    class="flex items-center md:w-[200px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-10">
+                    <select id="statusFilter" name="status"
+                        class="flex-1 bg-transparent text-gray-700 outline-none border-none px-3 focus:ring-0 focus:outline-none h-full text-sm cursor-pointer">
+                        <option value="">All Status</option>
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
+                    </select>
+                </div>
             </div>
 
             <!-- Add Category Button -->
             <a href="{{ route('subscription.create') }}"
-                class="bg-teal-500 flex flex-row items-center justify-center text-white px-4 md:py-2 py-2.5 md:w-auto w-full rounded text-sm font-medium hover:bg-teal-600 transition">
+                class="bg-teal-500 flex flex-row items-center justify-center text-white px-4 py-2.5 rounded text-sm font-medium hover:bg-teal-600 transition h-10">
                 Add Subscription
             </a>
         </div>
@@ -31,6 +45,7 @@
                             <th class="px-6 py-2 text-gray-700 text-xs text-left uppercase">Price</th>
                             <th class="px-6 py-2 text-gray-700 text-xs text-center uppercase">Days</th>
                             <th class="px-6 py-2 text-gray-700 text-xs text-center uppercase">Sells</th>
+                            <th class="px-6 py-2 text-gray-700 text-xs text-left uppercase">Status</th>
                             <th class="px-6 py-2 text-gray-700 text-xs text-center uppercase">Action</th>
                         </tr>
                     </thead>
@@ -52,10 +67,15 @@
     <script>
         $(document).ready(function() {
             fetchSubscriptions();
+
+            $('#statusFilter').change(function() {
+                const status = $(this).val();
+                fetchSubscriptions('', 1, status);
+            });
         });
 
-        function fetchSubscriptions(query = '', page = 1) {
-            fetch(`{{ route('subscription.api') }}?search=${query}&page=${page}`)
+        function fetchSubscriptions(query = '', page = 1, status = '') {
+            fetch(`{{ route('subscription.api') }}?search=${query}&page=${page}&status=${status}`)
                 .then(response => response.json())
                 .then(data => {
                     const subscriptionList = document.querySelector('.subscriptionList');
@@ -64,6 +84,20 @@
                     paginationLinks.innerHTML = '';
 
                     data.data.forEach(subscription => {
+                        let statusClass = '';
+                        let statusText = '';
+
+                        if (subscription.is_active === 1) {
+                            statusClass = 'text-green-600';
+                            statusText = 'Active';
+                        } else if (subscription.is_active === 0) {
+                            statusClass = 'text-red-500';
+                            statusText = 'Inactive';
+                        } else {
+                            statusClass = 'text-gray-500';
+                            statusText = 'Unknown';
+                        }
+
                         const row = `
                             <tr class="border-b hover:bg-gray-100">
                                 <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${subscription.id}</td>
@@ -72,6 +106,9 @@
                                 <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${subscription.price}</td>
                                 <td class="px-6 py-1 text-gray-700 text-sm text-center whitespace-nowrap">${subscription.duration_days}</td>
                                 <td class="px-6 py-1 text-gray-700 text-sm text-center whitespace-nowrap">${subscription.sells}</td>
+                                <td class="px-6 py-1 text-sm text-center whitespace-nowrap ${statusClass}">
+                                    ${statusText}
+                                </td>
                                 <td class="px-6 pt-4 flex flex-row gap-3 items-center justify-center text-center whitespace-nowrap">
                                     <a href="subscription/show/${subscription.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-eye-line"></i></a>
                                     <a href="subscription/edit/${subscription.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-edit-box-line"></i></a>

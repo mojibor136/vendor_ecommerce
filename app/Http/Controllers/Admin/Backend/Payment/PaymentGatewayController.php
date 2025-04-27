@@ -48,14 +48,27 @@ class PaymentGatewayController extends Controller {
 
     public function update( Request $request ) {
         $request->validate( [
-            'gateway_name' => 'required|unique:payment_gateways,gateway_name,' . $payment_gateway->id,
-            'credentials' => 'required|array',
+            'gateway_name' => 'required|unique:payment_gateways,gateway_name,' . $request->id,
+            'app_key'      => 'required|string',
+            'app_secret'   => 'required|string',
+            'username'     => 'required|string',
+            'password'     => 'required|string',
+            'is_active' => 'required|in:0,1',
         ] );
+
+        $credentials = [
+            'app_key'    => $request->app_key,
+            'app_secret' => $request->app_secret,
+            'username'   => $request->username,
+            'password'   => $request->password,
+        ];
+
+        $payment_gateway = PaymentGateway::findOrFail( $request->id );
 
         $payment_gateway->update( [
             'gateway_name' => $request->gateway_name,
-            'credentials' => $request->credentials,
-            'is_active' => $request->is_active ?? true,
+            'credentials'  => $credentials,
+            'is_active' => $request->is_active === '1',
         ] );
 
         return redirect()->route( 'payment-gateway.index' )->with( 'success', 'Payment Gateway updated successfully.' );

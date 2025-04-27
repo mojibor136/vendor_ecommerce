@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('duration_days')->default(15);
             $table->string('features')->nullable();
             $table->integer('sells')->default(0);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

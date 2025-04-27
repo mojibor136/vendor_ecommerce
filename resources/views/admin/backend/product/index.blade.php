@@ -3,18 +3,33 @@
 @section('content')
     <div class="bg-white w-full h-full flex flex-col gap-6">
         <!-- Header Section -->
-        <div class="p-3 flex items-center justify-between gap-4 flex-wrap">
-            <!-- Search Box -->
-            <div
-                class="flex items-center md:w-[250px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-9.5">
-                <i class="ri-search-line text-gray-500 ml-2 text-lg"></i>
-                <input id="searchInput" type="text" placeholder="Search" name="search"
-                    class="flex-1 px-0 bg-transparent text-gray-700 outline-none border-none focus:ring-0 focus:outline-none h-full">
+        <div class="p-3 flex items-center justify-between gap-4 flex-wrap bg-white rounded shadow-sm">
+            <!-- Left Side: Search + Filter -->
+            <div class="flex flex-wrap md:flex-nowrap md:w-auto w-full items-center gap-3">
+                <!-- Search Input -->
+                <div
+                    class="flex items-center md:w-[250px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-10">
+                    <i class="ri-search-line text-gray-500 ml-2 text-lg"></i>
+                    <input id="searchInput" type="text" placeholder="Search" name="search"
+                        class="flex-1 px-0 bg-transparent text-gray-700 outline-none border-none focus:ring-0 focus:outline-none h-full text-sm">
+                </div>
+
+                <!-- Status Filter Dropdown -->
+                <div
+                    class="flex items-center md:w-[200px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-10">
+                    <select id="statusFilter" name="status"
+                        class="flex-1 bg-transparent text-gray-700 outline-none border-none px-3 focus:ring-0 focus:outline-none h-full text-sm cursor-pointer">
+                        <option value="">All Status</option>
+                        <option value="approved">Approved</option>
+                        <option value="pending">Pending</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
             </div>
 
-            <!-- Add Product Button -->
+            <!-- Right Side: Add Button -->
             <a href="{{ route('products.create') }}"
-                class="bg-teal-500 flex flex-row items-center justify-center text-white px-4 md:py-2 py-2.5 md:w-auto w-full rounded text-sm font-medium hover:bg-teal-600 transition">
+                class="flex items-center justify-center bg-teal-500 hover:bg-teal-600 text-white font-medium text-sm rounded px-5 h-10 transition w-full md:w-auto">
                 Add Products
             </a>
         </div>
@@ -29,6 +44,7 @@
                             <th class="px-6 py-2 text-gray-800 text-xs text-left uppercase">Image</th>
                             <th class="px-6 py-2 text-gray-800 text-xs text-left uppercase">Products</th>
                             <th class="px-6 py-2 text-gray-800 text-xs text-left uppercase">Category</th>
+                            <th class="px-6 py-2 text-gray-800 text-xs text-left uppercase">Status</th>
                             <th class="px-6 py-2 text-gray-800 text-xs text-left uppercase">Price</th>
                             <th class="px-6 py-2 text-gray-800 text-xs text-center uppercase">Click</th>
                             <th class="px-6 py-2 text-gray-800 text-xs text-center uppercase">Order</th>
@@ -53,14 +69,19 @@
     <script>
         $(document).ready(function() {
             fetchProducts();
+
+            $('#statusFilter').change(function() {
+                const status = $(this).val();
+                fetchProducts('', 1, status);
+            });
         });
 
         function limitText(text, length = 30) {
             return text.length > length ? text.slice(0, length) + '...' : text;
         }
 
-        function fetchProducts(query = '', page = 1) {
-            fetch(`{{ route('products.api') }}?search=${query}&page=${page}`)
+        function fetchProducts(query = '', page = 1, status = '') {
+            fetch(`{{ route('products.api') }}?search=${query}&page=${page}&status=${status}`)
                 .then(response => response.json())
                 .then(data => {
                     const productList = document.querySelector('.productList');
@@ -77,10 +98,26 @@
                                         : `<span>No Image</span>`}
                                 </td>
                                 <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${productName}</td>
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${product.category.category_name}</td>
                                 <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${product.product_price}</td>
-                                <td class="px-6 py-1 text-gray-700 text-sm text-center whitespace-nowrap">${product.click_count}</td>
-                                <td class="px-6 py-1 text-gray-700 text-sm text-center whitespace-nowrap">${product.order_count}</td>
+                                <td class="px-6 py-1 text-sm whitespace-nowrap text-center">
+                                   <span class="${product.product_status === 'approved' ? 'text-green-500' : 
+                                        (product.product_status === 'pending' ? 'text-yellow-500' : 
+                                        (product.product_status === 'rejected' ? 'text-red-500' : 'text-gray-700'))
+                                    } capitalize">
+                                        ${product.product_status}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${product.product_price}</td>
+                                <td class="px-6 py-1 text-sm text-center whitespace-nowrap">
+                                    <span class="${product.click_count > 0 ? 'text-green-500' : 'text-red-500'}">
+                                        ${product.click_count}
+                                    </span>
+                               </td>
+                               <td class="px-6 py-1 text-sm text-center whitespace-nowrap">
+                                    <span class="${product.order_count > 0 ? 'text-green-500' : 'text-red-500'}">
+                                        ${product.order_count}
+                                    </span>
+                               </td>
                                 <td class="px-6 pt-4 flex flex-row gap-3 items-center text-center whitespace-nowrap">
                                     <a href="products/show/${product.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-eye-line"></i></a>
                                     <a href="products/edit/${product.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-edit-box-line"></i></a>

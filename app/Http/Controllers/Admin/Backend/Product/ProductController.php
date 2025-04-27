@@ -16,11 +16,16 @@ class ProductController extends Controller {
 
     public function api(Request $request) {
         $query = $request->input('search');
+        $status = $request->input('status'); 
+        
         $products = Product::with('category')
-            ->when($query, function ($q) use ($query) {
-                return $q->where('product_name', 'LIKE', "%$query%");
-            })
-            ->paginate(10);
+        ->when($query, function ($q) use ($query) {
+            return $q->where('product_name', 'LIKE', "%$query%");
+        })
+        ->when($status, function ($q) use ($status) {
+            return $q->where('product_status', $status);
+        })
+        ->paginate(10);
 
         return response()->json($products);
     }

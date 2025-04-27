@@ -15,13 +15,19 @@ class SellerController extends Controller {
 
     public function api(Request $request) {
         $query = $request->input('search');
-
-        $sellers = Seller::with('products', 'activeSubscription')->when($query, function ($q) use ($query) {
+        $status = $request->input('status'); 
+        
+        $sellers = Seller::with('products', 'activeSubscription')
+        ->when($query, function ($q) use ($query) {
             return $q->where(function ($q2) use ($query) {
                 $q2->where('name', 'LIKE', "%$query%")
                     ->orWhere('shop_name', 'LIKE', "%$query%");
             });
-        })->paginate(10);
+        })
+        ->when($status, function ($q) use ($status) {
+            return $q->where('status', $status);
+        })
+        ->paginate(10);
         
 
         $sellers->each(function($seller) {

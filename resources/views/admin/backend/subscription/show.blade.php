@@ -49,6 +49,23 @@
                         <span class="font-medium text-gray-700">Sells:</span>
                         <span class="text-gray-600">{{ $subscription->sells }}</span>
                     </div>
+                    <div class="flex justify-between border-b pb-2">
+                        <span class="font-medium text-gray-700">Status:</span>
+                        <span
+                            class="text-gray-600
+                            @if ($subscription->is_active === 1) text-green-600
+                            @elseif($subscription->is_active === 0) text-red-500
+                            @else text-gray-500 @endif
+                        ">
+                            @if ($subscription->is_active === 1)
+                                Active
+                            @elseif($subscription->is_active === 0)
+                                Deactive
+                            @else
+                                Unknown
+                            @endif
+                        </span>
+                    </div>
                     <div class="flex flex-col border-b pb-2">
                         <span class="font-medium text-gray-700 mb-1">Features:</span>
                         @php

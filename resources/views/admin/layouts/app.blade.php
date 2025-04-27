@@ -137,16 +137,42 @@
                             </a>
                         </li>
 
-
-                        <!-- Order -->
-                        <li class="group">
-                            <a href="{{ route('order.index') }}"
-                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 rounded transition duration-200
-                               {{ request()->routeIs('order.index', 'order.show') ? 'bg-blue-500 text-white' : 'text-gray-800 group-hover:text-white group-hover:bg-blue-500' }}">
-                                <i
-                                    class="ri-truck-line mr-1 {{ request()->routeIs('order.index', 'order.show') ? 'text-white' : 'text-gray-700 group-hover:text-white' }}"></i>
+                        <!-- Order  -->
+                        <li>
+                            <a href="#"
+                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 text-gray-800 hover:bg-blue-500 hover:text-white rounded transition duration-200 submenu-toggle {{ request()->is('setting/*') ? 'active' : '' }}"
+                                data-menu-key="order">
+                                <i class="ri-truck-line mr-1"></i>
                                 <span class="text-[15px]">Order</span>
+                                <i class="ri-arrow-down-s-line ml-auto mr-4 transition-transform duration-200"></i>
                             </a>
+                            <ul class="submenu pl-2 {{ request()->is('order/*') ? 'open' : '' }}">
+                                <li>
+                                    <a href="{{ route('country.index') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+
+                                        All Order
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('division.index') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        Delivered Order
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('division.index') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        Shipping Order
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('district.index') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.size') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        Cancel Order
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
 
                         <!-- Payment -->
@@ -192,14 +218,28 @@
                         </li>
 
                         <!-- Seller -->
-                        <li class="group">
-                            <a href="{{ route('seller.index') }}"
-                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 rounded transition duration-200
-                                                               {{ request()->routeIs('seller.index', 'seller.show') ? 'bg-blue-500 text-white' : 'text-gray-800 group-hover:text-white group-hover:bg-blue-500' }}">
-                                <i
-                                    class="ri-store-3-line mr-1 {{ request()->routeIs('seller.index', 'seller.show') ? 'text-white' : 'text-gray-700 group-hover:text-white' }}"></i>
+                        <li>
+                            <a href="#"
+                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 text-gray-800 hover:bg-blue-500 hover:text-white rounded transition duration-200 submenu-toggle {{ request()->is('setting/*') ? 'active' : '' }}"
+                                data-menu-key="seller">
+                                <i class="ri-store-3-line mr-1"></i>
                                 <span class="text-[15px]">Seller</span>
+                                <i class="ri-arrow-down-s-line ml-auto mr-4 transition-transform duration-200"></i>
                             </a>
+                            <ul class="submenu pl-2 {{ request()->is('seller/*') ? 'open' : '' }}">
+                                <li>
+                                    <a href="{{ route('seller.index') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        All Seller
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('sales.report') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        Unverified Seller
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
 
                         <!-- User -->

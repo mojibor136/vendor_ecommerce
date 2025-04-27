@@ -3,13 +3,26 @@
 @section('content')
     <div class="bg-white w-full h-full flex flex-col gap-6">
         <!-- Header Section -->
-        <div class="p-3 flex items-center justify-between gap-4 flex-wrap">
-            <!-- Search Box -->
-            <div
-                class="flex items-center md:w-[250px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-9.5">
-                <i class="ri-search-line text-gray-500 ml-2 text-lg"></i>
-                <input id="searchInput" type="text" placeholder="Search" name="search"
-                    class="flex-1 px-0 bg-transparent text-gray-700 outline-none border-none focus:ring-0 focus:outline-none h-full">
+        <div class="p-3 flex items-center justify-between gap-2 flex-wrap">
+            <div class="flex flex-row gap-2">
+                <!-- Search Box -->
+                <div
+                    class="flex items-center md:w-[250px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-10">
+                    <i class="ri-search-line text-gray-500 ml-2 text-lg"></i>
+                    <input id="searchInput" type="text" placeholder="Search..." name="search"
+                        class="flex-1 px-0 bg-transparent text-gray-700 outline-none border-none focus:ring-0 focus:outline-none h-full">
+                </div>
+
+                <!-- Status Filter Dropdown -->
+                <div
+                    class="flex items-center md:w-[200px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-10">
+                    <select id="statusFilter" name="status"
+                        class="flex-1 bg-transparent text-gray-700 outline-none border-none px-3 focus:ring-0 focus:outline-none h-full">
+                        <option value="">Status</option>
+                        <option value="active">Active</option>
+                        <option value="deactive">Deactive</option>
+                    </select>
+                </div>
             </div>
         </div>
 
@@ -82,6 +95,11 @@
     <script>
         $(document).ready(function() {
             fetchSeller();
+
+            $('#statusFilter').change(function() {
+                const status = $(this).val();
+                fetchSeller('', 1, status);
+            });
         });
 
         const updateStatusRoute = "{{ route('seller.verification.status', ['id' => ':id']) }}";
@@ -90,8 +108,8 @@
             return text.length > length ? text.slice(0, length) + '...' : text;
         }
 
-        function fetchSeller(query = '', page = 1) {
-            fetch(`{{ route('seller.api') }}?search=${query}&page=${page}`)
+        function fetchSeller(query = '', page = 1, status = '') {
+            fetch(`{{ route('seller.api') }}?search=${query}&page=${page}&status=${status}`)
                 .then(response => response.json())
                 .then(data => {
                     const sellerList = document.querySelector('.sellerList');
@@ -101,6 +119,7 @@
                         const formattedDate = new Date(seller.created_at).toLocaleDateString(
                             'en-US');
                         const productCount = seller.products.length;
+                        const productCountColorClass = productCount === 0 ? 'text-red-500' : 'text-green-600';
 
                         let rating = 0;
                         if (seller.products.length > 0) {
@@ -141,7 +160,7 @@
                                 </td>
                                 <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${seller.shop_name}</td>
                                 <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${averageRating}</td>
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap text-center">${productCount}</td>
+                                <td class="px-6 py-1 ${productCountColorClass} text-sm whitespace-nowrap text-center">${productCount}</td>
                                 <td class="px-6 py-1 text-white text-[13px] whitespace-nowrap capitalize">
                                     <a class="px-3 rounded-lg flex items-center justify-center ${statusColorClass}">${seller.status}</a>
                                 </td>

@@ -11,15 +11,23 @@ class SubscriptionController extends Controller {
         return view( 'admin.backend.subscription.index' );
     }
 
-    public function api(Request $request){
+    public function api(Request $request)
+    {
         $query = $request->input('search');
-        $categories = Subscription::when($query, function ($q) use ($query) {
-            return $q->where('name', 'LIKE', "%$query%");
-        })->latest()->paginate(10);
+        $status = $request->input('status');
     
-        return response()->json($categories);
+        $subscriptions = Subscription::when($query, function ($q) use ($query) {
+            return $q->where('name', 'LIKE', "%$query%");
+        })
+        ->when($status, function ($q) use ($status) {
+            return $q->where('is_active', $status); 
+        })
+        ->latest()
+        ->paginate(10);
+    
+        return response()->json($subscriptions);
     }
-
+    
     public function create() {
         return view( 'admin.backend.subscription.create' );
     }

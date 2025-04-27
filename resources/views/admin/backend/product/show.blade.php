@@ -63,20 +63,47 @@
                         <span class="text-gray-600">{{ $product->product_quantity }}</span>
                     </div>
                     <div class="flex justify-between">
+                        <span class="font-semibold">Status:</span>
+                        <span
+                            class="
+                            @if ($product->product_status == 'approved') text-green-500 
+                            @elseif($product->product_status == 'pending') text-yellow-500 
+                            @elseif($product->product_status == 'rejected') text-red-500 
+                            @else text-gray-600 @endif
+                        ">
+                            {{ ucfirst($product->product_status) }}
+                        </span>
+                    </div>
+                    <div class="flex justify-between">
                         <span class="font-semibold">Author:</span>
-                        <span class="text-gray-600">{{ $product->role }}</span>
+                        <span
+                            class="
+                            @if ($product->role == 'admin') text-blue-500 
+                            @elseif($product->role == 'seller') text-purple-500 
+                            @else text-gray-600 @endif
+                        ">
+                            {{ ucfirst($product->role) }}
+                        </span>
                     </div>
                     <div class="flex justify-between">
                         <span class="font-semibold">Author Id:</span>
-                        <span class="text-gray-600">{{ $product->author_id }}</span>
+                        <span class="{{ $product->author_id > 0 ? 'text-green-500' : 'text-red-500' }}">
+                            {{ $product->author_id }}
+                        </span>
                     </div>
+
                     <div class="flex justify-between">
                         <span class="font-semibold">Click:</span>
-                        <span class="text-gray-600">{{ $product->click_count }}</span>
+                        <span class="{{ $product->click_count > 0 ? 'text-green-500' : 'text-red-500' }}">
+                            {{ $product->click_count }}
+                        </span>
                     </div>
+
                     <div class="flex justify-between">
                         <span class="font-semibold">Order:</span>
-                        <span class="text-gray-600">{{ $product->order_count }}</span>
+                        <span class="{{ $product->order_count > 0 ? 'text-green-500' : 'text-red-500' }}">
+                            {{ $product->order_count }}
+                        </span>
                     </div>
                     @if (!empty(json_decode($product->size)))
                         <div class="flex justify-between">

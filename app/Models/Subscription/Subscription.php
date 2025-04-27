@@ -13,6 +13,7 @@ class Subscription extends Model {
         'duration_days',
         'features',
         'sells',
+        'is_active',
     ];
 
     public function sellerSubscriptions() {

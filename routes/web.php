@@ -115,7 +115,7 @@ Route::prefix('admin')->middleware('admin')->group(function(){
         Route::get('/payment-gateway/create', 'create')->name('payment-gateway.create');
         Route::post('/payment-gateway/store', 'store')->name('payment-gateway.store');
         Route::get('/payment-gateway/edit/{id}', 'edit')->name('payment-gateway.edit');
-        Route::post('/payment-gateway/update/{id}', 'update')->name('payment-gateway.update');
+        Route::post('/payment-gateway/update', 'update')->name('payment-gateway.update');
         Route::get('/payment-gateway/destroy/{id}', 'destroy')->name('payment-gateway.destroy');
     });
 
