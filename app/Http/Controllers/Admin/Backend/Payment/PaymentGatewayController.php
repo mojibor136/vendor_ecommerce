@@ -19,23 +19,34 @@ class PaymentGatewayController extends Controller {
     public function store( Request $request ) {
         $request->validate( [
             'gateway_name' => 'required|unique:payment_gateways,gateway_name',
-            'credentials' => 'required|array',
+            'app_key'      => 'required|string',
+            'app_secret'   => 'required|string',
+            'username'     => 'required|string',
+            'password'     => 'required|string',
         ] );
+
+        $credentials = [
+            'app_key'    => $request->app_key,
+            'app_secret' => $request->app_secret,
+            'username'   => $request->username,
+            'password'   => $request->password,
+        ];
 
         PaymentGateway::create( [
             'gateway_name' => $request->gateway_name,
-            'credentials' => $request->credentials,
-            'is_active' => $request->is_active ?? true,
+            'credentials'  => $credentials,
+            'is_active'    => $request->has( 'is_active' ) ? true : false,
         ] );
 
-        return redirect()->route( 'payment-gateways.index' )->with( 'success', 'Payment Gateway added successfully.' );
+        return redirect()->route( 'payment-gateway.index' )->with( 'success', 'Payment Gateway added successfully.' );
     }
 
-    public function edit( PaymentGateway $payment_gateway ) {
+    public function edit( $id ) {
+        $payment_gateway = PaymentGateway::findOrFail( $id );
         return view( 'admin.backend.payment.payment_gateway.edit', compact( 'payment_gateway' ) );
     }
 
-    public function update( Request $request, PaymentGateway $payment_gateway ) {
+    public function update( Request $request ) {
         $request->validate( [
             'gateway_name' => 'required|unique:payment_gateways,gateway_name,' . $payment_gateway->id,
             'credentials' => 'required|array',
@@ -47,11 +58,11 @@ class PaymentGatewayController extends Controller {
             'is_active' => $request->is_active ?? true,
         ] );
 
-        return redirect()->route( 'payment-gateways.index' )->with( 'success', 'Payment Gateway updated successfully.' );
+        return redirect()->route( 'payment-gateway.index' )->with( 'success', 'Payment Gateway updated successfully.' );
     }
 
-    public function destroy( PaymentGateway $payment_gateway ) {
-        $payment_gateway->delete();
-        return redirect()->route( 'payment-gateways.index' )->with( 'success', 'Payment Gateway deleted successfully.' );
+    public function destroy( $id ) {
+        PaymentGateway::findOrFail( $id )->delete();
+        return redirect()->route( 'payment-gateway.index' )->with( 'success', 'Payment Gateway deleted successfully.' );
     }
 }
