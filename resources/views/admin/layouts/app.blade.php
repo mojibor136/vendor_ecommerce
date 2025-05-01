@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
@@ -361,6 +362,7 @@
     </div>
 
     @stack('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const submenuToggles = document.querySelectorAll('.submenu-toggle');

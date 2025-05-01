@@ -101,7 +101,10 @@ Route::prefix('admin')->middleware('admin')->group(function(){
 
     // 🔹 OrderController CRUD Routes
      Route::controller(OrderController::class)->group(function () {
-        Route::get('/order/api' , 'api')->name('order.api');
+        Route::get('/order/api', 'api')->name('order.api');
+        Route::get('/order/delivered/api', 'deliveredApi')->name('delivered.order.api');
+        Route::get('/order/cancelled/api', 'cancelledApi')->name('cancelled.order.api');
+        Route::get('/order/shipped/api', 'shippedApi')->name('shipped.order.api');        
         Route::get('/order', 'index')->name('order.index');
         Route::get('/cancel/order', 'cancel')->name('cancel.order');
         Route::get('/shipping/order', 'shipping')->name('shipping.order');

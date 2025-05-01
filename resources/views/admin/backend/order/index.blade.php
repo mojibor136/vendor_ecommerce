@@ -6,7 +6,7 @@
         <!-- Header Section -->
         <div class="p-3 flex items-center justify-between gap-4 flex-wrap">
             <!-- Left Side: Search + Filter -->
-            <div class="flex flex-wrap md:flex-nowrap md:w-auto w-full items-center gap-3">
+            <div class="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-3 md:space-y-0 w-full">
                 <!-- Search Input -->
                 <div
                     class="flex items-center md:w-[250px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-10">
@@ -28,7 +28,16 @@
                         <option value="cancelled">Cancelled</option>
                     </select>
                 </div>
+
+                <!-- Date Range Picker -->
+                <div class="flex items-center gap-2 flex-wrap md:flex-nowrap">
+                    <input type="date" id="startDate"
+                        class="px-3 py-2 border border-gray-300 text-gray-700 rounded focus:border-green-600 focus:outline-none" />
+                    <input type="date" id="endDate"
+                        class="px-3 py-2 border border-gray-300 text-gray-700 rounded focus:border-green-600 focus:outline-none" />
+                </div>
             </div>
+
         </div>
 
         <!-- Data Table -->
@@ -67,12 +76,27 @@
         $(document).ready(function() {
             fetchOrder();
 
-            $('#statusFilter').change(function() {
-                const status = $(this).val();
+            $('#statusFilter').on('change', function() {
+                fetchOrderWithFilters();
+            });
 
-                fetchOrder('', 1, status);
+            $('#searchInput').on('input', function() {
+                fetchOrderWithFilters();
+            });
+
+            $('#startDate, #endDate').on('change', function() {
+                fetchOrderWithFilters();
             });
         });
+
+        function fetchOrderWithFilters(page = 1) {
+            const query = $('#searchInput').val();
+            const status = $('#statusFilter').val();
+            const startDate = $('#startDate').val();
+            const endDate = $('#endDate').val();
+
+            fetchOrder(query, page, status, startDate, endDate);
+        }
 
         function getStatusColor(status) {
             switch (status.toLowerCase()) {
@@ -92,18 +116,17 @@
             }
         }
 
-        function getPaymentColor(method) {
-            switch (method.toLowerCase()) {
-                case 'bkash':
-                case 'nagad':
-                    return 'bg-pink-500';
-                case 'cod':
-                case 'cash on delivery':
-                    return 'bg-gray-700';
-                case 'sslcommerz':
-                    return 'bg-indigo-600';
+        function getPaymentColor(status) {
+            if (!status) return 'bg-gray-500';
+            const cleanStatus = status.toString().trim().toLowerCase();
+
+            switch (cleanStatus) {
+                case 'paid':
+                    return 'bg-green-600';
+                case 'unpaid':
+                    return 'bg-red-500';
                 default:
-                    return 'bg-blue-600';
+                    return 'bg-gray-500';
             }
         }
 
@@ -112,7 +135,7 @@
             return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
         }
 
-        function fetchOrder(query = '', page = 1, status = '') {
+        function fetchOrder(query = '', page = 1, status = '', startDate = '', endDate = '') {
             const orderList = document.querySelector('.orderList');
             const paginationLinks = document.getElementById('paginationLinks');
 
@@ -122,7 +145,9 @@
                 </tr>`;
             paginationLinks.innerHTML = '';
 
-            fetch(`{{ route('order.api') }}?search=${query}&page=${page}&status=${status}`)
+            fetch(
+                    `{{ route('order.api') }}?search=${query}&page=${page}&status=${status}&start_date=${startDate}&end_date=${endDate}`
+                )
                 .then(response => response.json())
                 .then(data => {
                     orderList.innerHTML = '';
@@ -138,7 +163,7 @@
 
                     data.data.forEach(order => {
                         const statusColor = getStatusColor(order.order_status);
-                        const paymentColor = getPaymentColor(order.payment_method);
+                        const paymentColor = getPaymentColor(order.payment_status);
 
                         const row = `
                             <tr class="border-b hover:bg-gray-100 transition-all">
@@ -163,9 +188,6 @@
                                 <td class="px-6 pt-4 flex flex-row gap-3 items-center justify-center text-center whitespace-nowrap">
                                     <a href="categories/show/${order.id}" class="inline-block text-gray-600 hover:text-blue-600 text-[19px]">
                                         <i class="ri-eye-line"></i>
-                                    </a>
-                                    <a href="categories/edit/${order.id}" class="inline-block text-gray-600 hover:text-green-600 text-[19px]">
-                                        <i class="ri-edit-box-line"></i>
                                     </a>
                                     <a onclick="return confirm('Are you sure you want to delete this order?')" href="categories/destroy/${order.id}" class="inline-block text-gray-600 hover:text-red-600 text-[19px]">
                                         <i class="ri-delete-bin-6-line"></i>
@@ -211,7 +233,11 @@
         }
 
         document.getElementById('searchInput').addEventListener('input', function() {
-            fetchOrder(this.value);
+            const query = this.value;
+            const status = $('#statusFilter').val();
+            const startDate = $('#startDate').val();
+            const endDate = $('#endDate').val();
+            fetchOrder(query, 1, status, startDate, endDate);
         });
     </script>
 @endpush
