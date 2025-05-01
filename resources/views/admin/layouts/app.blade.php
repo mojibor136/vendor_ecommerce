@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
@@ -156,15 +155,21 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('delivered.order') }}"
+                                    <a href="{{ route('processing.order') }}"
                                         class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
-                                        Delivered Order
+                                        Processing Order
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('shipping.order') }}"
                                         class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Shipping Order
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('delivered.order') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        Delivered Order
                                     </a>
                                 </li>
                                 <li>
@@ -362,7 +367,7 @@
     </div>
 
     @stack('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const submenuToggles = document.querySelectorAll('.submenu-toggle');

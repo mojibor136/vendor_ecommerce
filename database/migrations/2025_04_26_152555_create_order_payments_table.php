@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('order_payments', function (Blueprint $table) {
             $table->id();
+            $table->integer('order_id');
+            $table->string('method');
+            $table->string('status')->default('unpaid');
+            $table->string('transaction_id')->nullable();
+            $table->text('gateway_response')->nullable(); 
+            $table->timestamp('paid_at')->nullable();
+            $table->decimal('amount', 10, 2);
             $table->timestamps();
         });
     }

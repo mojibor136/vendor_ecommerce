@@ -48,6 +48,7 @@
                         <tr class="bg-gray-50">
                             <th class="px-6 py-2 text-gray-700 text-xs text-left whitespace-nowrap uppercase">ID</th>
                             <th class="px-6 py-2 text-gray-700 text-xs text-left whitespace-nowrap uppercase">Customer</th>
+                            <th class="px-6 py-2 text-gray-700 text-xs text-left whitespace-nowrap uppercase">Shop</th>
                             <th class="px-6 py-2 text-gray-700 text-xs text-left whitespace-nowrap uppercase">Amount</th>
                             <th class="px-6 py-2 text-gray-700 text-xs text-left whitespace-nowrap uppercase">Status</th>
                             <th class="px-6 py-2 text-gray-700 text-xs text-left whitespace-nowrap uppercase">Payment</th>
@@ -163,7 +164,7 @@
 
                     data.data.forEach(order => {
                         const statusColor = getStatusColor(order.order_status);
-                        const paymentColor = getPaymentColor(order.payment_status);
+                        const paymentColor = getPaymentColor(order.payment.status);
 
                         const row = `
                             <tr class="border-b hover:bg-gray-100 transition-all">
@@ -171,22 +172,25 @@
                                 <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap capitalize">
                                     ${order.shipping?.shipping_name ?? 'N/A'}
                                 </td>
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${order.total_price}</td>
+                                 <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap capitalize">
+                                    ${order.seller?.shop_name ?? 'N/A'}
+                                </td>
+                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${order.payment.amount}</td>
                                 <td class="px-6 py-1 text-sm whitespace-nowrap">
                                     <span title="${order.order_status}" class="px-2 py-1 rounded text-white text-xs font-medium ${statusColor}">
                                         ${capitalize(order.order_status)}
                                     </span>
                                 </td>
                                 <td class="px-6 py-1 text-sm whitespace-nowrap">
-                                    <span title="${order.payment_status}" class="px-2 py-1 rounded text-white text-xs font-medium ${paymentColor}">
-                                        ${capitalize(order.payment_status)}
+                                    <span title="${order.payment.status}" class="px-2 py-1 rounded text-white text-xs font-medium ${paymentColor}">
+                                        ${capitalize(order.payment.status)}
                                     </span>
                                 </td>
                                 <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">
                                     ${new Date(order.created_at).toLocaleDateString('en-US')}
                                 </td>
                                 <td class="px-6 pt-4 flex flex-row gap-3 items-center justify-center text-center whitespace-nowrap">
-                                    <a href="categories/show/${order.id}" class="inline-block text-gray-600 hover:text-blue-600 text-[19px]">
+                                    <a href="order/show/${order.id}/${order.seller.shop_name?.toLowerCase()}" class="inline-block text-gray-600 hover:text-blue-600 text-[19px]">
                                         <i class="ri-eye-line"></i>
                                     </a>
                                     <a onclick="return confirm('Are you sure you want to delete this order?')" href="categories/destroy/${order.id}" class="inline-block text-gray-600 hover:text-red-600 text-[19px]">

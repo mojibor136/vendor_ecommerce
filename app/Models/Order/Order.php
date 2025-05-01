@@ -5,16 +5,14 @@ namespace App\Models\Order;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Seller\Seller;
 use App\Models\BackEnd\Product;
+use App\Models\Payment\OrderPayment;
 
 class Order extends Model {
     protected $fillable = [
         'author_id',
         'customer_id',
         'role',
-        'total_price',
         'order_status',
-        'payment_method',
-        'payment_status',
         'courier_name',
         'is_manual_tracking',
         'shipping_charge',
@@ -39,6 +37,10 @@ class Order extends Model {
 
     public function seller() {
         return $this->belongsTo( Seller::class, 'author_id' );
+    }
+
+    public function payment() {
+        return $this->hasOne( OrderPayment::class, 'order_id' );
     }
 
 }

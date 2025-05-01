@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('order_id')->unique();
             $table->string('shipping_name');
+            $table->string('shipping_email');
             $table->text('shipping_address');
             $table->integer('shipping_country_id');
             $table->integer('shipping_district_id')->nullable();

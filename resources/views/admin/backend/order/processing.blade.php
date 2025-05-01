@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-@section('title', 'Cancelled Order')
+@section('title', 'Processing Order')
 
 @section('content')
     <div class="bg-white w-full h-full flex flex-col gap-6">
@@ -119,7 +119,7 @@
             paginationLinks.innerHTML = '';
 
             fetch(
-                    `{{ route('cancelled.order.api') }}?search=${query}&page=${page}&start_date=${startDate}&end_date=${endDate}`
+                    `{{ route('processing.order.api') }}?search=${query}&page=${page}&start_date=${startDate}&end_date=${endDate}`
                 )
                 .then(response => response.json())
                 .then(data => {

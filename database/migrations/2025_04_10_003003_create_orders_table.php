@@ -16,10 +16,7 @@ return new class extends Migration
             $table->integer('author_id'); 
             $table->integer('customer_id');
             $table->string('role')->nullable(); 
-            $table->decimal('total_price', 10, 2);
             $table->string('order_status')->default('pending');
-            $table->string('payment_method');
-            $table->string('payment_status')->default('unpaid');
             $table->string('courier_name')->nullable(); 
             $table->boolean('is_manual_tracking')->default(false);
             $table->decimal('shipping_charge', 10, 2)->default(0);

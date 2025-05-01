@@ -11,6 +11,7 @@ class Shipping extends Model {
     protected $fillable = [
         'order_id',
         'shipping_name',
+        'shipping_email',
         'shipping_address',
         'shipping_division_id',
         'shipping_district_id',
