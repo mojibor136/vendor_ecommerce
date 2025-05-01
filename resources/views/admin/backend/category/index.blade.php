@@ -1,5 +1,6 @@
 @extends('admin.layouts.app')
 @section('title', 'All Categories')
+
 @section('content')
     <div class="bg-white w-full h-full flex flex-col gap-6">
         <!-- Header Section -->
@@ -34,6 +35,7 @@
                         </tr>
                     </thead>
                     <tbody class="categoryList">
+                        <!-- Categories will be loaded here -->
                     </tbody>
                 </table>
             </div>
@@ -54,22 +56,38 @@
         });
 
         function fetchCategories(query = '', page = 1) {
+            const categoryList = document.querySelector('.categoryList');
+            const paginationLinks = document.getElementById('paginationLinks');
+
+            // Show loading message
+            categoryList.innerHTML = `
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-gray-500">Loading categories...</td>
+                </tr>`;
+            paginationLinks.innerHTML = '';
+
             fetch(`{{ route('categories.api') }}?search=${query}&page=${page}`)
                 .then(response => response.json())
                 .then(data => {
-                    const categoryList = document.querySelector('.categoryList');
-                    const paginationLinks = document.getElementById('paginationLinks');
                     categoryList.innerHTML = '';
                     paginationLinks.innerHTML = '';
+
+                    if (data.data.length === 0) {
+                        categoryList.innerHTML = `
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-gray-500">No categories found.</td>
+                            </tr>`;
+                        return;
+                    }
 
                     data.data.forEach(category => {
                         const row = `
                             <tr class="border-b hover:bg-gray-100">
                                 <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${category.id}</td>
                                 <td class="px-6 py-2 text-center whitespace-nowrap">
-                                      ${category.category_img 
-                                ? `<img src="/storage/${category.category_img}" class="w-12 h-12 object-cover rounded">`
-                                : `<span>No Image</span>`}
+                                    ${category.category_img 
+                                        ? `<img src="/storage/${category.category_img}" class="w-12 h-12 object-cover rounded">`
+                                        : `<span>No Image</span>`}
                                 </td>
                                 <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${category.category_name}</td>
                                 <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${category.subcategory_count}</td>
@@ -77,21 +95,21 @@
                                 <td class="px-6 pt-4 flex flex-row gap-3 items-center text-center whitespace-nowrap">
                                     <a href="categories/show/${category.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-eye-line"></i></a>
                                     <a href="categories/edit/${category.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-edit-box-line"></i></a>
-                                    <a href="categories/destroy/${category.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-delete-bin-6-line"></i></a>
+                                    <a onclick="return confirm('Are you sure?')" href="categories/destroy/${category.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-delete-bin-6-line"></i></a>
                                 </td>
                             </tr>
                         `;
                         categoryList.insertAdjacentHTML('beforeend', row);
                     });
 
-                    // Pagination Links
+                    // Pagination
                     if (data.links) {
                         let prevLink = data.links.find(link => link.label.toLowerCase().includes('previous'));
                         let nextLink = data.links.find(link => link.label.toLowerCase().includes('next'));
 
                         if (prevLink && prevLink.url) {
                             paginationLinks.innerHTML += `
-                                <button onclick="fetchCategories('${query}', ${new URL(prevLink.url).searchParams.get('page')})" 
+                                <button onclick="fetchCategories('${query}', ${new URL(prevLink.url).searchParams.get('page')})"
                                     class="px-4 py-1.5 border bg-gray-500 text-gray-50 rounded">
                                     Previous
                                 </button>`;
@@ -99,14 +117,20 @@
 
                         if (nextLink && nextLink.url) {
                             paginationLinks.innerHTML += `
-                                <button onclick="fetchCategories('${query}', ${new URL(nextLink.url).searchParams.get('page')})" 
+                                <button onclick="fetchCategories('${query}', ${new URL(nextLink.url).searchParams.get('page')})"
                                     class="px-4 py-1.5 border bg-gray-500 text-gray-50 rounded">
                                     Next
                                 </button>`;
                         }
                     }
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    categoryList.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-red-500">Error loading categories.</td>
+                        </tr>`;
+                    console.error('Error:', error);
+                });
         }
 
         document.getElementById('searchInput').addEventListener('input', function() {

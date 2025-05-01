@@ -17,9 +17,6 @@ class Shipping extends Model {
         'shipping_country_id',
         'shipping_phone',
         'shipping_status',
-        'tracking_number',
-        'shipped_at',
-        'delivered_at',
     ];
 
     // Each Shipping belongs to one Order

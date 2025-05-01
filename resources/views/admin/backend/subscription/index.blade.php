@@ -74,6 +74,17 @@
             });
         });
 
+        function getStatusColor(status) {
+            switch (status) {
+                case 1:
+                    return 'bg-green-600';
+                case 0:
+                    return 'bg-red-500';
+                default:
+                    return 'bg-gray-500';
+            }
+        }
+
         function fetchSubscriptions(query = '', page = 1, status = '') {
             fetch(`{{ route('subscription.api') }}?search=${query}&page=${page}&status=${status}`)
                 .then(response => response.json())
@@ -84,38 +95,29 @@
                     paginationLinks.innerHTML = '';
 
                     data.data.forEach(subscription => {
-                        let statusClass = '';
-                        let statusText = '';
-
-                        if (subscription.is_active === 1) {
-                            statusClass = 'text-green-600';
-                            statusText = 'Active';
-                        } else if (subscription.is_active === 0) {
-                            statusClass = 'text-red-500';
-                            statusText = 'Inactive';
-                        } else {
-                            statusClass = 'text-gray-500';
-                            statusText = 'Unknown';
-                        }
+                        const statusColor = getStatusColor(subscription.is_active);
+                        const statusText = subscription.is_active === 1 ? 'Active' : 'Inactive';
 
                         const row = `
-                            <tr class="border-b hover:bg-gray-100">
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${subscription.id}</td>
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${subscription.name}</td>
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${subscription.product_limit}</td>
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${subscription.price}</td>
-                                <td class="px-6 py-1 text-gray-700 text-sm text-center whitespace-nowrap">${subscription.duration_days}</td>
-                                <td class="px-6 py-1 text-gray-700 text-sm text-center whitespace-nowrap">${subscription.sells}</td>
-                                <td class="px-6 py-1 text-sm text-center whitespace-nowrap ${statusClass}">
-                                    ${statusText}
-                                </td>
-                                <td class="px-6 pt-4 flex flex-row gap-3 items-center justify-center text-center whitespace-nowrap">
-                                    <a href="subscription/show/${subscription.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-eye-line"></i></a>
-                                    <a href="subscription/edit/${subscription.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-edit-box-line"></i></a>
-                                    <a href="subscription/destroy/${subscription.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-delete-bin-6-line"></i></a>
-                                </td>
-                            </tr>
-                        `;
+                    <tr class="border-b hover:bg-gray-100">
+                        <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${subscription.id}</td>
+                        <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${subscription.name}</td>
+                        <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${subscription.product_limit}</td>
+                        <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${subscription.price}</td>
+                        <td class="px-6 py-1 text-gray-700 text-sm text-center whitespace-nowrap">${subscription.duration_days}</td>
+                        <td class="px-6 py-1 text-gray-700 text-sm text-center whitespace-nowrap">${subscription.sells}</td>
+                        <td class="px-6 py-1 text-sm text-center whitespace-nowrap">
+                            <span class="px-2 py-1 rounded text-white text-xs font-medium ${statusColor}">
+                                ${statusText}
+                            </span>
+                        </td>
+                        <td class="px-6 pt-4 flex flex-row gap-3 items-center justify-center text-center whitespace-nowrap">
+                            <a href="subscription/show/${subscription.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-eye-line"></i></a>
+                            <a href="subscription/edit/${subscription.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-edit-box-line"></i></a>
+                            <a href="subscription/destroy/${subscription.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-delete-bin-6-line"></i></a>
+                        </td>
+                    </tr>
+                `;
                         subscriptionList.insertAdjacentHTML('beforeend', row);
                     });
 
@@ -126,23 +128,24 @@
 
                         if (prevLink && prevLink.url) {
                             paginationLinks.innerHTML += `
-                                <button onclick="fetchSubscriptions('${query}', ${new URL(prevLink.url).searchParams.get('page')})" 
-                                    class="px-4 py-1.5 border bg-gray-500 text-gray-50 rounded">
-                                    Previous
-                                </button>`;
+                        <button onclick="fetchSubscriptions('${query}', ${new URL(prevLink.url).searchParams.get('page')})" 
+                            class="px-4 py-1.5 border bg-gray-500 text-gray-50 rounded">
+                            Previous
+                        </button>`;
                         }
 
                         if (nextLink && nextLink.url) {
                             paginationLinks.innerHTML += `
-                                <button onclick="fetchSubscriptions('${query}', ${new URL(nextLink.url).searchParams.get('page')})" 
-                                    class="px-4 py-1.5 border bg-gray-500 text-gray-50 rounded">
-                                    Next
-                                </button>`;
+                        <button onclick="fetchSubscriptions('${query}', ${new URL(nextLink.url).searchParams.get('page')})" 
+                            class="px-4 py-1.5 border bg-gray-500 text-gray-50 rounded">
+                            Next
+                        </button>`;
                         }
                     }
                 })
                 .catch(error => console.error('Error:', error));
         }
+
 
         document.getElementById('searchInput').addEventListener('input', function() {
             fetchSubscriptions(this.value);

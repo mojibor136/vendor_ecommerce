@@ -103,6 +103,9 @@ Route::prefix('admin')->middleware('admin')->group(function(){
      Route::controller(OrderController::class)->group(function () {
         Route::get('/order/api' , 'api')->name('order.api');
         Route::get('/order', 'index')->name('order.index');
+        Route::get('/cancel/order', 'cancel')->name('cancel.order');
+        Route::get('/shipping/order', 'shipping')->name('shipping.order');
+        Route::get('/delivered/order', 'delivered')->name('delivered.order');
         Route::get('/order/status/{id}' , 'status')->name('order.status');
         Route::get('/order/show/{shop_name}/{id}', 'show')->name('order.show');
         Route::get('/order/destroy/{id}', 'destroy')->name('order.destroy');

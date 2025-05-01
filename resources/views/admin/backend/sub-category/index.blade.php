@@ -33,7 +33,7 @@
                         </tr>
                     </thead>
                     <tbody class="subcategoryList">
-
+                        <!-- Loading message will appear here initially -->
                     </tbody>
                 </table>
             </div>
@@ -54,28 +54,43 @@
         });
 
         function fetchSubCategories(query = '', page = 1) {
+            const subcategoryList = document.querySelector('.subcategoryList');
+            const paginationLinks = document.getElementById('paginationLinks');
+
+            // Show loading message
+            subcategoryList.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-gray-500">Loading subcategories...</td>
+                </tr>`;
+            paginationLinks.innerHTML = '';
+
             fetch(`{{ route('subcategories.api') }}?search=${query}&page=${page}`)
                 .then(response => response.json())
                 .then(data => {
-                    const subcategoryList = document.querySelector('.subcategoryList');
-                    const paginationLinks = document.getElementById('paginationLinks');
-                    subcategoryList.innerHTML = '';
-                    paginationLinks.innerHTML = '';
+                    subcategoryList.innerHTML = ''; // Clear loading message
 
+                    if (data.data.length === 0) {
+                        subcategoryList.innerHTML = `
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-gray-500">No subcategories found.</td>
+                            </tr>`;
+                        return;
+                    }
+
+                    // Populate rows with subcategories
                     data.data.forEach(subcategory => {
                         const row = `
-                <tr class="border-b hover:bg-gray-100">
-                    <td class="px-6 py-2 text-gray-700 text-sm whitespace-nowrap">${subcategory.id}</td>
-                    <td class="px-6 py-2 text-gray-700 text-sm whitespace-nowrap">${subcategory.subcategory_name}</td>
-                    <td class="px-6 py-2 text-gray-700 text-sm whitespace-nowrap">${subcategory.product_count}</td>
-                    <td class="px-6 py-2 text-gray-700 text-sm whitespace-nowrap">${subcategory.category.category_name}</td>
-                    <td class="px-6 py-2 flex flex-row gap-3 items-center text-center whitespace-nowrap">
-                        <a href="subcategories/show/${subcategory.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-eye-line"></i></a>
-                        <a href="subcategories/edit/${subcategory.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-edit-box-line"></i></a>
-                        <a href="subcategories/destroy/${subcategory.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-delete-bin-6-line"></i></a>
-                    </td>
-                </tr>
-                `;
+                            <tr class="border-b hover:bg-gray-100">
+                                <td class="px-6 py-2 text-gray-700 text-sm">${subcategory.id}</td>
+                                <td class="px-6 py-2 text-gray-700 text-sm">${subcategory.subcategory_name}</td>
+                                <td class="px-6 py-2 text-gray-700 text-sm">${subcategory.product_count}</td>
+                                <td class="px-6 py-2 text-gray-700 text-sm">${subcategory.category.category_name}</td>
+                                <td class="px-6 py-2 flex flex-row gap-3 items-center text-center">
+                                    <a href="subcategories/show/${subcategory.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-eye-line"></i></a>
+                                    <a href="subcategories/edit/${subcategory.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-edit-box-line"></i></a>
+                                    <a href="subcategories/destroy/${subcategory.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-delete-bin-6-line"></i></a>
+                                </td>
+                            </tr>`;
                         subcategoryList.insertAdjacentHTML('beforeend', row);
                     });
 
@@ -101,7 +116,13 @@
                         }
                     }
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    subcategoryList.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-red-500">Failed to load subcategories.</td>
+                        </tr>`;
+                    console.error('Error:', error);
+                });
         }
 
         document.getElementById('searchInput').addEventListener('input', function() {

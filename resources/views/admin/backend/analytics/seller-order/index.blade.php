@@ -22,15 +22,16 @@
                             <th class="px-6 py-2 text-gray-800 text-xs text-center uppercase whitespace-nowrap">Ratings</th>
                             <th class="px-6 py-2 text-gray-800 text-xs text-center uppercase whitespace-nowrap">Canceled
                             </th>
-                            <th class="px-6 py-2 text-gray-800 text-xs text-center uppercase whitespace-nowrap">Pending
-                            </th>
+                            <th class="px-6 py-2 text-gray-800 text-xs text-center uppercase whitespace-nowrap">Pending</th>
                             <th class="px-6 py-2 text-gray-800 text-xs text-center uppercase whitespace-nowrap">Delivered
                             </th>
                             <th class="px-6 py-2 text-gray-800 text-xs text-center uppercase whitespace-nowrap">Action</th>
                         </tr>
                     </thead>
                     <tbody class="salesList">
-
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-gray-500">Loading sales data...</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -51,38 +52,59 @@
         });
 
         function fetchSales(query = '', page = 1) {
+            const salesList = document.querySelector('.salesList');
+            // Show loading state
+            salesList.innerHTML = `
+                <tr>
+                    <td colspan="7" class="text-center py-4 text-gray-500">Loading sales data...</td>
+                </tr>`;
+
             fetch(`{{ route('sales.report.data') }}?search=${query}&page=${page}`)
                 .then(response => response.json())
                 .then(data => {
-                    const salesList = document.querySelector('.salesList');
-                    salesList.innerHTML = '';
+                    salesList.innerHTML = ''; // Clear loading message
 
+                    if (data.data.length === 0) {
+                        salesList.innerHTML = `
+                            <tr>
+                                <td colspan="7" class="text-center py-4 text-gray-500">No sales data found.</td>
+                            </tr>`;
+                        return;
+                    }
+
+                    // Loop through the data and insert rows
                     data.data.forEach(seller => {
                         const averageRating = seller.average_rating !== null ? `${seller.average_rating} / 5` :
                             'No ratings';
                         const row = `
-                        <tr class="border-b hover:bg-gray-100 vertical-align">
-                        <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${seller.id}</td>
-                        <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${seller.shop_name}</td>
-                        <td class="px-6 py-1 text-orange-700 text-sm whitespace-nowrap text-center">${averageRating}</td>
-                        <td class="px-6 py-1 text-red-500 text-sm whitespace-nowrap text-center">${seller.canceled_orders_count}</td>
-                        <td class="px-6 py-1 text-yellow-500 text-sm whitespace-nowrap text-center">${seller.pending_orders_count}</td>
-                        <td class="px-6 py-1 text-green-500 text-sm whitespace-nowrap text-center">${seller.delivered_orders_count}</td>
-                        <td class="px-6 py-2 text-green-700 text-sm whitespace-nowrap">
-                            <div class="flex flex-row items-center justify-center gap-2">
-                                <a href="seller-orders/${seller.shop_name.toLowerCase()}/${seller.id}" class="inline-block text-green-600 text-[19px]"><i
-                                        class="ri-eye-line"></i></a>
-                            </div>
-                        </td>
-                        </tr>`;
+                            <tr class="border-b hover:bg-gray-100">
+                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${seller.id}</td>
+                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${seller.shop_name}</td>
+                                <td class="px-6 py-1 text-orange-700 text-sm whitespace-nowrap text-center">${averageRating}</td>
+                                <td class="px-6 py-1 text-red-500 text-sm whitespace-nowrap text-center">${seller.canceled_orders_count}</td>
+                                <td class="px-6 py-1 text-yellow-500 text-sm whitespace-nowrap text-center">${seller.pending_orders_count}</td>
+                                <td class="px-6 py-1 text-green-500 text-sm whitespace-nowrap text-center">${seller.delivered_orders_count}</td>
+                                <td class="px-6 py-2 text-green-700 text-sm whitespace-nowrap">
+                                    <div class="flex flex-row items-center justify-center gap-2">
+                                        <a href="seller-orders/${seller.shop_name.toLowerCase()}/${seller.id}" class="inline-block text-green-600 text-[19px]"><i
+                                                class="ri-eye-line"></i></a>
+                                    </div>
+                                </td>
+                            </tr>`;
                         salesList.insertAdjacentHTML('beforeend', row);
                     });
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    console.error('Error:', error);
+                    salesList.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-gray-500">Error loading sales data. Please try again later.</td>
+                        </tr>`;
+                });
         }
 
         document.getElementById('searchInput').addEventListener('input', function() {
-            fetchSales(this.value);
+            fetchSales(this.value); // Trigger fetch when search input changes
         });
     </script>
 @endpush

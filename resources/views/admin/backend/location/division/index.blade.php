@@ -40,6 +40,9 @@
                         </tr>
                     </thead>
                     <tbody class="divisionList">
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-gray-500">Loading divisions...</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -60,15 +63,29 @@
         });
 
         function fetchDivision(query = '', page = 1) {
+            const divisionList = document.querySelector('.divisionList');
+            // Display loading message while fetching data
+            divisionList.innerHTML = `
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-gray-500">Loading divisions...</td>
+                </tr>`;
+
             fetch(`{{ route('division.api') }}?search=${query}&page=${page}`)
                 .then(response => response.json())
                 .then(data => {
-                    const divisionList = document.querySelector('.divisionList');
-                    divisionList.innerHTML = '';
+                    divisionList.innerHTML = ''; // Clear the loading message
 
+                    if (data.data.length === 0) {
+                        divisionList.innerHTML = `
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-gray-500">No divisions found.</td>
+                            </tr>`;
+                        return;
+                    }
+
+                    // Populate division data
                     data.data.forEach(division => {
-                        const formattedDate = new Date(division.created_at).toLocaleDateString(
-                            'en-US');
+                        const formattedDate = new Date(division.created_at).toLocaleDateString('en-US');
                         const row = `
                             <tr class="border-b hover:bg-gray-100">
                                 <td class="px-6 py-2 text-gray-700 text-sm whitespace-nowrap">${division.id}</td>
@@ -84,11 +101,17 @@
                         divisionList.insertAdjacentHTML('beforeend', row);
                     });
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    console.error('Error:', error);
+                    divisionList.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-gray-500">Error loading divisions. Please try again later.</td>
+                        </tr>`;
+                });
         }
 
         document.getElementById('searchInput').addEventListener('input', function() {
-            fetchDivision(this.value);
+            fetchDivision(this.value); // Trigger fetch on search input change
         });
     </script>
 @endpush

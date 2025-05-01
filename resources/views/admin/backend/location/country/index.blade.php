@@ -39,6 +39,9 @@
                         </tr>
                     </thead>
                     <tbody class="countryList">
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-gray-500">Loading countries...</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -55,19 +58,33 @@
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            fetchCountry();
+            fetchCountry(); // Call initial fetch on page load
         });
 
         function fetchCountry(query = '', page = 1) {
+            const countryList = document.querySelector('.countryList');
+            // Display loading message while fetching data
+            countryList.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-gray-500">Loading countries...</td>
+                </tr>`;
+
             fetch(`{{ route('country.api') }}?search=${query}&page=${page}`)
                 .then(response => response.json())
                 .then(data => {
-                    const countryList = document.querySelector('.countryList');
-                    countryList.innerHTML = '';
+                    countryList.innerHTML = ''; // Clear the loading message
 
+                    if (data.data.length === 0) {
+                        countryList.innerHTML = `
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-gray-500">No countries found.</td>
+                            </tr>`;
+                        return;
+                    }
+
+                    // Populate country data
                     data.data.forEach(country => {
-                        const formattedDate = new Date(country.created_at).toLocaleDateString(
-                            'en-US');
+                        const formattedDate = new Date(country.created_at).toLocaleDateString('en-US');
                         const row = `
                             <tr class="border-b hover:bg-gray-100">
                                 <td class="px-6 py-2 text-gray-700 text-sm whitespace-nowrap">${country.id}</td>
@@ -82,11 +99,17 @@
                         countryList.insertAdjacentHTML('beforeend', row);
                     });
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    console.error('Error:', error);
+                    countryList.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-gray-500">Error loading countries. Please try again later.</td>
+                        </tr>`;
+                });
         }
 
         document.getElementById('searchInput').addEventListener('input', function() {
-            fetchCountry(this.value);
+            fetchCountry(this.value); // Trigger fetch on search input change
         });
     </script>
 @endpush

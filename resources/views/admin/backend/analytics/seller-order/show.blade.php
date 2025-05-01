@@ -21,19 +21,28 @@
 
         <!-- Table Container -->
         <div class="overflow-x-auto bg-white rounded mt-4">
+            <!-- Loading Message -->
+            <div id="loadingMessage" class="text-center text-gray-500 p-4 hidden">
+                Loading orders...
+            </div>
+
+            <!-- Empty Message -->
+            <div id="emptyMessage" class="text-center text-gray-500 p-4 hidden">
+                No orders found for this seller.
+            </div>
+
             <table class="min-w-full table-auto text-sm text-left text-gray-500">
                 <thead class="text-xs uppercase text-gray-700">
                     <tr>
                         <th class="px-1 py-2 text-gray-800 text-xs uppercase whitespace-nowrap">ID</th>
                         <th class="px-1 py-2 text-gray-800 text-xs uppercase whitespace-nowrap">Products</th>
                         <th class="px-1 py-2 text-gray-800 text-xs uppercase whitespace-nowrap">Ratings</th>
-                        <th class="px-1 py-2 text-gray-800 text-xs uppercase whitespace-nowrap">Order Status
-                        </th>
+                        <th class="px-1 py-2 text-gray-800 text-xs uppercase whitespace-nowrap">Order Status</th>
                         <th class="px-1 py-2 text-gray-800 text-xs uppercase whitespace-nowrap">Order Date</th>
                         <th class="px-1 py-2 text-gray-800 text-xs text-center uppercase whitespace-nowrap">Action</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="orderList">
                     @foreach ($orders as $order)
                         <tr class="bg-white border-b hover:bg-gray-50">
                             <td class="py-3 px-2">{{ $order->id }}</td>
@@ -53,14 +62,14 @@
                             </td>
                             <td class="py-3 px-2">
                                 <span
-                                    class="px-3 py-0.5 rounded-full 
+                                    class="px-2 py-1 rounded text-white text-xs font-medium
                                     {{ $order->order_status == 'delivered'
-                                        ? 'bg-green-500 text-white'
+                                        ? 'bg-green-500'
                                         : ($order->order_status == 'pending'
-                                            ? 'bg-yellow-500 text-white'
+                                            ? 'bg-yellow-500'
                                             : ($order->order_status == 'canceled'
-                                                ? 'bg-red-500 text-white'
-                                                : 'bg-gray-500 text-white')) }}">
+                                                ? 'bg-red-500'
+                                                : 'bg-gray-500')) }}">
                                     {{ $order->order_status }}
                                 </span>
                             </td>
@@ -74,14 +83,31 @@
                                         class="inline-block text-green-600 text-[19px]">
                                         <i class="ri-eye-line"></i>
                                     </a>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+
             <div class="mt-6">
                 {{ $orders->links() }}
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            // Show loading message
+            document.getElementById('loadingMessage').classList.remove('hidden');
+
+            // Hide loading message when orders are loaded
+            if (document.getElementById('orderList').children.length === 0) {
+                document.getElementById('loadingMessage').classList.add('hidden');
+                document.getElementById('emptyMessage').classList.remove('hidden');
+            } else {
+                document.getElementById('loadingMessage').classList.add('hidden');
+            }
+        </script>
+    @endpush
 @endsection

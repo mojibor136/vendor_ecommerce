@@ -148,26 +148,26 @@
                             </a>
                             <ul class="submenu pl-2 {{ request()->is('order/*') ? 'open' : '' }}">
                                 <li>
-                                    <a href="{{ route('country.index') }}"
+                                    <a href="{{ route('order.index') }}"
                                         class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
 
                                         All Order
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('division.index') }}"
+                                    <a href="{{ route('delivered.order') }}"
                                         class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Delivered Order
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('division.index') }}"
+                                    <a href="{{ route('shipping.order') }}"
                                         class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Shipping Order
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('district.index') }}"
+                                    <a href="{{ route('cancel.order') }}"
                                         class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.size') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Cancel Order
                                     </a>
@@ -179,12 +179,12 @@
                         <li>
                             <a href="#"
                                 class="mb-1 flex text-[17px] items-center pl-4 py-2.5 text-gray-800 hover:bg-blue-500 hover:text-white rounded transition duration-200 submenu-toggle {{ request()->is('setting/*') ? 'active' : '' }}"
-                                data-menu-key="analytics">
+                                data-menu-key="payment">
                                 <i class="ri-bar-chart-line mr-1"></i>
                                 <span class="text-[15px]">Payment</span>
                                 <i class="ri-arrow-down-s-line ml-auto mr-4 transition-transform duration-200"></i>
                             </a>
-                            <ul class="submenu pl-2 {{ request()->is('analytics/*') ? 'open' : '' }}">
+                            <ul class="submenu pl-2 {{ request()->is('payment/*') ? 'open' : '' }}">
                                 <li>
                                     <a href="{{ route('sales.location') }}"
                                         class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">

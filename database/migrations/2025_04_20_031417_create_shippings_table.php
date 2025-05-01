@@ -21,9 +21,6 @@ return new class extends Migration
             $table->integer('shipping_division_id');
             $table->integer('shipping_phone');
             $table->string('shipping_status')->default('pending');
-            $table->string('tracking_number')->nullable();
-            $table->timestamp('shipped_at')->nullable();
-            $table->timestamp('delivered_at')->nullable();
             $table->timestamps();
         });
     }

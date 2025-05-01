@@ -1,5 +1,7 @@
 @extends('admin.layouts.app')
+
 @section('title', 'All Products')
+
 @section('content')
     <div class="bg-white w-full h-full flex flex-col gap-6">
         <!-- Header Section -->
@@ -7,16 +9,14 @@
             <!-- Left Side: Search + Filter -->
             <div class="flex flex-wrap md:flex-nowrap md:w-auto w-full items-center gap-3">
                 <!-- Search Input -->
-                <div
-                    class="flex items-center md:w-[250px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-10">
+                <div class="flex items-center md:w-[250px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-10">
                     <i class="ri-search-line text-gray-500 ml-2 text-lg"></i>
                     <input id="searchInput" type="text" placeholder="Search" name="search"
                         class="flex-1 px-0 bg-transparent text-gray-700 outline-none border-none focus:ring-0 focus:outline-none h-full text-sm">
                 </div>
 
                 <!-- Status Filter Dropdown -->
-                <div
-                    class="flex items-center md:w-[200px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-10">
+                <div class="flex items-center md:w-[200px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-10">
                     <select id="statusFilter" name="status"
                         class="flex-1 bg-transparent text-gray-700 outline-none border-none px-3 focus:ring-0 focus:outline-none h-full text-sm cursor-pointer">
                         <option value="">All Status</option>
@@ -52,6 +52,10 @@
                         </tr>
                     </thead>
                     <tbody class="productList">
+                        <!-- Loading message will appear here initially -->
+                        <tr>
+                            <td colspan="9" class="text-center py-4 text-gray-500">Loading products...</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -81,12 +85,30 @@
         }
 
         function fetchProducts(query = '', page = 1, status = '') {
+            const productList = document.querySelector('.productList');
+            const paginationLinks = document.getElementById('paginationLinks');
+
+            // Show loading message
+            productList.innerHTML = `
+                <tr>
+                    <td colspan="9" class="text-center py-4 text-gray-500">Loading products...</td>
+                </tr>`;
+            paginationLinks.innerHTML = '';
+
             fetch(`{{ route('products.api') }}?search=${query}&page=${page}&status=${status}`)
                 .then(response => response.json())
                 .then(data => {
-                    const productList = document.querySelector('.productList');
-                    productList.innerHTML = '';
+                    productList.innerHTML = ''; // Clear loading message
 
+                    if (data.data.length === 0) {
+                        productList.innerHTML = `
+                            <tr>
+                                <td colspan="9" class="text-center py-4 text-gray-500">No products found.</td>
+                            </tr>`;
+                        return;
+                    }
+
+                    // Populate rows with products
                     data.data.forEach(product => {
                         const productName = limitText(product.product_name, 20);
                         const row = `
@@ -100,10 +122,11 @@
                                 <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${productName}</td>
                                 <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${product.product_price}</td>
                                 <td class="px-6 py-1 text-sm whitespace-nowrap text-center">
-                                   <span class="${product.product_status === 'approved' ? 'text-green-500' : 
-                                        (product.product_status === 'pending' ? 'text-yellow-500' : 
-                                        (product.product_status === 'rejected' ? 'text-red-500' : 'text-gray-700'))
-                                    } capitalize">
+                                    <span class="px-2 py-1 rounded text-white text-xs font-medium 
+                                        ${product.product_status === 'approved' ? 'bg-green-500' : 
+                                            (product.product_status === 'pending' ? 'bg-yellow-500' : 
+                                            (product.product_status === 'rejected' ? 'bg-red-500' : 'bg-gray-500'))
+                                        } capitalize">
                                         ${product.product_status}
                                     </span>
                                 </td>
@@ -112,12 +135,12 @@
                                     <span class="${product.click_count > 0 ? 'text-green-500' : 'text-red-500'}">
                                         ${product.click_count}
                                     </span>
-                               </td>
-                               <td class="px-6 py-1 text-sm text-center whitespace-nowrap">
+                                </td>
+                                <td class="px-6 py-1 text-sm text-center whitespace-nowrap">
                                     <span class="${product.order_count > 0 ? 'text-green-500' : 'text-red-500'}">
                                         ${product.order_count}
                                     </span>
-                               </td>
+                                </td>
                                 <td class="px-6 pt-4 flex flex-row gap-3 items-center text-center whitespace-nowrap">
                                     <a href="products/show/${product.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-eye-line"></i></a>
                                     <a href="products/edit/${product.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-edit-box-line"></i></a>
@@ -127,7 +150,13 @@
                         productList.insertAdjacentHTML('beforeend', row);
                     });
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    productList.innerHTML = `
+                        <tr>
+                            <td colspan="9" class="text-center py-4 text-red-500">Failed to load products.</td>
+                        </tr>`;
+                    console.error('Error:', error);
+                });
         }
 
         document.getElementById('searchInput').addEventListener('input', function() {

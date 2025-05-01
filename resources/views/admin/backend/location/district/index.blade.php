@@ -39,6 +39,9 @@
                         </tr>
                     </thead>
                     <tbody class="districtList">
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-gray-500">Loading districts...</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -59,15 +62,29 @@
         });
 
         function fetchDistrict(query = '', page = 1) {
+            const districtList = document.querySelector('.districtList');
+            // Show loading state
+            districtList.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-gray-500">Loading districts...</td>
+                </tr>`;
+
             fetch(`{{ route('district.api') }}?search=${query}&page=${page}`)
                 .then(response => response.json())
                 .then(data => {
-                    const districtList = document.querySelector('.districtList');
-                    districtList.innerHTML = '';
+                    districtList.innerHTML = ''; // Clear loading message
 
+                    if (data.data.length === 0) {
+                        districtList.innerHTML = `
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-gray-500">No districts found.</td>
+                            </tr>`;
+                        return;
+                    }
+
+                    // Loop through the data and insert rows
                     data.data.forEach(district => {
-                        const formattedDate = new Date(district.created_at).toLocaleDateString(
-                            'en-US');
+                        const formattedDate = new Date(district.created_at).toLocaleDateString('en-US');
                         const row = `
                             <tr class="border-b hover:bg-gray-100">
                                 <td class="px-6 py-2 text-gray-700 text-sm whitespace-nowrap">${district.id}</td>
@@ -82,11 +99,18 @@
                         districtList.insertAdjacentHTML('beforeend', row);
                     });
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    console.error('Error:', error);
+                    districtList.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-gray-500">Error loading districts. Please try again later.</td>
+                        </tr>`;
+                });
         }
 
+        // Search handler
         document.getElementById('searchInput').addEventListener('input', function() {
-            fetchDistrict(this.value);
+            fetchDistrict(this.value); // Trigger fetch when search input changes
         });
     </script>
 @endpush

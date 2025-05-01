@@ -50,8 +50,7 @@
                             <th class="px-6 py-2 text-gray-800 text-xs text-center uppercase whitespace-nowrap">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="sellerList">
-                    </tbody>
+                    <tbody class="sellerList"></tbody>
                 </table>
             </div>
 
@@ -67,9 +66,7 @@
         <!-- Modal Box -->
         <div class="bg-white rounded-md border shadow-lg p-6 w-[400px]">
             <h2 class="text-xl font-bold mb-4">Seller Status</h2>
-
             <input type="hidden" id="modalSellerId">
-
             <div class="mb-4">
                 <label for="statusSelect" class="block text-sm font-medium text-gray-700">Status</label>
                 <select id="statusSelect"
@@ -78,7 +75,6 @@
                     <option value="active">Active</option>
                 </select>
             </div>
-
             <div class="flex justify-end gap-2 mt-6">
                 <button onclick="closeModal()"
                     class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">Cancel</button>
@@ -87,7 +83,6 @@
             </div>
         </div>
     </div>
-
 @endsection
 
 @push('scripts')
@@ -95,7 +90,6 @@
     <script>
         $(document).ready(function() {
             fetchSeller();
-
             $('#statusFilter').change(function() {
                 const status = $(this).val();
                 fetchSeller('', 1, status);
@@ -104,92 +98,94 @@
 
         const updateStatusRoute = "{{ route('seller.verification.status', ['id' => ':id']) }}";
 
-        function limitText(text, length = 30) {
-            return text.length > length ? text.slice(0, length) + '...' : text;
-        }
-
         function fetchSeller(query = '', page = 1, status = '') {
+            const sellerList = document.querySelector('.sellerList');
+            const loadingMessage =
+                `<tr><td colspan="10" class="text-center py-4 text-gray-500">Loading sellers...</td></tr>`;
+            const emptyMessage = `<tr><td colspan="10" class="text-center py-4 text-gray-500">No sellers found.</td></tr>`;
+
+            // Show loading message
+            sellerList.innerHTML = loadingMessage;
+
             fetch(`{{ route('seller.api') }}?search=${query}&page=${page}&status=${status}`)
                 .then(response => response.json())
                 .then(data => {
-                    const sellerList = document.querySelector('.sellerList');
+                    // Clear the loading message
                     sellerList.innerHTML = '';
 
+                    // If no data, show empty message
+                    if (data.data.length === 0) {
+                        sellerList.innerHTML = emptyMessage;
+                        return;
+                    }
+
+                    // Populate data
                     data.data.forEach(seller => {
-                        const formattedDate = new Date(seller.created_at).toLocaleDateString(
-                            'en-US');
+                        const formattedDate = new Date(seller.created_at).toLocaleDateString('en-US');
                         const productCount = seller.products.length;
                         const productCountColorClass = productCount === 0 ? 'text-red-500' : 'text-green-600';
-
-                        let rating = 0;
-                        if (seller.products.length > 0) {
-                            const totalRating = seller.products.reduce((sum, product) => sum + product.rating,
-                                0);
-                            rating = totalRating / seller.products.length;
-                        }
-
-                        const verificationColorClass = seller.verification_status === 'pending' ?
-                            'bg-yellow-500' :
-                            seller.verification_status === 'verified' ?
-                            'bg-green-600' :
-                            seller.verification_status === 'rejected' ?
-                            'bg-red-500' :
-                            'bg-gray-700';
-
-                        const subscriptionColorClass = seller.subscription_status === 'active' ?
-                            'bg-green-600' :
-                            seller.subscription_status === 'deactive' ?
-                            'bg-red-500' :
-                            'bg-gray-700';
-
-                        const statusColorClass = seller.status === 'active' ?
-                            'bg-green-600' :
-                            seller.status === 'deactive' ?
-                            'bg-red-500' :
-                            'bg-gray-700';
                         const averageRating = seller.average_rating !== null ? `${seller.average_rating} ★` :
                             'No ratings';
+
+                        const verificationColorClass =
+                            seller.verification_status === 'pending' ? 'bg-yellow-500' :
+                            seller.verification_status === 'verified' ? 'bg-green-600' :
+                            seller.verification_status === 'rejected' ? 'bg-red-500' :
+                            'bg-gray-700';
+
+                        const subscriptionColorClass =
+                            seller.subscription_status === 'active' ? 'bg-green-600' :
+                            seller.subscription_status === 'deactive' ? 'bg-red-500' :
+                            'bg-gray-700';
+
+                        const statusColorClass =
+                            seller.status === 'active' ? 'bg-green-600' :
+                            seller.status === 'deactive' ? 'bg-red-500' :
+                            'bg-gray-700';
+
                         const row = `
-                            <tr class="border-b hover:bg-gray-100 vertical-align">
-                                <td class="px-6 py-2 text-gray-700 text-sm whitespace-nowrap">${seller.id}</td>
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">
-                                    <div class="flex items-center gap-2">
-                                       <img src="/storage/${seller.image}" class="w-10 h-10 shrink-0 rounded-full object-cover" alt="Owner 1">
-                                       <span class="font-semibold text-md">${seller.name}</span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${seller.shop_name}</td>
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${averageRating}</td>
-                                <td class="px-6 py-1 ${productCountColorClass} text-sm whitespace-nowrap text-center">${productCount}</td>
-                                <td class="px-6 py-1 text-white text-[13px] whitespace-nowrap capitalize">
-                                    <a class="px-3 rounded-lg flex items-center justify-center ${statusColorClass}">${seller.status}</a>
-                                </td>
-                                <td class="px-6 py-1 text-white text-[13px] whitespace-nowrap capitalize">
-                                   <a class="px-1 rounded-lg flex items-center justify-center ${verificationColorClass}">${seller.verification_status}</a>
-                                </td>
-                                <td class="px-6 py-1 text-white text-[13px] whitespace-nowrap capitalize">
-                                    <a class="px-1 rounded-lg flex items-center justify-center ${subscriptionColorClass}">${seller.subscription_status}</a>
-                                </td>
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${formattedDate}</td>
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap text-center align-middle">
-                                    <div class="flex flex-row items-center justify-center gap-2">
-                                        <a href="#" onclick="showEditModal(${seller.id}, '${seller.status}')" class="text-lg text-gray-700"><i class="ri-edit-box-line"></i></a>
-                                        <a href="seller/show/${seller.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-eye-line"></i></a>
-                                        <a href="seller/destroy/${seller.id}" class="text-lg text-gray-700"><i class="ri-delete-bin-7-line"></i></a>
-                                    </div>
-                                </td>
-                            </tr>`;
+                    <tr class="border-b hover:bg-gray-100 vertical-align">
+                        <td class="px-6 py-2 text-gray-700 text-sm whitespace-nowrap">${seller.id}</td>
+                        <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">
+                            <div class="flex items-center gap-2">
+                               <img src="/storage/${seller.image}" class="w-10 h-10 shrink-0 rounded-full object-cover" alt="Owner 1">
+                               <span class="font-semibold text-md">${seller.name}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${seller.shop_name}</td>
+                        <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${averageRating}</td>
+                        <td class="px-6 py-1 ${productCountColorClass} text-sm whitespace-nowrap text-center">${productCount}</td>
+                        <td class="px-6 py-1 text-white text-xs whitespace-nowrap capitalize">
+                            <a class="px-2 py-1 rounded flex items-center justify-center ${statusColorClass}">${seller.status}</a>
+                        </td>
+                        <td class="px-6 py-1 text-white text-xs whitespace-nowrap capitalize">
+                           <a class="px-2 py-1 rounded flex items-center justify-center ${verificationColorClass}">${seller.verification_status}</a>
+                        </td>
+                        <td class="px-6 py-1 text-white text-xs whitespace-nowrap capitalize">
+                            <a class="px-2 py-1 rounded flex items-center justify-center ${subscriptionColorClass}">${seller.subscription_status}</a>
+                        </td>
+                        <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${formattedDate}</td>
+                        <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap text-center align-middle">
+                            <div class="flex flex-row items-center justify-center gap-2">
+                                <a href="#" onclick="showEditModal(${seller.id}, '${seller.status}')" class="text-lg text-gray-700"><i class="ri-edit-box-line"></i></a>
+                                <a href="seller/show/${seller.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-eye-line"></i></a>
+                                <a href="seller/destroy/${seller.id}" class="text-lg text-gray-700"><i class="ri-delete-bin-7-line"></i></a>
+                            </div>
+                        </td>
+                    </tr>`;
                         sellerList.insertAdjacentHTML('beforeend', row);
                     });
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    console.error('Error:', error);
+                    sellerList.innerHTML = emptyMessage;
+                });
         }
 
         document.getElementById('searchInput').addEventListener('input', function() {
             fetchSeller(this.value);
         });
 
-        // Show Modal
         function showEditModal(sellerId, currentStatus) {
             document.getElementById('modalSellerId').value = sellerId;
             document.getElementById('statusSelect').value = currentStatus;
@@ -197,18 +193,15 @@
             document.getElementById('editModal').classList.add('flex');
         }
 
-        // Close Modal
         function closeModal() {
             document.getElementById('editModal').classList.remove('flex');
             document.getElementById('editModal').classList.add('hidden');
         }
 
-        // Update Seller Status
         function updateSellerStatus() {
             const sellerId = document.getElementById('modalSellerId').value;
             const newStatus = document.getElementById('statusSelect').value;
-
-            const url = updateStatusRoute.replace(':id', sellerId); // route name থেকে বানানো url
+            const url = updateStatusRoute.replace(':id', sellerId);
 
             fetch(url, {
                     method: 'POST',

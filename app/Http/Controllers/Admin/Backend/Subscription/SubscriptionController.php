@@ -19,14 +19,14 @@ class SubscriptionController extends Controller {
         $subscriptions = Subscription::when($query, function ($q) use ($query) {
             return $q->where('name', 'LIKE', "%$query%");
         })
-        ->when($status, function ($q) use ($status) {
+        ->when($request->filled('status'), function ($q) use ($status) {
             return $q->where('is_active', $status); 
         })
         ->latest()
         ->paginate(10);
     
         return response()->json($subscriptions);
-    }
+    }    
     
     public function create() {
         return view( 'admin.backend.subscription.create' );

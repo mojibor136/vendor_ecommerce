@@ -13,6 +13,12 @@ class Order extends Model {
         'role',
         'total_price',
         'order_status',
+        'payment_method',
+        'payment_status',
+        'courier_name',
+        'is_manual_tracking',
+        'shipping_charge',
+        'tracking_number',
     ];
 
     // Order has many OrderItems
