@@ -6,20 +6,15 @@
         <div class="p-3 flex items-center justify-between gap-4 flex-wrap">
             <!-- Search Box -->
             <div
-                class="flex items-center md:w-[250px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-9.5">
+                class="flex items-center md:w-[250px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-10">
                 <i class="ri-search-line text-gray-500 ml-2 text-lg"></i>
                 <input id="searchInput" type="text" placeholder="Search" name="search"
                     class="flex-1 px-0 bg-transparent text-gray-700 outline-none border-none focus:ring-0 focus:outline-none h-full">
             </div>
 
             <div class="flex flex-row w-full gap-2 md:gap-3 md:w-auto">
-                <a href="{{ route('country.index') }}"
-                    class="bg-blue-500 flex flex-row items-center justify-center text-white px-4 md:py-2 py-2.5 md:w-auto w-full rounded text-sm font-medium hover:bg-blue-600 transition">
-                    <i class="ri-arrow-left-line mr-1"></i>
-                    Back
-                </a>
                 <a href="{{ route('district.create') }}"
-                    class="bg-teal-500 flex flex-row items-center justify-center text-white px-4 md:py-2 py-2.5 md:w-auto w-full rounded text-sm font-medium hover:bg-teal-600 transition">
+                    class="bg-teal-500 flex flex-row items-center justify-center text-white px-4 h-10 md:w-auto w-full rounded text-sm font-medium hover:bg-teal-600 transition">
                     Add District
                 </a>
             </div>

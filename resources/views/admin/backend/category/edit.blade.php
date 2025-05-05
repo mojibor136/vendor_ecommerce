@@ -40,9 +40,9 @@
                 <!-- Category Image Input -->
                 <div class="mb-4">
                     <label for="image" class="block text-gray-700 font-medium">Image<span class="text-red-500">
-                            *</span></label> <input type="file" name="image" id="image"
+                            *</span></label> <input type="file" name="category_img" id="image"
                         class="w-full mt-2 p-2 border rounded border-gray-300 text-gray-700" value="{{ old('image') }}">
-                    @error('image')
+                    @error('category_img')
                         <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                     @enderror
                 </div>

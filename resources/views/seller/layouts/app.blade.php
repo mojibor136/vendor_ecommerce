@@ -77,7 +77,7 @@
         <!-- Sidebar and Content Section -->
         <div class="flex flex-1 pt-[56px]">
             <div id="sidebar"
-                class="scroll-bar w-[210px] z-50 md:block bg-white fixed md:top-[70px] top-[60px] bottom-0 overflow-y-auto 
+                class="scroll-bar md:w-[210px] lg:w-[240px] z-50 md:block bg-white fixed md:top-[70px] top-[60px] bottom-0 overflow-y-auto 
             transition-all duration-500 ease-in-out transform -translate-x-full md:translate-x-0">
                 <div class="pb-6 px-1.5 pt-1.5 md:border-none border-t border-gray-50">
                     <ul>
@@ -218,7 +218,7 @@
             </div>
 
             <!-- Main Content Section -->
-            <div class="flex-1 md:ml-[210px] md:px-4 px-2 md:pt-8 pt-4 overflow-y-auto">
+            <div class="flex-1 md:ml-[210px] lg:ml-[240px] md:px-4 px-2 md:pt-8 pt-4 overflow-y-auto">
                 @yield('content')
             </div>
         </div>

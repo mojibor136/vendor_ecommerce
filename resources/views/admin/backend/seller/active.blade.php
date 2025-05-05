@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-@section('title', 'All Seller')
+@section('title', 'Active Seller')
 @section('content')
     <div class="bg-white w-full h-full flex flex-col gap-6">
         <!-- Header Section -->
@@ -11,17 +11,6 @@
                     <i class="ri-search-line text-gray-500 ml-2 text-lg"></i>
                     <input id="searchInput" type="text" placeholder="Search..." name="search"
                         class="flex-1 px-0 bg-transparent text-gray-700 outline-none border-none focus:ring-0 focus:outline-none h-full">
-                </div>
-
-                <!-- Status Filter Dropdown -->
-                <div
-                    class="flex items-center md:w-[200px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-10">
-                    <select id="statusFilter" name="status"
-                        class="flex-1 bg-transparent text-gray-700 outline-none border-none px-3 focus:ring-0 focus:outline-none h-full">
-                        <option value="">Status</option>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                    </select>
                 </div>
 
                 <!-- Date Range Picker -->
@@ -99,10 +88,6 @@
         $(document).ready(function() {
             fetchSeller();
 
-            $('#statusFilter').on('change', function() {
-                fetchSellerWithFilters();
-            });
-
             $('#searchInput').on('input', function() {
                 fetchSellerWithFilters();
             });
@@ -114,16 +99,15 @@
 
         function fetchSellerWithFilters(page = 1) {
             const query = $('#searchInput').val();
-            const status = $('#statusFilter').val();
             const startDate = $('#startDate').val();
             const endDate = $('#endDate').val();
 
-            fetchSeller(query, page, status, startDate, endDate);
+            fetchSeller(query, page, startDate, endDate);
         }
 
         const updateStatusRoute = "{{ route('seller.verification.status', ['id' => ':id']) }}";
 
-        function fetchSeller(query = '', page = 1, status = '', startDate = '', endDate = '') {
+        function fetchSeller(query = '', page = 1, startDate = '', endDate = '') {
             const sellerList = document.querySelector('.sellerList');
             const loadingMessage =
                 `<tr><td colspan="10" class="text-center py-4 text-gray-500">Loading sellers...</td></tr>`;
@@ -133,7 +117,7 @@
             sellerList.innerHTML = loadingMessage;
 
             fetch(
-                    `{{ route('seller.api') }}?search=${query}&page=${page}&status=${status}&start_date=${startDate}&end_date=${endDate}`
+                    `{{ route('active.seller.api') }}?search=${query}&page=${page}&start_date=${startDate}&end_date=${endDate}`
                 )
                 .then(response => response.json())
                 .then(data => {
@@ -211,10 +195,9 @@
 
         document.getElementById('searchInput').addEventListener('input', function() {
             const query = this.value;
-            const status = $('#statusFilter').val();
             const startDate = $('#startDate').val();
             const endDate = $('#endDate').val();
-            fetchSeller(query, 1, status, startDate, endDate);
+            fetchSeller(query, 1, startDate, endDate);
         });
 
         function showEditModal(sellerId, currentStatus) {

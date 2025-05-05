@@ -31,7 +31,7 @@ class CategoryController extends Controller {
         try {
             $request->validate([
                 'category_name' => 'required|string|max:255',
-                'category_img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'category_img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
             ]);
     
             $existingCategory = Category::where('category_name', $request->category_name)->first();
@@ -43,8 +43,18 @@ class CategoryController extends Controller {
             $imagePath = null;
     
             if ($request->hasFile('category_img')) {
-                $imagePath = $request->file('category_img')->store('category', 'public');
-            }
+                $image = $request->file('category_img');
+            
+                $randomName = Str::random(4);
+            
+                $extension = $image->getClientOriginalExtension();
+            
+                $fileName = $randomName . '.' . $extension;
+            
+                $image->storeAs('category', $fileName, 'public');
+            
+                $imagePath = 'category/' . $fileName;
+            }            
     
             Category::create([
                 'category_name' => $request->category_name,
@@ -78,26 +88,46 @@ class CategoryController extends Controller {
         return view('admin.backend.category.edit' , compact('category'));
     }
 
-    public function update(Request $request) {
-        $request->validate( [
+    public function update(Request $request)
+    {
+        $request->validate([
             'category_name' => 'required',
-            'category_img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ] );
-
-        $category = Category::findOrFail($request->id);
-
-        $data = [
-            'category_name' => $request->category_name,
-            'slug' => Str::slug($request->name),
-        ];
-
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('category', 'public');
-            $data['category_img'] = $imagePath;
+            'category_img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+        ]);
+    
+        try {
+            $category = Category::findOrFail($request->id);
+    
+            $data = [
+                'category_name' => $request->category_name,
+                'slug' => Str::slug($request->category_name),
+            ];
+    
+            if ($request->hasFile('category_img')) {
+                if ($category->category_img && \Storage::disk('public')->exists($category->category_img)) {
+                    \Storage::disk('public')->delete($category->category_img);
+                }
+    
+                $image = $request->file('category_img');
+                $randomName = Str::random(4);
+                $extension = $image->getClientOriginalExtension();
+                $fileName = $randomName . '.' . $extension;
+    
+                $image->storeAs('category', $fileName, 'public');
+                $data['category_img'] = 'category/' . $fileName;
+            }
+    
+            $category->update($data);
+    
+            return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->errorInfo[1] == 1062) {
+                return redirect()->back()->with('error', 'Slug already exists. Please choose a different category name.');
+            }
+    
+            return redirect()->back()->with('error', 'An error occurred while updating the category.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Unexpected error: ' . $e->getMessage());
         }
-
-        $category->update($data);
-
-        return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
-    }
+    }    
 }

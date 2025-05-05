@@ -22,6 +22,9 @@ use App\Http\Controllers\Admin\Backend\Location\DistrictController;
 use App\Http\Controllers\Admin\Backend\Location\CountryController;
 use App\Http\Controllers\Admin\Backend\Analytics\AnalyticsController;
 use App\Http\Controllers\Admin\Backend\Payment\PaymentGatewayController;
+use App\Http\Controllers\Admin\Backend\Payment\SellerPaymentController;
+use App\Http\Controllers\Admin\Backend\Payment\OrderPaymentController;
+use App\Http\Controllers\Admin\Backend\Payment\SubscriptionPaymentController;
 // Front-End Routes
 use App\Http\Controllers\FrontEnd\HomeController;
 
@@ -72,6 +75,8 @@ Route::prefix('admin')->middleware('admin')->group(function(){
         Route::get('/products/edit/{id}' , 'edit')->name('products.edit');
         Route::get('/products/show/{id}', 'show')->name('products.show');
         Route::post('/products/update', 'update')->name('products.update');
+        Route::get('product/add/stock' , 'addStock')->name('product.add.stock');
+        Route::post('product/update/stock' , 'updateStock')->name('product.update.stock');
         Route::get('/products/destroy/{id}', 'destroy')->name('products.destroy');
     });
 
@@ -90,7 +95,11 @@ Route::prefix('admin')->middleware('admin')->group(function(){
     // 🔹 SubscriptionController CRUD Routes
     Route::controller(SubscriptionController::class)->group(function () {
         Route::get('/subscription/api' , 'api')->name('subscription.api');
+        Route::get('/yearly/subscription/api' , 'yearlyApi')->name('subscription.yearly.api');
+        Route::get('/monthly/subscription/api' , 'monthlyApi')->name('subscription.monthly.api');
         Route::get('/subscription', 'index')->name('subscription.index');
+        Route::get('/monthly/subscription', 'monthly')->name('subscription.monthly');
+        Route::get('/yearly/subscription', 'yearly')->name('subscription.yearly');
         Route::get('/subscription/create', 'create')->name('subscription.create');
         Route::post('/subscription/store', 'store')->name('subscription.store');
         Route::get('/subscription/edit/{id}' , 'edit')->name('subscription.edit');
@@ -129,6 +138,26 @@ Route::prefix('admin')->middleware('admin')->group(function(){
         Route::get('/payment-gateway/destroy/{id}', 'destroy')->name('payment-gateway.destroy');
     });
 
+    // 🔹 SellerPaymentController CRUD Routes
+    Route::controller(SellerPaymentController::class)->group(function () {
+        Route::get('/seller/payment' , 'index')->name('seller.payment.index');
+        Route::get('/seller/payment/api' , 'api')->name('seller.payment.api');
+        Route::get('/seller/payment/show/{id}' , 'show')->name('seller.payment.show');
+        Route::post('seller/payment/status' , 'status')->name('seller.payment.status');
+    });
+
+    // 🔹 OrderPaymentController CRUD Routes
+    Route::controller(OrderPaymentController::class)->group(function () {
+        Route::get('/order/payment' , 'index')->name('order.payment.index');
+        Route::get('/order/payment/api' , 'api')->name('order.payment.api');
+    });
+
+    // 🔹 SubscriptionPaymentController CRUD Routes
+    Route::controller(SubscriptionPaymentController::class)->group(function () {
+        Route::get('/subscription/payment' , 'index')->name('subscription.payment.index');
+        Route::get('/subscription/payment/api' , 'api')->name('subscription.payment.api');
+    });
+
     // 🔹 UserController CRUD Routes
     Route::controller(UserController::class)->group(function () {
         Route::get('/user/api' , 'api')->name('user.api');
@@ -141,7 +170,11 @@ Route::prefix('admin')->middleware('admin')->group(function(){
     // 🔹 BackendSellerController CRUD Routes
     Route::controller(BackendSellerController::class)->group(function () {
         Route::get('/seller/api' , 'api')->name('seller.api');
+        Route::get('/inactive/seller/api' , 'inactiveApi')->name('inactive.seller.api');
+        Route::get('/active/seller/api' , 'activeApi')->name('active.seller.api');
         Route::get('/seller', 'index')->name('seller.index');
+        Route::get('/active/seller', 'active')->name('active.seller');
+        Route::get('/inactive/seller', 'inactive')->name('inactive.seller');
         Route::post('/seller/verification/{id}/status' , 'status')->name('seller.verification.status');
         Route::get('/seller/show/{id}', 'show')->name('seller.show');
         Route::get('/seller/destroy/{id}', 'destroy')->name('seller.destroy');

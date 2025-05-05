@@ -56,6 +56,15 @@ class ProductController extends Controller {
         return view('admin.backend.product.edit', compact('product', 'categories', 'subcategories'));
     }
 
+    public function addStock(Request $request){
+        if($request->ProductId){
+            $request->validate(['ProductId' => 'required']);
+            $product = Product::findOrFail($request->ProductId);
+            return view('admin.backend.product.stock' , compact('product'));
+        }
+        return view('admin.backend.product.stock');
+    }
+
     public function store(Request $request)
     {
         try {

@@ -7,10 +7,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('title')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
         rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('remixicon/remixicon.css') }}">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <style>
@@ -77,7 +77,7 @@
         <!-- Sidebar and Content Section -->
         <div class="flex flex-1 pt-[56px]">
             <div id="sidebar"
-                class="scroll-bar w-[210px] z-50 md:block bg-white fixed md:top-[70px] top-[60px] bottom-0 overflow-y-auto 
+                class="scroll-bar md:w-[210px] lg:w-[240px] z-50 md:block bg-white fixed md:top-[70px] top-[60px] bottom-0 overflow-y-auto 
             transition-all duration-500 ease-in-out transform -translate-x-full md:translate-x-0">
                 <div class="pb-6 px-1.5 pt-1.5 md:border-none border-t border-gray-50">
                     <ul>
@@ -104,37 +104,36 @@
                             </a>
                         </li>
 
-                        <!-- Categories -->
-                        <li class="group">
-                            <a href="{{ route('categories.index') }}"
-                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 rounded transition duration-200
-                               {{ request()->routeIs('categories.index', 'categories.show', 'categories.create', 'categories.edit') ? 'bg-blue-500 text-white' : 'text-gray-800 group-hover:text-white group-hover:bg-blue-500' }}">
-                                <i
-                                    class="ri-apps-line mr-1 {{ request()->routeIs('categories.index', 'categories.show', 'categories.create', 'categories.edit') ? 'text-white' : 'text-gray-700 group-hover:text-white' }}"></i>
-                                <span class="text-[15px]">Categories</span>
+                        <!-- Ecommerce  -->
+                        <li>
+                            <a href="#"
+                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 text-gray-800 hover:bg-blue-500 hover:text-white rounded transition duration-200 submenu-toggle {{ request()->is('setting/*') ? 'active' : '' }}"
+                                data-menu-key="ecommerce">
+                                <i class="ri-newspaper-line mr-1"></i>
+                                <span class="text-[15px]">Ecommerce</span>
+                                <i class="ri-arrow-down-s-line ml-auto mr-4 transition-transform duration-200"></i>
                             </a>
-                        </li>
+                            <ul class="submenu pl-2 {{ request()->is('ecommerce/*') ? 'open' : '' }}">
+                                <li>
+                                    <a href="{{ route('products.index') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
 
-                        <!-- Sub-Categories -->
-                        <li class="group">
-                            <a href="{{ route('subcategories.index') }}"
-                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 rounded transition duration-200
-                               {{ request()->routeIs('subcategories.index', 'subcategories.show', 'subcategories.create', 'subcategories.edit') ? 'bg-blue-500 text-white' : 'text-gray-800 group-hover:text-white group-hover:bg-blue-500' }}">
-                                <i
-                                    class="ri-list-check mr-1 {{ request()->routeIs('subcategories.index', 'subcategories.show', 'subcategories.create', 'subcategories.edit') ? 'text-white' : 'text-gray-700 group-hover:text-white' }}"></i>
-                                <span class="text-[15px]">Subcategories</span>
-                            </a>
-                        </li>
-
-                        <!-- Product -->
-                        <li class="group">
-                            <a href="{{ route('products.index') }}"
-                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 rounded transition duration-200
-                               {{ request()->routeIs('products.index', 'products.show', 'products.edit', 'products.create') ? 'bg-blue-500 text-white' : 'text-gray-800 group-hover:text-white group-hover:bg-blue-500' }}">
-                                <i
-                                    class="ri-newspaper-line mr-1 {{ request()->routeIs('products.index', 'products.show', 'products.edit', 'products.create') ? 'text-white' : 'text-gray-700 group-hover:text-white' }}"></i>
-                                <span class="text-[15px]">Products</span>
-                            </a>
+                                        Products
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('categories.index') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        Categories
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('subcategories.index') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        Subcategories
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
 
                         <!-- Order  -->
@@ -192,19 +191,19 @@
                             </a>
                             <ul class="submenu pl-2 {{ request()->is('payment/*') ? 'open' : '' }}">
                                 <li>
-                                    <a href="{{ route('sales.location') }}"
+                                    <a href="{{ route('seller.payment.index') }}"
                                         class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Seller payment
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('sales.report') }}"
+                                    <a href="{{ route('order.payment.index') }}"
                                         class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Order payment
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('sales.location') }}"
+                                    <a href="{{ route('subscription.payment.index') }}"
                                         class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Subscription payment
                                     </a>
@@ -213,14 +212,34 @@
                         </li>
 
                         <!-- Subscription -->
-                        <li class="group">
-                            <a href="{{ route('subscription.index') }}"
-                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 rounded transition duration-200
-                                                       {{ request()->routeIs('subscription.index', 'subscription.show', 'subscription.edit', 'subscription.create') ? 'bg-blue-500 text-white' : 'text-gray-800 group-hover:text-white group-hover:bg-blue-500' }}">
-                                <i
-                                    class="ri-vip-crown-line mr-1 {{ request()->routeIs('subscription.index', 'subscription.show', 'subscription.edit', 'subscription.create') ? 'text-white' : 'text-gray-700 group-hover:text-white' }}"></i>
+                        <li>
+                            <a href="#"
+                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 text-gray-800 hover:bg-blue-500 hover:text-white rounded transition duration-200 submenu-toggle {{ request()->is('setting/*') ? 'active' : '' }}"
+                                data-menu-key="subscription">
+                                <i class="ri-vip-crown-line mr-1"></i>
                                 <span class="text-[15px]">Subscription</span>
+                                <i class="ri-arrow-down-s-line ml-auto mr-4 transition-transform duration-200"></i>
                             </a>
+                            <ul class="submenu pl-2 {{ request()->is('subscription/*') ? 'open' : '' }}">
+                                <li>
+                                    <a href="{{ route('subscription.index') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        All Subscription
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('subscription.monthly') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        Monthly Subscription
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('subscription.yearly') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        Yearly Subscription
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
 
                         <!-- Seller -->
@@ -240,23 +259,49 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('sales.report') }}"
+                                    <a href="{{ route('active.seller') }}"
                                         class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
-                                        Unverified Seller
+                                        Active Seller
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('inactive.seller') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        Inactive Seller
                                     </a>
                                 </li>
                             </ul>
                         </li>
 
                         <!-- User -->
-                        <li class="group">
-                            <a href="{{ route('user.index') }}"
-                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 rounded transition duration-200
-                                                       {{ request()->routeIs('user.index', 'user.show') ? 'bg-blue-500 text-white' : 'text-gray-800 group-hover:text-white group-hover:bg-blue-500' }}">
-                                <i
-                                    class="ri-group-line mr-1 {{ request()->routeIs('user.index', 'user.show') ? 'text-white' : 'text-gray-700 group-hover:text-white' }}"></i>
+                        <li>
+                            <a href="#"
+                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 text-gray-800 hover:bg-blue-500 hover:text-white rounded transition duration-200 submenu-toggle {{ request()->is('setting/*') ? 'active' : '' }}"
+                                data-menu-key="user">
+                                <i class="ri-group-line mr-1"></i>
                                 <span class="text-[15px]">User</span>
+                                <i class="ri-arrow-down-s-line ml-auto mr-4 transition-transform duration-200"></i>
                             </a>
+                            <ul class="submenu pl-2 {{ request()->is('user/*') ? 'open' : '' }}">
+                                <li>
+                                    <a href="{{ route('user.index') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        All User
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('active.seller.api') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        Active User
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('inactive.seller.api') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        Inactive User
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
 
                         <!-- Location  -->
@@ -360,7 +405,7 @@
             </div>
 
             <!-- Main Content Section -->
-            <div class="flex-1 md:ml-[210px] md:px-4 px-2 md:pt-8 pt-4 overflow-y-auto">
+            <div class="flex-1 md:ml-[210px] lg:ml-[240px] md:px-4 px-2 md:pt-8 pt-4 overflow-y-auto">
                 @yield('content')
             </div>
         </div>

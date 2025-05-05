@@ -137,7 +137,7 @@
                         <i class="ri-bar-chart-2-line text-white text-2xl"></i>
                     </div>
                     <div class="flex flex-col">
-                        <p class="text-xl font-bold">{{ $totalSales }}</p>
+                        <p class="text-xl font-bold">10000</p>
                         <h3 class="text-sm font-medium">Sales Report</h3>
                     </div>
                 </div>

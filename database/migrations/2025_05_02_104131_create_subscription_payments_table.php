@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('seller_payments', function (Blueprint $table) {
+        Schema::create('subscription_payments', function (Blueprint $table) {
             $table->id();
-            $table->string('shop');
-            $table->decimal('amount', 10, 2);
-            $table->timestamp('paid_at')->nullable();
-            $table->string('method');
-            $table->string('status');
-            $table->integer('order_id');
             $table->integer('seller_id');
+            $table->integer('subscription_id');
+            $table->integer('transaction_id');
+            $table->string('method');
+            $table->decimal('amount');
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('seller_payments');
+        Schema::dropIfExists('subscription_payments');
     }
 };

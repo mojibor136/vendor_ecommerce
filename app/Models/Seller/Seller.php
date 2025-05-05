@@ -61,7 +61,7 @@ class Seller extends Authenticatable {
         $subscription = $this->activeSubscription;
 
         if ( !$subscription ) {
-            return 'deactive';
+            return 'inactive';
         }
 
         $now = Carbon::now();
@@ -70,7 +70,7 @@ class Seller extends Authenticatable {
             return 'active';
         }
 
-        return 'deactive';
+        return 'inactive';
     }
 
 }

@@ -32,7 +32,6 @@ class AdminController extends Controller {
         $countryCount = Country::count();
         $divisionCount = Division::count();
         $districtCount = District::count();
-        $totalSales = Order::where( 'order_status', 'delivered' )->sum( 'total_price' );
         $totalProductsSold = OrderItem::whereHas('order', function ($query) {
             $query->where('order_status', 'delivered');
         })->sum('quantity');
@@ -49,7 +48,6 @@ class AdminController extends Controller {
             'countryCount',
             'divisionCount',
             'districtCount',
-            'totalSales',
             'totalProductsSold',
             'totalProductQuantity',
         ) );

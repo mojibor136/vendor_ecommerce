@@ -11,6 +11,14 @@ class SubscriptionController extends Controller {
         return view( 'admin.backend.subscription.index' );
     }
 
+    public function yearly(){
+        return view('admin.backend.subscription.yearly');
+    }
+
+    public function monthly(){
+        return view('admin.backend.subscription.monthly');
+    }
+
     public function api(Request $request)
     {
         $query = $request->input('search');
@@ -28,6 +36,40 @@ class SubscriptionController extends Controller {
         return response()->json($subscriptions);
     }    
     
+    public function yearlyApi(Request $request){
+        $query = $request->input('search');
+        $status = $request->input('status');
+    
+        $subscriptions = Subscription::when($query, function ($q) use ($query) {
+            return $q->where('name', 'LIKE', "%$query%");
+        })
+        ->where('duration_days' , 360)
+        ->when($request->filled('status'), function ($q) use ($status) {
+            return $q->where('is_active', $status); 
+        })
+        ->latest()
+        ->paginate(10);
+    
+        return response()->json($subscriptions);
+    }
+
+    public function monthlyApi(Request $request){
+        $query = $request->input('search');
+        $status = $request->input('status');
+    
+        $subscriptions = Subscription::when($query, function ($q) use ($query) {
+            return $q->where('name', 'LIKE', "%$query%");
+        })
+        ->where('duration_days' , 30)
+        ->when($request->filled('status'), function ($q) use ($status) {
+            return $q->where('is_active', $status); 
+        })
+        ->latest()
+        ->paginate(10);
+    
+        return response()->json($subscriptions);
+    }
+
     public function create() {
         return view( 'admin.backend.subscription.create' );
     }

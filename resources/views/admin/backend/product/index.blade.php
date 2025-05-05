@@ -9,14 +9,16 @@
             <!-- Left Side: Search + Filter -->
             <div class="flex flex-wrap md:flex-nowrap md:w-auto w-full items-center gap-3">
                 <!-- Search Input -->
-                <div class="flex items-center md:w-[250px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-10">
+                <div
+                    class="flex items-center md:w-[250px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-10">
                     <i class="ri-search-line text-gray-500 ml-2 text-lg"></i>
                     <input id="searchInput" type="text" placeholder="Search" name="search"
                         class="flex-1 px-0 bg-transparent text-gray-700 outline-none border-none focus:ring-0 focus:outline-none h-full text-sm">
                 </div>
 
                 <!-- Status Filter Dropdown -->
-                <div class="flex items-center md:w-[200px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-10">
+                <div
+                    class="flex items-center md:w-[200px] w-full gap-2 bg-gray-50 rounded ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue-500 h-10">
                     <select id="statusFilter" name="status"
                         class="flex-1 bg-transparent text-gray-700 outline-none border-none px-3 focus:ring-0 focus:outline-none h-full text-sm cursor-pointer">
                         <option value="">All Status</option>
@@ -28,10 +30,16 @@
             </div>
 
             <!-- Right Side: Add Button -->
-            <a href="{{ route('products.create') }}"
-                class="flex items-center justify-center bg-teal-500 hover:bg-teal-600 text-white font-medium text-sm rounded px-5 h-10 transition w-full md:w-auto">
-                Add Products
-            </a>
+            <div class="flex flex-row gap-2">
+                <a href="{{ route('product.add.stock') }}"
+                    class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-medium text-sm rounded px-5 h-10 transition w-full md:w-auto">
+                    Stock
+                </a>
+                <a href="{{ route('products.create') }}"
+                    class="flex items-center justify-center bg-teal-500 hover:bg-teal-600 text-white font-medium text-sm rounded px-5 h-10 transition w-full md:w-auto">
+                    Add Products
+                </a>
+            </div>
         </div>
 
         <!-- Data Table -->
