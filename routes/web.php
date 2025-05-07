@@ -123,7 +123,7 @@ Route::prefix('admin')->middleware('admin')->group(function(){
         Route::post('/order/status' , 'status')->name('order.status');
         Route::post('/shipped/manual' , 'manual')->name('shipped.manual');
         Route::post('/shipped/auto' , 'auto')->name('shipped.auto');
-        Route::get('/order/show/{shop_id}/{shop_name}', 'show')->name('order.show');
+        Route::get('/order/show/{shop_name}/{shop_id}', 'show')->name('order.show');
         Route::get('/order/destroy/{id}', 'destroy')->name('order.destroy');
     });
 
@@ -220,13 +220,13 @@ Route::prefix('admin')->middleware('admin')->group(function(){
 
     // 🔹 AnalyticsController CRUD Routes
     Route::controller(AnalyticsController::class)->group(function () {
-        Route::get('/sales-report', 'index')->name('sales.report');
+        Route::get('/sales/report', 'index')->name('sales.report');
         Route::get('/seller-location' , 'sellerLocation')->name('seller.location');
         Route::get('/get-seller-location' , 'getSellerLocation')->name('get.seller.location');
         Route::get('/sales-location' , 'salesLocation')->name('sales.location');
         Route::get('/get-sales-location' , 'getSalesLocation')->name('get.sales.location');
-        Route::get('/sales-report/data' , 'getSellersData')->name('sales.report.data');
-        Route::get('/seller-orders/{shop_name}/{sellerId}', 'showSellerOrders')->name('show.seller.orders');
+        Route::get('/sales/report/data' , 'getSellersData')->name('sales.report.data');
+        Route::get('/seller/orders/{shop_name}/{shop_id}', 'showSellerOrders')->name('seller.orders');
     });
             
 });

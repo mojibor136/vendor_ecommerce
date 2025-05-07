@@ -156,7 +156,7 @@ class OrderController extends Controller {
         return view( 'admin.backend.order.processing' );
     }
 
-    public function show($shop_id, $shop_name)
+    public function show( $shop_name,$shop_id)
     {
         $order = Order::with([
             'shipping.country', 'shipping.division', 'shipping.district',

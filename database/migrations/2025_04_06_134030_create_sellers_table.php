@@ -24,7 +24,9 @@ return new class extends Migration
             $table->integer('district_id')->nullable();
             $table->integer('division_id')->nullable();
             $table->integer('country_id')->nullable();
+            $table->integer('total_amount')->nullable();
             $table->string('shop_logo')->nullable();
+            $table->string('shop_image')->nullable();
             $table->string('shop_banner')->nullable();
             $table->boolean('phone_verification')->default(false);
             $table->string('facebook_pixel_id')->nullable()->unique();

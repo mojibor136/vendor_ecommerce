@@ -20,6 +20,8 @@
                             <th class="px-6 py-2 text-gray-800 text-xs text-left uppercase whitespace-nowrap">Store Name
                             </th>
                             <th class="px-6 py-2 text-gray-800 text-xs text-center uppercase whitespace-nowrap">Ratings</th>
+                            <th class="px-6 py-2 text-gray-800 text-xs text-center uppercase whitespace-nowrap">Total Order
+                            </th>
                             <th class="px-6 py-2 text-gray-800 text-xs text-center uppercase whitespace-nowrap">Canceled
                             </th>
                             <th class="px-6 py-2 text-gray-800 text-xs text-center uppercase whitespace-nowrap">Pending</th>
@@ -48,12 +50,11 @@
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            fetchSales();
+            fetchSales()
         });
 
         function fetchSales(query = '', page = 1) {
             const salesList = document.querySelector('.salesList');
-            // Show loading state
             salesList.innerHTML = `
                 <tr>
                     <td colspan="7" class="text-center py-4 text-gray-500">Loading sales data...</td>
@@ -62,7 +63,7 @@
             fetch(`{{ route('sales.report.data') }}?search=${query}&page=${page}`)
                 .then(response => response.json())
                 .then(data => {
-                    salesList.innerHTML = ''; // Clear loading message
+                    salesList.innerHTML = '';
 
                     if (data.data.length === 0) {
                         salesList.innerHTML = `
@@ -72,22 +73,29 @@
                         return;
                     }
 
-                    // Loop through the data and insert rows
                     data.data.forEach(seller => {
                         const averageRating = seller.average_rating !== null ? `${seller.average_rating} / 5` :
                             'No ratings';
+
                         const row = `
                             <tr class="border-b hover:bg-gray-100">
                                 <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${seller.id}</td>
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${seller.shop_name}</td>
+                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">
+                                    <div class="flex items-center gap-2">
+                                        <img src="/storage/${seller.image}" class="w-10 h-10 shrink-0 rounded-full object-cover" alt="Owner 1">
+                                        <span class="font-semibold text-md">${seller.shop_name}</span>
+                                    </div>
+                                </td>
                                 <td class="px-6 py-1 text-orange-700 text-sm whitespace-nowrap text-center">${averageRating}</td>
+                                <td class="px-6 py-1 text-orange-700 text-sm whitespace-nowrap text-center">${seller.total_orders_count}</td>
                                 <td class="px-6 py-1 text-red-500 text-sm whitespace-nowrap text-center">${seller.canceled_orders_count}</td>
                                 <td class="px-6 py-1 text-yellow-500 text-sm whitespace-nowrap text-center">${seller.pending_orders_count}</td>
                                 <td class="px-6 py-1 text-green-500 text-sm whitespace-nowrap text-center">${seller.delivered_orders_count}</td>
                                 <td class="px-6 py-2 text-green-700 text-sm whitespace-nowrap">
                                     <div class="flex flex-row items-center justify-center gap-2">
-                                        <a href="seller-orders/${seller.shop_name.toLowerCase()}/${seller.id}" class="inline-block text-green-600 text-[19px]"><i
-                                                class="ri-eye-line"></i></a>
+                                        <a href="/admin/seller/orders/${seller.shop_name.toLowerCase()}/${seller.id}" class="inline-block text-green-600 text-[19px]">
+                                            <i class="ri-eye-line"></i>
+                                        </a>
                                     </div>
                                 </td>
                             </tr>`;
@@ -103,8 +111,9 @@
                 });
         }
 
+        // Live search
         document.getElementById('searchInput').addEventListener('input', function() {
-            fetchSales(this.value); // Trigger fetch when search input changes
+            fetchSales(this.value);
         });
     </script>
 @endpush

@@ -35,8 +35,9 @@
                 <thead class="text-xs uppercase text-gray-700">
                     <tr>
                         <th class="px-1 py-2 text-gray-800 text-xs uppercase whitespace-nowrap">ID</th>
-                        <th class="px-1 py-2 text-gray-800 text-xs uppercase whitespace-nowrap">Products</th>
-                        <th class="px-1 py-2 text-gray-800 text-xs uppercase whitespace-nowrap">Ratings</th>
+                        <th class="px-1 py-2 text-gray-800 text-xs uppercase whitespace-nowrap">Customer</th>
+                        <th class="px-1 py-2 text-gray-800 text-xs uppercase whitespace-nowrap">Quantity</th>
+                        <th class="px-1 py-2 text-gray-800 text-xs uppercase whitespace-nowrap">Amount</th>
                         <th class="px-1 py-2 text-gray-800 text-xs uppercase whitespace-nowrap">Order Status</th>
                         <th class="px-1 py-2 text-gray-800 text-xs uppercase whitespace-nowrap">Order Date</th>
                         <th class="px-1 py-2 text-gray-800 text-xs text-center uppercase whitespace-nowrap">Action</th>
@@ -46,28 +47,17 @@
                     @foreach ($orders as $order)
                         <tr class="bg-white border-b hover:bg-gray-50">
                             <td class="py-3 px-2">{{ $order->id }}</td>
-                            <td class="py-3 px-2 whitespace-nowrap">
-                                @foreach ($order->orderItems as $orderItem)
-                                    <span class="text-sm text-gray-700">
-                                        {{ \Illuminate\Support\Str::limit($orderItem->product->product_name, 30) }}
-                                    </span><br>
-                                @endforeach
-                            </td>
-                            <td class="py-3 px-2">
-                                @foreach ($order->orderItems as $orderItem)
-                                    @foreach ($orderItem->product->approvedRatings as $rating)
-                                        <span class="text-yellow-500">{{ $rating->rating }} / 5</span><br>
-                                    @endforeach
-                                @endforeach
-                            </td>
+                            <td class="py-3 px-2 whitespace-nowrap capitalize">{{ $order->shipping->shipping_name }}</td>
+                            <td class="py-3 px-2">{{ $order->orderItems->count() }}</td>
+                            <td class="py-3 px-2">{{ $order->payment->amount }}</td>
                             <td class="py-3 px-2">
                                 <span
-                                    class="px-2 py-1 rounded text-white text-xs font-medium
+                                    class="px-2 py-1 capitalize rounded text-white text-xs font-medium
                                     {{ $order->order_status == 'delivered'
                                         ? 'bg-green-500'
                                         : ($order->order_status == 'pending'
                                             ? 'bg-yellow-500'
-                                            : ($order->order_status == 'canceled'
+                                            : ($order->order_status == 'cancelled'
                                                 ? 'bg-red-500'
                                                 : 'bg-gray-500')) }}">
                                     {{ $order->order_status }}
@@ -76,10 +66,7 @@
                             <td class="py-3 px-2">{{ $order->created_at->format('Y-m-d') }}</td>
                             <td class="px-6 py-2 text-green-700 text-sm whitespace-nowrap">
                                 <div class="flex flex-row items-center justify-center gap-2">
-                                    <a href="{{ route('order.show', [
-                                        'shop_name' => \Illuminate\Support\Str::slug(strtolower($seller->shop_name)),
-                                        'id' => $order->id,
-                                    ]) }}"
+                                    <a href="{{ route('order.show', [strtolower($order->seller->shop_name), $order->id]) }}"
                                         class="inline-block text-green-600 text-[19px]">
                                         <i class="ri-eye-line"></i>
                                     </a>

@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('status')->default('unpaid');
             $table->string('transaction_id')->nullable();
             $table->text('gateway_response')->nullable(); 
-            $table->timestamp('paid_at')->nullable();
             $table->decimal('amount', 10, 2);
             $table->timestamps();
         });

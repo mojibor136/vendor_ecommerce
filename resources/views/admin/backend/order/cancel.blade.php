@@ -31,15 +31,15 @@
                 <table class="w-full border-collapse">
                     <thead>
                         <tr class="bg-gray-50">
-                            <th class="px-6 py-2 text-gray-700 text-xs text-left whitespace-nowrap uppercase">ID</th>
-                            <th class="px-6 py-2 text-gray-700 text-xs text-left whitespace-nowrap uppercase">Customer</th>
-                            <th class="px-6 py-2 text-gray-700 text-xs text-left whitespace-nowrap uppercase">Shop</th>
-                            <th class="px-6 py-2 text-gray-700 text-xs text-left whitespace-nowrap uppercase">Amount</th>
-                            <th class="px-6 py-2 text-gray-700 text-xs text-left whitespace-nowrap uppercase">Status</th>
-                            <th class="px-6 py-2 text-gray-700 text-xs text-left whitespace-nowrap uppercase">Payment</th>
-                            <th class="px-6 py-2 text-gray-700 text-xs text-left whitespace-nowrap uppercase">Order Date
+                            <th class="px-6 py-2 text-gray-700 text-xs text-left uppercase">ID</th>
+                            <th class="px-6 py-2 text-gray-700 text-xs text-left uppercase">Customer</th>
+                            <th class="px-6 py-2 text-gray-700 text-xs text-left uppercase">Shop</th>
+                            <th class="px-6 py-2 text-gray-700 text-xs text-left uppercase">Amount</th>
+                            <th class="px-6 py-2 text-gray-700 text-xs text-left uppercase">Status</th>
+                            <th class="px-6 py-2 text-gray-700 text-xs text-left uppercase">Payment</th>
+                            <th class="px-6 py-2 text-gray-700 text-xs text-left uppercase">Order Date
                             </th>
-                            <th class="px-6 py-2 text-gray-700 text-xs text-center whitespace-nowrap uppercase">Action</th>
+                            <th class="px-6 py-2 text-gray-700 text-xs text-center uppercase">Action</th>
                         </tr>
                     </thead>
                     <tbody class="orderList">
@@ -140,29 +140,29 @@
 
                         const row = `
                             <tr class="border-b hover:bg-gray-100 transition-all">
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${order.id}</td>
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap capitalize">
+                                <td class="px-6 py-1 text-gray-700 text-sm">${order.id}</td>
+                                <td class="px-6 py-1 text-gray-700 text-sm capitalize">
                                     ${order.shipping?.shipping_name ?? 'N/A'}
                                 </td>
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap capitalize">
+                                <td class="px-6 py-1 text-gray-700 text-sm capitalize">
                                     ${order.seller?.shop_name ?? 'N/A'}
                                 </td>
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${order.payment.amount}</td>
-                                <td class="px-6 py-1 text-sm whitespace-nowrap">
+                                <td class="px-6 py-1 text-gray-700 text-sm">${order.payment.amount}</td>
+                                <td class="px-6 py-1 text-sm">
                                     <span title="${order.order_status}" class="px-2 py-1 rounded text-white text-xs font-medium ${statusColor}">
                                         ${capitalize(order.order_status)}
                                     </span>
                                 </td>
-                                <td class="px-6 py-1 text-sm whitespace-nowrap">
+                                <td class="px-6 py-1 text-sm">
                                     <span title="${order.payment.status}" class="px-2 py-1 rounded text-white text-xs font-medium ${paymentColor}">
                                         ${capitalize(order.payment.status)}
                                     </span>
                                 </td>
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">
+                                <td class="px-6 py-1 text-gray-700 text-sm">
                                     ${new Date(order.created_at).toLocaleDateString('en-US')}
                                 </td>
-                                <td class="px-6 pt-4 flex flex-row gap-3 items-center justify-center text-center whitespace-nowrap">
-                                    <a href="order/show/${order.id}/${order.seller.shop_name?.toLowerCase()}" class="inline-block text-gray-600 hover:text-blue-600 text-[19px]">
+                                <td class="px-6 pt-4 flex flex-row gap-3 items-center justify-center text-center">
+                                    <a href="/admin/order/show/${order.seller.shop_name?.toLowerCase()}/${order.id}" class="inline-block text-gray-600 hover:text-blue-600 text-[19px]">
                                         <i class="ri-eye-line"></i>
                                     </a>
                                     <a onclick="return confirm('Are you sure you want to delete this order?')" href="categories/destroy/${order.id}" class="inline-block text-gray-600 hover:text-red-600 text-[19px]">

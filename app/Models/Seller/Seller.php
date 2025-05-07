@@ -12,13 +12,14 @@ use App\Models\Backend\Location\Country;
 use App\Models\Backend\Location\Division;
 use App\Models\Backend\Location\District;
 use App\Models\Order\Order;
+use App\Models\Payment\SellerPayment;
 
 class Seller extends Authenticatable {
     protected $fillable = [
         'image', 'name', 'email', 'password',
         'phone', 'shop_name', 'shop_description', 'facebook_pixel_id',
-        'shop_address', 'country_id', 'division_id', 'district_id', 'shop_logo', 'shop_banner', 'phone_verification',
-        'nid_front_image', 'nid_back_image', 'verification_status', 'status',
+        'shop_address', 'country_id', 'division_id', 'district_id', 'shop_logo', 'shop_image', 'shop_banner', 'phone_verification',
+        'nid_front_image', 'nid_back_image', 'verification_status', 'status', 'total_amount',
     ];
 
     public function country() {
@@ -55,6 +56,10 @@ class Seller extends Authenticatable {
 
     public function orders(): HasMany {
         return $this->hasMany( Order::class, 'author_id' );
+    }
+
+    public function sellerPayments(): HasMany {
+        return $this->hasMany( SellerPayment::class );
     }
 
     public function getSubscriptionStatusAttribute() {

@@ -11,9 +11,23 @@ class SellerPaymentController extends Controller {
         return view( 'admin.backend.payment.seller_payment.index' );
     }
 
-    public function api() {
-        $payments = SellerPayment::paginate( 10 );
-        return response()->json( $payments );
+    public function api(Request $request) {
+        $method = $request->input('method');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        
+        $payments = SellerPayment::with('order' , 'seller')
+            ->when($method, fn($query) => $query->where('method', $method))
+            ->when($startDate, fn($query) => $query->whereDate('created_at', '>=', $startDate))
+            ->when($endDate, fn($query) => $query->whereDate('created_at', '<=', $endDate))
+            ->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->through(function ($payment) {
+                $payment->formatted_date = $payment->created_at->format('Y-m-d');
+                return $payment;
+            });
+
+        return response()->json($payments);
     }
 
     public function show( $id ) {

@@ -3,6 +3,7 @@
 namespace App\Models\Payment;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Order\Order;
 
 class OrderPayment extends Model {
     protected $fillable = [
@@ -11,7 +12,6 @@ class OrderPayment extends Model {
         'status',
         'transaction_id',
         'gateway_response',
-        'paid_at',
         'amount',
     ];
 

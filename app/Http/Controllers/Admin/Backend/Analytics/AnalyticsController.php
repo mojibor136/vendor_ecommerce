@@ -24,7 +24,7 @@ class AnalyticsController extends Controller {
     public function getSellersData(Request $request){
         $search = $request->input('search');
     
-        $sellers = Seller::select('id', 'name', 'shop_name')
+        $sellers = Seller::select('id', 'name', 'shop_name' , 'image')
         ->withCount([
             'orders as delivered_orders_count' => function ($q) {
                 $q->where('order_status', 'delivered')
@@ -34,8 +34,11 @@ class AnalyticsController extends Controller {
                 $q->where('order_status', 'pending')
                   ->where('role', 'seller');
             },
+            'orders as total_orders_count' => function ($q) {
+                $q->where('role', 'seller');
+            },
             'orders as canceled_orders_count' => function ($q) {
-                $q->where('order_status', 'canceled')
+                $q->where('order_status', 'cancelled')
                   ->where('role', 'seller');
             },
         ])
@@ -66,7 +69,7 @@ class AnalyticsController extends Controller {
     public function showSellerOrders($shop_name , $sellerId) {
         $seller = Seller::findOrFail($sellerId);
 
-        $orders = Order::with(['orderItems.product', 'orderItems.product.approvedRatings', 'shipping'])
+        $orders = Order::with(['orderItems', 'shipping' , 'payment' , 'seller'])
         ->where('author_id', $sellerId)
         ->orderByDesc('id')
         ->paginate(10);
