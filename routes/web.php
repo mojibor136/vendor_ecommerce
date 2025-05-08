@@ -27,6 +27,8 @@ use App\Http\Controllers\Admin\Backend\Payment\OrderPaymentController;
 use App\Http\Controllers\Admin\Backend\Payment\SubscriptionPaymentController;
 // Front-End Routes
 use App\Http\Controllers\FrontEnd\HomeController;
+// CourierController Routes
+use App\Http\Controllers\Courier\CourierController;
 
 // 🔐 Auth Routes (Laravel Breeze / Fortify ইত্যাদি ইউজ করলে এখানে থাকে)
 require __DIR__.'/auth.php';
@@ -229,6 +231,11 @@ Route::prefix('admin')->middleware('admin')->group(function(){
         Route::get('/seller/orders/{shop_name}/{shop_id}', 'showSellerOrders')->name('seller.orders');
     });
             
+});
+
+// 🛡️ Seller Routes Group (Only accessible if seller is authenticated)
+Route::controller(CourierController::class)->group(function () {
+    Route::post('/courier-check', 'check')->name('courier.check');
 });
 
 // 🛡️ Seller Routes Group (Only accessible if seller is authenticated)

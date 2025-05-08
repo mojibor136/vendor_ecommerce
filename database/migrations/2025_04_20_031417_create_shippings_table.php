@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('shipping_country_id');
             $table->integer('shipping_district_id')->nullable();
             $table->integer('shipping_division_id');
-            $table->integer('shipping_phone');
+            $table->string('shipping_phone');
             $table->string('shipping_status')->default('pending');
             $table->timestamps();
         });

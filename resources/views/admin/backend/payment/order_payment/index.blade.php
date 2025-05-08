@@ -6,7 +6,7 @@
 
         <!-- Page Heading -->
         <div class="px-4 pt-6 flex flex-col gap-1">
-            <h1 class="text-2xl font-semibold text-gray-800">Order Payment List</h1>
+            <h1 class="text-2xl font-semibold text-gray-800">Order Payment</h1>
             <p class="text-sm text-gray-500">Filter and view all customer payment details for orders.</p>
         </div>
 

@@ -5,7 +5,7 @@
     <div class="bg-white w-full h-full flex flex-col gap-5">
         <!-- Page Heading -->
         <div class="px-4 pt-6 flex flex-col gap-1">
-            <h1 class="text-2xl font-semibold text-gray-800">Subscription Payment List</h1>
+            <h1 class="text-2xl font-semibold text-gray-800">Subscription Payment</h1>
             <p class="text-sm text-gray-500">Filter and view all subscription payment details from seller.</p>
         </div>
 
