@@ -2,9 +2,16 @@
 @section('title', 'Order Payment')
 
 @section('content')
-    <div class="bg-white w-full h-full flex flex-col gap-6">
+    <div class="bg-white w-full h-full flex flex-col gap-5">
+
+        <!-- Page Heading -->
+        <div class="px-4 pt-6 flex flex-col gap-1">
+            <h1 class="text-2xl font-semibold text-gray-800">Order Payment List</h1>
+            <p class="text-sm text-gray-500">Filter and view all customer payment details for orders.</p>
+        </div>
+
         <!-- Filter Section -->
-        <div class="p-3 flex items-center justify-between gap-4 flex-wrap">
+        <div class="px-4 flex items-center justify-between gap-4 flex-wrap">
             <div class="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-3 md:space-y-0 w-full">
                 <!-- Method Filter Dropdown -->
                 <div
@@ -41,6 +48,7 @@
                             <th class="px-6 py-2 text-gray-700 uppercase text-xs text-left">Order Status</th>
                             <th class="px-6 py-2 text-gray-700 uppercase text-xs text-left">Transaction</th>
                             <th class="px-6 py-2 text-gray-700 uppercase text-xs text-left">Payment Date</th>
+                            <th class="px-6 py-2 text-gray-700 uppercase text-xs text-left">Order Date</th>
                         </tr>
                     </thead>
                     <tbody class="paymentList">
@@ -61,12 +69,10 @@
         $(document).ready(function() {
             fetchOrderPayment();
 
-            // Filter input changes
             $('#methodFilter, #startDate, #endDate').on('change', function() {
                 fetchOrderPayment();
             });
         });
-
 
         function getStatusColor(status) {
             switch (status.toLowerCase()) {
@@ -102,7 +108,6 @@
         function getPaymentColor(status) {
             if (!status) return 'bg-gray-500';
             const cleanStatus = status.toString().trim().toLowerCase();
-
             switch (cleanStatus) {
                 case 'paid':
                     return 'bg-green-600';
@@ -123,11 +128,10 @@
 
             paymentList.innerHTML = `
                 <tr>
-                    <td colspan="7" class="text-center py-4 text-gray-500">Loading...</td>
+                    <td colspan="8" class="text-center py-4 text-gray-500">Loading...</td>
                 </tr>`;
             paginationLinks.innerHTML = '';
 
-            // API call with selected filters (method and date range)
             fetch(
                     `{{ route('order.payment.api') }}?method=${method}&start_date=${startDate}&end_date=${endDate}&page=${page}`
                 )
@@ -139,7 +143,7 @@
                     if (data.data.length === 0) {
                         paymentList.innerHTML = `
                             <tr>
-                                <td colspan="7" class="text-center py-4 text-gray-500">No orders found.</td>
+                                <td colspan="8" class="text-center py-4 text-gray-500">No orders found.</td>
                             </tr>`;
                         return;
                     }
@@ -152,29 +156,29 @@
                         const row = `
                             <tr class="border-b hover:bg-gray-100 transition-all">
                                 <td class="px-6 py-2 text-gray-700 text-sm capitalize">#${payment.order_id}</td>
-                                <td class="px-6 py-2 text-gray-700 text-sm capitalize">${payment.amount}</td>
-                                <td class="px-6 py-1 text-sm capitalize">
-                                    <span title="${payment.method}" class="px-2 py-1 rounded text-white text-xs font-medium  ${methodColor}">
+                                <td class="px-6 text-gray-700 text-sm capitalize">${payment.amount}</td>
+                                <td class="px-6 text-sm capitalize">
+                                    <span title="${payment.method}" class="px-2 py-1 rounded text-white text-xs font-medium ${methodColor}">
                                         ${payment.method}
                                     </span>
                                 </td>
-                                <td class="px-6 py-1 text-sm capitalize">
+                                <td class="px-6 text-sm capitalize">
                                     <span title="${payment.status}" class="px-2 py-1 rounded text-white text-xs font-medium ${paymentColor}">
                                         ${payment.status}
                                     </span>
                                 </td>
-                                <td class="px-6 py-1 text-sm capitalize">
+                                <td class="px-6 text-sm capitalize">
                                     <span title="${payment.order.order_status}" class="px-2 py-1 rounded text-white text-xs font-medium ${statusColor}">
                                         ${payment.order.order_status}
                                     </span>
                                 </td>
-                                <td class="px-6 py-2 text-gray-700 text-sm capitalize">${payment.transaction_id}</td>
-                                <td class="px-6 py-2 text-gray-700 text-sm capitalize">${payment.formatted_date}</td>
+                                <td class="px-6 text-gray-700 text-sm capitalize">${payment.transaction_id}</td>
+                                <td class="px-6 text-gray-700 text-sm capitalize">${payment.paid_at}</td>
+                                <td class="px-6 text-gray-700 text-sm capitalize">${payment.formatted_date}</td>
                             </tr>`;
                         paymentList.insertAdjacentHTML('beforeend', row);
                     });
 
-                    // Pagination
                     if (data.links) {
                         let prevLink = data.links.find(link => link.label.toLowerCase().includes('previous'));
                         let nextLink = data.links.find(link => link.label.toLowerCase().includes('next'));
@@ -199,7 +203,7 @@
                 .catch(error => {
                     paymentList.innerHTML = `
                         <tr>
-                            <td colspan="7" class="text-center py-4 text-red-500">Error loading orders.</td>
+                            <td colspan="8" class="text-center py-4 text-red-500">Error loading orders.</td>
                         </tr>`;
                     console.error('Error:', error);
                 });

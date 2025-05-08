@@ -2,9 +2,16 @@
 @section('title', 'Seller Payment')
 
 @section('content')
-    <div class="bg-white w-full h-full flex flex-col gap-6">
+    <div class="bg-white w-full h-full flex flex-col gap-5">
+
+        <!-- Page Heading -->
+        <div class="px-4 pt-6 flex flex-col gap-1">
+            <h1 class="text-2xl font-semibold text-gray-800">Seller Payment List</h1>
+            <p class="text-sm text-gray-500">Filter and view all seller payment details for orders.</p>
+        </div>
+
         <!-- Filter Section -->
-        <div class="p-3 flex items-center justify-between gap-4 flex-wrap">
+        <div class="px-4 flex items-center justify-between gap-4 flex-wrap">
             <div class="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-3 md:space-y-0 w-full">
                 <!-- Method Filter Dropdown -->
                 <div
@@ -39,7 +46,8 @@
                             <th class="px-6 py-2 text-gray-700 uppercase text-xs text-left">Method</th>
                             <th class="px-6 py-2 text-gray-700 uppercase text-xs text-left">Status</th>
                             <th class="px-6 py-2 text-gray-700 uppercase text-xs text-left">Order Status</th>
-                            <th class="px-6 py-2 text-gray-700 uppercase text-xs text-left">Payment Date</th>
+                            <th class="px-6 py-2 text-gray-700 uppercase text-xs text-left">Order Date</th>
+                            <th class="px-6 py-2 text-gray-700 uppercase text-xs text-left">Action</th>
                         </tr>
                     </thead>
                     <tbody class="paymentList">
@@ -149,24 +157,29 @@
                         const row = `
                             <tr class="border-b hover:bg-gray-100 transition-all">
                                 <td class="px-6 py-2 text-gray-700 text-sm capitalize">#${payment.order_id}</td>
-                                <td class="px-6 py-2 text-gray-700 text-sm capitalize">${payment.seller.shop_name}</td>
-                                <td class="px-6 py-2 text-gray-700 text-sm capitalize">${payment.amount}</td>
-                                <td class="px-6 py-1 text-sm capitalize">
+                                <td class="px-6 text-gray-700 text-sm capitalize">${payment.seller.shop_name}</td>
+                                <td class="px-6 text-gray-700 text-sm capitalize">${payment.amount}</td>
+                                <td class="px-6 text-sm capitalize">
                                     <span title="${payment.method}" class="px-2 py-1 rounded text-white text-xs font-medium  ${methodColor}">
                                         ${payment.method}
                                     </span>
                                 </td>
-                                <td class="px-6 py-1 text-sm capitalize">
+                                <td class="px-6 text-sm capitalize">
                                     <span title="${payment.status}" class="px-2 py-1 rounded text-white text-xs font-medium ${paymentColor}">
                                         ${payment.status}
                                     </span>
                                 </td>
-                                <td class="px-6 py-1 text-sm capitalize">
+                                <td class="px-6 text-sm capitalize">
                                     <span title="${payment.order.order_status}" class="px-2 py-1 rounded text-white text-xs font-medium ${statusColor}">
                                         ${payment.order.order_status}
                                     </span>
                                 </td>
-                                <td class="px-6 py-2 text-gray-700 text-sm capitalize">${payment.formatted_date}</td>
+                                <td class="px-6 text-gray-700 text-sm capitalize">${payment.formatted_date}</td>
+                                <td class="px-6 pt-4 flex flex-row gap-3 items-center justify-center text-center">
+                                    <a href="" class="inline-block text-gray-600 hover:text-blue-600 text-[19px]">
+                                        <i class="ri-eye-line"></i>
+                                    </a>
+                                </td>
                             </tr>`;
                         paymentList.insertAdjacentHTML('beforeend', row);
                     });

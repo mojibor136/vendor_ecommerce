@@ -3,6 +3,7 @@
 namespace App\Models\Subscription;
 
 use Illuminate\Database\Eloquent\Model;
+use \App\Models\Payment\SubscriptionPayment;
 
 class Subscription extends Model {
     protected $fillable = [
@@ -19,4 +20,9 @@ class Subscription extends Model {
     public function sellerSubscriptions() {
         return $this->hasMany( SellerSubscription::class );
     }
+
+    public function payments() {
+        return $this->hasMany( SubscriptionPayment::class );
+    }
+
 }

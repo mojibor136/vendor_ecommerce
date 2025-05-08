@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('shop');
             $table->decimal('amount', 10, 2);
-            $table->timestamp('paid_at')->nullable();
             $table->string('method');
             $table->string('status');
             $table->integer('order_id');

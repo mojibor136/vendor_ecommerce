@@ -10,7 +10,6 @@ class SellerPayment extends Model {
     protected $fillable = [
         'shop',
         'amount',
-        'paid_at',
         'method',
         'status',
         'order_id',

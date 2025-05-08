@@ -13,6 +13,7 @@ class OrderPayment extends Model {
         'transaction_id',
         'gateway_response',
         'amount',
+        'paid_at',
     ];
 
     public function order() {

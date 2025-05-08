@@ -13,6 +13,7 @@ use App\Models\Backend\Location\Division;
 use App\Models\Backend\Location\District;
 use App\Models\Order\Order;
 use App\Models\Payment\SellerPayment;
+use App\Models\Payment\SubscriptionPayment;
 
 class Seller extends Authenticatable {
     protected $fillable = [
@@ -60,6 +61,10 @@ class Seller extends Authenticatable {
 
     public function sellerPayments(): HasMany {
         return $this->hasMany( SellerPayment::class );
+    }
+
+    public function subscriptionPayments() {
+        return $this->hasMany( SubscriptionPayment::class );
     }
 
     public function getSubscriptionStatusAttribute() {
