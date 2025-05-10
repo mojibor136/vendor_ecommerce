@@ -1,7 +1,12 @@
 @extends('admin.layouts.app')
 @section('title', 'All Subcategories')
 @section('content')
-    <div class="bg-white w-full h-full flex flex-col gap-6">
+    <div class="bg-white w-full h-full flex flex-col gap-3">
+        <!-- Page Heading -->
+        <div class="px-4 pt-6 flex flex-col gap-1">
+            <h1 class="text-2xl font-semibold text-gray-800">Subcategories Management</h1>
+            <p class="text-sm text-gray-500">Track, filter, and manage all subcategories and status.</p>
+        </div>
         <!-- Header Section -->
         <div class="p-3 flex items-center justify-between gap-4 flex-wrap">
             <!-- Search Box -->
@@ -27,8 +32,8 @@
                         <tr class="bg-gray-50">
                             <th class="px-6 py-2 text-gray-800 text-xs text-left uppercase">ID</th>
                             <th class="px-6 py-2 text-gray-800 text-xs text-left uppercase">Subcategories</th>
-                            <th class="px-6 py-2 text-gray-800 text-xs text-left uppercase">Product Count</th>
                             <th class="px-6 py-2 text-gray-800 text-xs text-left uppercase">Category</th>
+                            <th class="px-6 py-2 text-gray-800 text-xs text-center uppercase">Product</th>
                             <th class="px-6 py-2 text-gray-800 text-xs text-center uppercase">Action</th>
                         </tr>
                     </thead>
@@ -83,12 +88,14 @@
                             <tr class="border-b hover:bg-gray-100">
                                 <td class="px-6 py-2 text-gray-700 text-sm">${subcategory.id}</td>
                                 <td class="px-6 py-2 text-gray-700 text-sm">${subcategory.subcategory_name}</td>
-                                <td class="px-6 py-2 text-gray-700 text-sm">${subcategory.product_count}</td>
                                 <td class="px-6 py-2 text-gray-700 text-sm">${subcategory.category.category_name}</td>
-                                <td class="px-6 py-2 flex flex-row gap-3 items-center text-center">
-                                    <a href="subcategories/show/${subcategory.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-eye-line"></i></a>
-                                    <a href="subcategories/edit/${subcategory.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-edit-box-line"></i></a>
-                                    <a href="subcategories/destroy/${subcategory.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-delete-bin-6-line"></i></a>
+                                <td class="px-6 py-2 text-gray-700 text-sm text-center">${subcategory.product_count}</td>
+                                <td class="px-6 py-2 text-center">
+                                    <div class="flex justify-center items-center gap-3">
+                                        <a href="subcategories/show/${subcategory.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-eye-line"></i></a>
+                                        <a href="subcategories/edit/${subcategory.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-edit-box-line"></i></a>
+                                        <a onclick="return confirm('Are you sure?')" href="subcategories/destroy/${subcategory.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-delete-bin-6-line"></i></a>
+                                    </div>
                                 </td>
                             </tr>`;
                         subcategoryList.insertAdjacentHTML('beforeend', row);

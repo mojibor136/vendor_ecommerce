@@ -3,10 +3,14 @@
 @section('title', 'All Products')
 
 @section('content')
-    <div class="bg-white w-full h-full flex flex-col gap-6">
+    <div class="bg-white w-full h-full flex flex-col gap-3">
+        <!-- Page Heading -->
+        <div class="px-4 pt-6 flex flex-col gap-1">
+            <h1 class="text-2xl font-semibold text-gray-800">Products Management</h1>
+            <p class="text-sm text-gray-500">Track, filter, and manage all products and status.</p>
+        </div>
         <!-- Header Section -->
         <div class="p-3 flex items-center justify-between gap-4 flex-wrap bg-white rounded shadow-sm">
-            <!-- Left Side: Search + Filter -->
             <div class="flex flex-wrap md:flex-nowrap md:w-auto w-full items-center gap-3">
                 <!-- Search Input -->
                 <div
@@ -149,10 +153,12 @@
                                         ${product.order_count}
                                     </span>
                                 </td>
-                                <td class="px-6 pt-4 flex flex-row gap-3 items-center text-center whitespace-nowrap">
-                                    <a href="products/show/${product.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-eye-line"></i></a>
-                                    <a href="products/edit/${product.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-edit-box-line"></i></a>
-                                    <a href="products/destroy/${product.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-delete-bin-6-line"></i></a>
+                                <td class="px-6 py-2 text-center">
+                                    <div class="flex justify-center items-center gap-3">
+                                        <a href="products/show/${product.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-eye-line"></i></a>
+                                        <a href="products/edit/${product.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-edit-box-line"></i></a>
+                                        <a onclick="return confirm('Are you sure?')" href="products/destroy/${product.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-delete-bin-6-line"></i></a>
+                                    </div>
                                 </td>
                             </tr>`;
                         productList.insertAdjacentHTML('beforeend', row);

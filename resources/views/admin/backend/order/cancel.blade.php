@@ -2,10 +2,14 @@
 @section('title', 'Cancelled Order')
 
 @section('content')
-    <div class="bg-white w-full h-full flex flex-col gap-6">
+    <div class="bg-white w-full h-full flex flex-col gap-3">
+        <!-- Page Heading -->
+        <div class="px-4 pt-6 flex flex-col gap-1">
+            <h1 class="text-2xl font-semibold text-gray-800">Cancelled Order</h1>
+            <p class="text-sm text-gray-500">Track, filter, and manage all customer orders and their payment statuses.</p>
+        </div>
         <!-- Header Section -->
         <div class="p-3 flex items-center justify-between gap-4 flex-wrap">
-            <!-- Left Side: Search + Filter -->
             <div class="flex flex-wrap md:flex-nowrap md:w-auto w-full items-center gap-3">
                 <!-- Search Input -->
                 <div
@@ -161,16 +165,18 @@
                                 <td class="px-6 py-1 text-gray-700 text-sm">
                                     ${new Date(order.created_at).toLocaleDateString('en-US')}
                                 </td>
-                                <td class="px-6 pt-4 flex flex-row gap-3 items-center justify-center text-center">
-                                    <a href="/admin/order/show/${order.seller.shop_name?.toLowerCase()}/${order.id}" class="inline-block text-gray-600 hover:text-blue-600 text-[19px]">
-                                        <i class="ri-eye-line"></i>
-                                    </a>
-                                    <a onclick="return confirm('Are you sure you want to delete this order?')" href="categories/destroy/${order.id}" class="inline-block text-gray-600 hover:text-red-600 text-[19px]">
-                                        <i class="ri-delete-bin-6-line"></i>
-                                    </a>
-                                    <a href="orders/invoice/${order.id}" class="inline-block text-gray-600 text-[19px]" title="Invoice">
-                                        <i class="ri-file-download-line"></i>
-                                    </a>
+                                <td class="px-6 py-2 text-center">
+                                    <div class="flex justify-center items-center gap-3">
+                                        <a href="/admin/order/show/${order.seller.shop_name?.toLowerCase()}/${order.id}" class="inline-block text-gray-600 hover:text-blue-600 text-[19px]">
+                                            <i class="ri-eye-line"></i>
+                                        </a>
+                                        <a onclick="return confirm('Are you sure you want to delete this order?')" href="categories/destroy/${order.id}" class="inline-block text-gray-600 hover:text-red-600 text-[19px]">
+                                            <i class="ri-delete-bin-6-line"></i>
+                                        </a>
+                                        <a href="orders/invoice/${order.id}" class="inline-block text-gray-600 text-[19px]" title="Invoice">
+                                            <i class="ri-file-download-line"></i>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         `;

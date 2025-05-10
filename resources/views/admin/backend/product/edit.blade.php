@@ -26,6 +26,31 @@
         <div class="w-full bg-white rounded md:px-6 px-3">
             <form action="{{ route('products.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
+
+
+                <!-- Success & Error Messages -->
+                @if (session('success'))
+                    <div class="bg-green-600 text-white px-4 py-3 rounded flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="white" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-5-5 1.41-1.41L11 14.17l6.59-6.59L19 9l-8 8z">
+                            </path>
+                        </svg>
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="bg-red-600 text-white px-4 py-3 rounded flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="white" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-5-5 1.41-1.41L11 14.17l6.59-6.59L19 9l-8 8z">
+                            </path>
+                        </svg>
+                        {{ session('error') }}
+                    </div>
+                @endif
+
                 <input type="hidden" name="id" value="{{ $product->id }}">
                 <!-- Subcategory Name Input -->
                 <div class="mb-6 mt-6">
@@ -114,11 +139,13 @@
                 <!-- Image -->
                 <div class="mb-6 mt-6">
                     <label for="image" class="block text-gray-700 font-medium">Image<span class="text-red-500">
-                            *</span></label> <input type="file" name="image" id="image"
+                            *</span></label> <input type="file" id="product_image"
                         class="w-full mt-2 p-2 border rounded">
                     @error('image')
                         <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                     @enderror
+                    <!-- Hidden input for optimized image -->
+                    <input type="hidden" name="optimized_image" id="optimizedImage">
                 </div>
 
                 <!-- Multiple Image Input -->
@@ -126,12 +153,14 @@
                     <label for="multiple_image" class="block text-gray-700 font-medium">
                         Multiple Image<span class="text-red-400"></span>
                     </label>
-                    <input type="file" name="multiple_image[]" id="multiple_image" class="w-full mt-2 p-2 border rounded"
-                        multiple accept="image/*">
+                    <input type="file" id="multiple_image" class="w-full mt-2 p-2 border rounded" multiple
+                        accept="image/*">
 
                     @error('multiple_image.*')
                         <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                     @enderror
+
+                    <input type="hidden" name="optimized_multiple_images" id="optimizedMultipleImages">
                 </div>
 
                 <!-- Submit Button -->
@@ -171,6 +200,99 @@
                     $('#subcategory').append('<option value="">-- Select Subcategory --</option>');
                 }
             });
+        });
+    </script>
+
+    <script>
+        document.getElementById('multiple_image').addEventListener('change', function(event) {
+            const files = event.target.files;
+            const imagePromises = [];
+
+            Array.from(files).forEach((file) => {
+                imagePromises.push(new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = new Image();
+                        img.onload = function() {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+
+                            // Resize to 800x800 while maintaining aspect ratio
+                            canvas.width = 800;
+                            canvas.height = 800;
+                            const ratio = Math.min(800 / img.width, 800 / img.height);
+                            const newWidth = img.width * ratio;
+                            const newHeight = img.height * ratio;
+                            const offsetX = (800 - newWidth) / 2;
+                            const offsetY = (800 - newHeight) / 2;
+
+                            ctx.fillStyle = "#fff"; // White background
+                            ctx.fillRect(0, 0, 800, 800);
+                            ctx.drawImage(img, offsetX, offsetY, newWidth, newHeight);
+
+                            // Convert to WebP
+                            canvas.toBlob(blob => {
+                                const reader = new FileReader();
+                                reader.onloadend = () => {
+                                    resolve(reader
+                                        .result); // Return base64 string
+                                };
+                                reader.readAsDataURL(blob);
+                            }, 'image/webp', 0.8);
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }));
+            });
+
+            Promise.all(imagePromises).then((base64Images) => {
+                const multipleImageInput = document.createElement('input');
+                multipleImageInput.type = 'hidden';
+                multipleImageInput.name = 'optimized_multiple_images';
+                multipleImageInput.value = JSON.stringify(base64Images); // Save as JSON string
+                document.querySelector('form').appendChild(multipleImageInput);
+            });
+        });
+    </script>
+
+    <script>
+        document.getElementById('product_image').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    // Resize to 800x800 while maintaining aspect ratio
+                    canvas.width = 800;
+                    canvas.height = 800;
+                    const ratio = Math.min(800 / img.width, 800 / img.height);
+                    const newWidth = img.width * ratio;
+                    const newHeight = img.height * ratio;
+                    const offsetX = (800 - newWidth) / 2;
+                    const offsetY = (800 - newHeight) / 2;
+
+                    ctx.fillStyle = "#fff"; // White background
+                    ctx.fillRect(0, 0, 800, 800);
+                    ctx.drawImage(img, offsetX, offsetY, newWidth, newHeight);
+
+                    // Convert to WebP and store in hidden input
+                    canvas.toBlob(blob => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                            document.getElementById('optimizedImage').value = reader.result;
+                        };
+                        reader.readAsDataURL(blob);
+                    }, 'image/webp', 0.8);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         });
     </script>
 @endpush

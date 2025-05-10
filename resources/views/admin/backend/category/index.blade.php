@@ -2,7 +2,12 @@
 @section('title', 'All Categories')
 
 @section('content')
-    <div class="bg-white w-full h-full flex flex-col gap-6">
+    <div class="bg-white w-full h-full flex flex-col gap-3">
+        <!-- Page Heading -->
+        <div class="px-4 pt-6 flex flex-col gap-1">
+            <h1 class="text-2xl font-semibold text-gray-800">Categories Management</h1>
+            <p class="text-sm text-gray-500">Track, filter, and manage all categories and status.</p>
+        </div>
         <!-- Header Section -->
         <div class="p-3 flex items-center justify-between gap-4 flex-wrap">
             <!-- Search Box -->
@@ -29,8 +34,8 @@
                             <th class="px-6 py-2 text-gray-700 text-xs text-left uppercase">ID</th>
                             <th class="px-6 py-2 text-gray-700 text-xs text-left uppercase">Image</th>
                             <th class="px-6 py-2 text-gray-700 text-xs text-left uppercase">Category</th>
-                            <th class="px-6 py-2 text-gray-700 text-xs text-left uppercase">Subcategories</th>
-                            <th class="px-6 py-2 text-gray-700 text-xs text-left uppercase">Product</th>
+                            <th class="px-6 py-2 text-gray-700 text-xs text-center uppercase">Subcategories</th>
+                            <th class="px-6 py-2 text-gray-700 text-xs text-center uppercase">Product</th>
                             <th class="px-6 py-2 text-gray-700 text-xs text-center uppercase">Action</th>
                         </tr>
                     </thead>
@@ -90,12 +95,14 @@
                                         : `<span>No Image</span>`}
                                 </td>
                                 <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${category.category_name}</td>
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${category.subcategory_count}</td>
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${category.product_count}</td>
-                                <td class="px-6 pt-4 flex flex-row gap-3 items-center text-center whitespace-nowrap">
-                                    <a href="categories/show/${category.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-eye-line"></i></a>
-                                    <a href="categories/edit/${category.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-edit-box-line"></i></a>
-                                    <a onclick="return confirm('Are you sure?')" href="categories/destroy/${category.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-delete-bin-6-line"></i></a>
+                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap text-center">${category.subcategory_count}</td>
+                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap text-center">${category.product_count}</td>
+                                <td class="px-6 py-2 text-center">
+                                    <div class="flex justify-center items-center gap-3">
+                                        <a href="categories/show/${category.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-eye-line"></i></a>
+                                        <a href="categories/edit/${category.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-edit-box-line"></i></a>
+                                        <a onclick="return confirm('Are you sure?')" href="categories/destroy/${category.id}" class="inline-block text-gray-600 text-[19px]"><i class="ri-delete-bin-6-line"></i></a>
+                                    </div>
                                 </td>
                             </tr>
                         `;

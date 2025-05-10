@@ -40,12 +40,16 @@
                 <!-- Category Image Input -->
                 <div class="mb-4">
                     <label for="image" class="block text-gray-700 font-medium">Image<span class="text-red-500">
-                            *</span></label> <input type="file" name="category_img" id="image"
-                        class="w-full mt-2 p-2 border rounded border-gray-300 text-gray-700" value="{{ old('image') }}">
+                            *</span></label>
+                    <input type="file" id="category_img"
+                        class="w-full mt-2 p-2 border rounded border-gray-300 text-gray-700">
                     @error('category_img')
                         <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                     @enderror
+                    <!-- Hidden input to hold optimized image data -->
+                    <input type="hidden" name="optimized_image" id="optimizedImage">
                 </div>
+
                 <!-- Submit Button -->
                 <div class="flex justify-end mb-6">
                     <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
@@ -55,4 +59,43 @@
             </form>
         </div>
     </div>
+    <script>
+        document.getElementById('category_img').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    // Resize to 800x800 while maintaining aspect ratio
+                    canvas.width = 800;
+                    canvas.height = 800;
+                    const ratio = Math.min(800 / img.width, 800 / img.height);
+                    const newWidth = img.width * ratio;
+                    const newHeight = img.height * ratio;
+                    const offsetX = (800 - newWidth) / 2;
+                    const offsetY = (800 - newHeight) / 2;
+
+                    ctx.fillStyle = "#fff"; // White background
+                    ctx.fillRect(0, 0, 800, 800);
+                    ctx.drawImage(img, offsetX, offsetY, newWidth, newHeight);
+
+                    // Convert to WebP and store in hidden input
+                    canvas.toBlob(blob => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                            document.getElementById('optimizedImage').value = reader.result;
+                        };
+                        reader.readAsDataURL(blob);
+                    }, 'image/webp', 0.8);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    </script>
 @endsection

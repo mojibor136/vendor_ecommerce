@@ -158,10 +158,12 @@
                 <div class="mb-6">
                     <label for="image" class="block text-gray-700 font-medium">Image<span class="text-red-400">
                             *</span></label>
-                    <input type="file" name="image" id="image" class="w-full mt-2 p-2 border rounded">
+                    <input type="file" id="product_image" class="w-full mt-2 p-2 border rounded">
                     @error('image')
                         <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                     @enderror
+                    <!-- Hidden input for optimized image -->
+                    <input type="hidden" name="optimized_image" id="optimizedImage">
                 </div>
 
                 <!-- Multiple Image Input -->
@@ -169,12 +171,14 @@
                     <label for="multiple_image" class="block text-gray-700 font-medium">
                         Multiple Image<span class="text-red-400"></span>
                     </label>
-                    <input type="file" name="multiple_image[]" id="multiple_image"
-                        class="w-full mt-2 p-2 border rounded" multiple accept="image/*">
+                    <input type="file" id="multiple_image" class="w-full mt-2 p-2 border rounded" multiple
+                        accept="image/*">
 
                     @error('multiple_image.*')
                         <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                     @enderror
+
+                    <input type="hidden" name="optimized_multiple_images" id="optimizedMultipleImages">
                 </div>
 
                 <!-- Submit Button -->
@@ -281,6 +285,99 @@
                     $('#subcategory').append('<option value="">-- Select Subcategory --</option>');
                 }
             });
+        });
+    </script>
+
+    <script>
+        document.getElementById('multiple_image').addEventListener('change', function(event) {
+            const files = event.target.files;
+            const imagePromises = [];
+
+            Array.from(files).forEach((file) => {
+                imagePromises.push(new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = new Image();
+                        img.onload = function() {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+
+                            // Resize to 800x800 while maintaining aspect ratio
+                            canvas.width = 800;
+                            canvas.height = 800;
+                            const ratio = Math.min(800 / img.width, 800 / img.height);
+                            const newWidth = img.width * ratio;
+                            const newHeight = img.height * ratio;
+                            const offsetX = (800 - newWidth) / 2;
+                            const offsetY = (800 - newHeight) / 2;
+
+                            ctx.fillStyle = "#fff"; // White background
+                            ctx.fillRect(0, 0, 800, 800);
+                            ctx.drawImage(img, offsetX, offsetY, newWidth, newHeight);
+
+                            // Convert to WebP
+                            canvas.toBlob(blob => {
+                                const reader = new FileReader();
+                                reader.onloadend = () => {
+                                    resolve(reader
+                                        .result); // Return base64 string
+                                };
+                                reader.readAsDataURL(blob);
+                            }, 'image/webp', 0.8);
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }));
+            });
+
+            Promise.all(imagePromises).then((base64Images) => {
+                const multipleImageInput = document.createElement('input');
+                multipleImageInput.type = 'hidden';
+                multipleImageInput.name = 'optimized_multiple_images';
+                multipleImageInput.value = JSON.stringify(base64Images); // Save as JSON string
+                document.querySelector('form').appendChild(multipleImageInput);
+            });
+        });
+    </script>
+
+    <script>
+        document.getElementById('product_image').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    // Resize to 800x800 while maintaining aspect ratio
+                    canvas.width = 800;
+                    canvas.height = 800;
+                    const ratio = Math.min(800 / img.width, 800 / img.height);
+                    const newWidth = img.width * ratio;
+                    const newHeight = img.height * ratio;
+                    const offsetX = (800 - newWidth) / 2;
+                    const offsetY = (800 - newHeight) / 2;
+
+                    ctx.fillStyle = "#fff"; // White background
+                    ctx.fillRect(0, 0, 800, 800);
+                    ctx.drawImage(img, offsetX, offsetY, newWidth, newHeight);
+
+                    // Convert to WebP and store in hidden input
+                    canvas.toBlob(blob => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                            document.getElementById('optimizedImage').value = reader.result;
+                        };
+                        reader.readAsDataURL(blob);
+                    }, 'image/webp', 0.8);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         });
     </script>
 @endpush

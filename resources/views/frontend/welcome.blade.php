@@ -57,7 +57,7 @@
 
     <div class="max-w-7xl mx-auto px-2 lg:px-4 my-6">
         <!-- Categories grid section -->
-        <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center justify-between px-2 py-3 md:p-4 border-b bg-white">
             <h2 class="text-2xl font-bold text-gray-700">Shops</h2>
             <a href="" class="text-sm text-gray-700 hover:underline inline-flex items-center">
                 See More <i class="ri-arrow-right-line ml-1 text-base"></i>
@@ -68,14 +68,14 @@
                 <a href="#"
                     class="min-w-[100px] flex-shrink-0 bg-white shadow rounded p-4 flex flex-col items-center hover:shadow-lg transition">
                     <img src="{{ asset('storage/' . $shop->shop_logo) }}" alt="{{ $shop->shop_name }}"
-                        class="w-20 h-20 object-cover rounded-full mb-2" loading="lazy">
+                        class="w-16 h-16 object-cover rounded-full mb-2" loading="lazy">
                     <p class="text-center font-medium text-gray-800 text-sm">{{ $shop->shop_name }}</p>
                 </a>
             @endforeach
         </div>
 
         <!-- Categories grid section -->
-        <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center justify-between px-2 py-3 md:p-4 border-b bg-white">
             <h2 class="text-2xl font-bold text-gray-700">Categories</h2>
             <a href="" class="text-sm text-gray-700 hover:underline inline-flex items-center">
                 See More <i class="ri-arrow-right-line ml-1 text-base"></i>
@@ -92,61 +92,62 @@
             @endforeach
         </div>
 
-
         <!-- Product grid section -->
-        <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center justify-between px-2 py-3 md:p-4 border-b bg-white">
             <h2 class="text-xl lg:text-2xl font-bold text-gray-700">Featured Products</h2>
             <a href="" class="text-sm text-gray-700 hover:underline inline-flex items-center">
                 See More <i class="ri-arrow-right-line ml-1 text-base"></i>
             </a>
         </div>
         <div class="grid md:grid-cols-5 grid-cols-2 gap-3">
-            <a href="#"
-                class="col-span-1 block bg-white rounded overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 ease-in-out">
-                <div class="w-full">
-                    <img src="{{ asset('product/product1.jpg') }}" alt="Product Image"
-                        class="w-full h-auto object-cover">
-                </div>
-                <div class="flex flex-col px-1 py-2 space-y-1">
-                    <!-- Price & Sold -->
-                    <div class="flex items-center justify-between">
-                        <span class="text-blue-600 text-lg font-semibold leading-[normal]">৳ 420.00</span>
+            @foreach ($products as $product)
+                <a href="#"
+                    class="col-span-1 block bg-white rounded overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 ease-in-out">
+                    <div class="w-full">
+                        <img src="{{ asset('storage/' . $product->product_image) }}" alt="Product Image"
+                            class="w-full h-auto object-cover">
+                    </div>
+                    <div class="flex flex-col px-1 py-2 space-y-1">
+                        <!-- Price & Sold -->
+                        <div class="flex items-center justify-between my-1">
+                            <span class="text-blue-600 text-lg font-semibold leading-[normal]">৳
+                                {{ $product->product_price }}
+                            </span>
 
-                        <!-- Buttons: Wishlist + Cart -->
-                        <div class="flex items-center gap-1">
-                            <!-- Wishlist Button (Pink) -->
-                            <button
-                                class="flex items-center gap-1 text-red-500 border border-red-500 px-1.5 py-0.5 rounded hover:bg-red-500 hover:text-white transition">
-                                <i class="ri-heart-line text-base"></i>
-                            </button>
+                            <!-- Buttons: Wishlist + Cart -->
+                            <div class="flex items-center gap-1">
+                                <!-- Wishlist Button (Pink) -->
+                                <button
+                                    class="flex items-center gap-1 text-red-500 border border-red-500 px-1.5 py-0.5 rounded hover:bg-red-500 hover:text-white transition">
+                                    <i class="ri-heart-line text-base"></i>
+                                </button>
 
-                            <!-- Add to Cart Button (Blue) -->
-                            <button
-                                class="flex items-center gap-1 text-[#0f4c81] border border-[#0f4c81] px-1.5 py-0.5 rounded hover:bg-[#0f4c81] hover:text-white transition">
-                                <i class="ri-shopping-cart-line text-base"></i>
-                            </button>
+                                <!-- Add to Cart Button (Blue) -->
+                                <button
+                                    class="flex items-center gap-1 text-[#0f4c81] border border-[#0f4c81] px-1.5 py-0.5 rounded hover:bg-[#0f4c81] hover:text-white transition">
+                                    <i class="ri-shopping-cart-line text-base"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Title -->
+                        <span
+                            class="line-clamp-2 text-sm text-gray-700 hover:text-[#0f4c81] transition">{{ $product->product_name }}</span>
+
+                        <!-- Star Rating -->
+                        <div class="flex items-center gap-2 mt-1">
+                            <div class="flex gap-0.5 text-yellow-400 text-sm">
+                                <i class="ri-star-fill"></i>
+                                <i class="ri-star-fill"></i>
+                                <i class="ri-star-fill"></i>
+                                <i class="ri-star-line"></i>
+                                <i class="ri-star-line"></i>
+                            </div>
+                            <span class="text-xs text-gray-500">(12)</span>
                         </div>
                     </div>
-
-                    <!-- Title -->
-                    <span class="line-clamp-2 text-sm text-gray-700 hover:text-[#0f4c81] transition">
-                        Nature Leaf Ramadan Eid Special Combo | Elach 25gm, Lobonngo 50g, Daruchini 100g | Cardamom 25g,
-                        Clove 50g, Cinnamon Whole 100g
-                    </span>
-
-                    <!-- Star Rating -->
-                    <div class="flex items-center gap-2 mt-1">
-                        <div class="flex gap-0.5 text-yellow-400 text-sm">
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-line"></i>
-                            <i class="ri-star-line"></i>
-                        </div>
-                        <span class="text-xs text-gray-500">(12)</span>
-                    </div>
-                </div>
-            </a>
+                </a>
+            @endforeach
         </div>
     </div>
 
