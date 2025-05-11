@@ -42,8 +42,7 @@
                     <i onclick="toggleFilter()"
                         class="ri-equalizer-line text-gray-600 cursor-pointer hover:text-gray-800"></i>
                 </div>
-                <div id="results1"
-                    class="absolute w-full shadow-md bg-white border-t border-gray-100 rounded-b-md z-10 hidden">
+                <div id="results1" class="absolute w-full shadow-md bg-white rounded-b-md z-10 hidden">
                 </div>
             </div>
 
@@ -102,30 +101,81 @@
                     class="ri-equalizer-line text-gray-600 cursor-pointer hover:text-gray-800"></i>
             </div>
             <div id="results2"
-                class="absolute top-full left-0 w-full shadow-md bg-white border-t border-gray-100 rounded-b-lg z-10 hidden mx-2 box-content">
+                class="absolute top-full left-0 w-full shadow-md bg-white rounded-b-lg z-10 hidden mx-2 box-content">
             </div>
         </div>
     </header>
 
     <nav id="navbar" class="bg-white shadow-sm md:block hidden shadow border-b border-gray-50">
-        <div class="max-w-7xl mx-auto px-4 flex items-center gap-6 py-3">
+        <div class="max-w-7xl mx-auto px-4 flex items-center gap-6 py-3 justify-between">
 
-            <div
-                class="flex items-center gap-1 border border-[#0f4c81] text-[#0f4c81] px-3 py-1.5 rounded hover:bg-[#0f4c81] hover:text-white transition cursor-pointer">
-                <i class="ri-grid-fill text-base"></i>
-                <span class="font-medium leading-none">Category</span>
-                <i class="ri-arrow-down-s-line text-base"></i>
+            <div class="relative group">
+                <!-- Category Button -->
+                <div
+                    class="flex items-center gap-1 border border-[#0f4c81] text-[#0f4c81] px-3 py-1.5 rounded overflow-hidden cursor-pointer">
+                    <!-- Background Animation Layer -->
+                    <span
+                        class="absolute inset-0 w-0 bg-[#0f4c81] transition-all duration-300 group-hover:w-full rounded"></span>
+                    <div class="relative flex items-center gap-1 z-10 text-[#0f4c81] group-hover:text-white transition">
+                        <i class="ri-grid-fill text-base"></i>
+                        <span class="font-medium leading-none">Category</span>
+                        <i class="ri-arrow-down-s-line text-base"></i>
+                    </div>
+                </div>
+
+                <!-- Dropdown List -->
+                <div class="absolute mt-0 w-60">
+                    <div
+                        class="mt-3.5 bg-white shadow-lg border border-gray-100 rounded z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200">
+                        <ul class="text-gray-700 text-base">
+                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Electronics</li>
+                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Fashion</li>
+                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Home & Garden</li>
+                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Beauty</li>
+                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Sports</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
+
 
             <div class="hidden md:flex items-center gap-6 text-[#0f4c81] font-medium">
-                <a href="#" class="hover:text-[#0056a3] transition">Shop</a>
-                <a href="#" class="hover:text-[#0056a3] transition">Today's Products</a>
-                <a href="#" class="hover:text-[#0056a3] transition">Hot Deals</a>
-                <a href="#" class="hover:text-[#0056a3] transition">New Arrivals</a>
-                <a href="#" class="hover:text-[#0056a3] transition">Best Sellers</a>
+                <a href="#" class="relative group hover:text-[#0056a3] transition">
+                    Shop
+                    <span
+                        class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0056a3] transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#" class="relative group hover:text-[#0056a3] transition">
+                    Today's Products
+                    <span
+                        class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0056a3] transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#" class="relative group hover:text-[#0056a3] transition">
+                    Hot Deals
+                    <span
+                        class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0056a3] transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#" class="relative group hover:text-[#0056a3] transition">
+                    New Arrivals
+                    <span
+                        class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0056a3] transition-all duration-300 group-hover:w-full"></span>
+                </a>
+                <a href="#" class="relative group hover:text-[#0056a3] transition">
+                    Best Sellers
+                    <span
+                        class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0056a3] transition-all duration-300 group-hover:w-full"></span>
+                </a>
             </div>
+
+            <!-- Become a Seller Button -->
+            <a href="#"
+                class="bg-[#0f4c81] text-white font-medium px-4 py-2 rounded hover:bg-[#0056a3] transition">
+                Become a Seller
+            </a>
+
         </div>
     </nav>
+
     <script>
         let hasScrolledAbove100 = null;
         const navbar = document.getElementById('navbar');
@@ -226,16 +276,27 @@
                     filtered.forEach(item => {
                         const resultdiv = document.createElement('div');
                         const result = document.createElement('a');
+                        const image = document.createElement('img');
+                        const wrapper = document.createElement('div');
 
-                        result.className = 'px-3 py-2 text-[14.5px] text-gray-700 hover:bg-gray-100 block';
-                        result.textContent = item.name.length > 50 ? item.name.slice(0, 50) + '...' : item.name;
-                        result.href = '';
+                        image.src = item.image || '/default.png';
+                        image.alt = item.name.length > 50 ? item.name.slice(0, 50) + '...' : item.name;
+                        image.className = 'w-8 h-8 rounded object-cover';
 
-                        resultdiv.className = 'flex flex-col gap-2';
+                        result.className =
+                            'px-3 py-2 text-[14.5px] text-gray-700 hover:bg-gray-100 flex items-center gap-2';
+                        result.href = '#';
+
+                        const span = document.createElement('span');
+                        span.textContent = item.name.length > 50 ? item.name.slice(0, 50) + '...' : item.name;
+
+                        result.appendChild(image);
+                        result.appendChild(span);
+
                         resultdiv.appendChild(result);
-
                         resultBox.appendChild(resultdiv);
                     });
+
 
                     resultBox.appendChild(totalDiv);
 

@@ -59,9 +59,6 @@
         <!-- Categories grid section -->
         <div class="flex items-center justify-between px-2 py-3 md:p-4 border-b bg-white">
             <h2 class="text-2xl font-bold text-gray-700">Shops</h2>
-            <a href="" class="text-sm text-gray-700 hover:underline inline-flex items-center">
-                See More <i class="ri-arrow-right-line ml-1 text-base"></i>
-            </a>
         </div>
         <div id="shop-wrapper" class="flex overflow-x-auto space-x-3 mb-10">
             @foreach ($topShops as $shop)
@@ -77,9 +74,6 @@
         <!-- Categories grid section -->
         <div class="flex items-center justify-between px-2 py-3 md:p-4 border-b bg-white">
             <h2 class="text-2xl font-bold text-gray-700">Categories</h2>
-            <a href="" class="text-sm text-gray-700 hover:underline inline-flex items-center">
-                See More <i class="ri-arrow-right-line ml-1 text-base"></i>
-            </a>
         </div>
         <div id="category-wrapper" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 mb-10">
             @foreach ($topCategories as $category)
@@ -95,9 +89,6 @@
         <!-- Product grid section -->
         <div class="flex items-center justify-between px-2 py-3 md:p-4 border-b bg-white">
             <h2 class="text-xl lg:text-2xl font-bold text-gray-700">Featured Products</h2>
-            <a href="" class="text-sm text-gray-700 hover:underline inline-flex items-center">
-                See More <i class="ri-arrow-right-line ml-1 text-base"></i>
-            </a>
         </div>
         <div class="grid md:grid-cols-5 grid-cols-2 gap-3">
             @foreach ($products as $product)

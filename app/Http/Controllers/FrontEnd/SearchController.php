@@ -22,6 +22,7 @@ class SearchController extends Controller {
                 ->get()
                 ->map(function($product) {
                     $product->name = $product->product_name;
+                    $product->image = asset('storage/' . $product->product_image);
                     return $product;
                 });
         }
@@ -31,6 +32,7 @@ class SearchController extends Controller {
                 ->get()
                 ->map(function($category) {
                     $category->name = $category->category_name;
+                    $category->image = asset('storage/' . $category->category_img);
                     return $category;
                 });
         }
@@ -40,6 +42,7 @@ class SearchController extends Controller {
                 ->get()
                 ->map(function($seller) {
                     $seller->name = $seller->shop_name;
+                    $seller->image = asset('storage/' . $seller->shop_logo);
                     return $seller;
                 });
         }
