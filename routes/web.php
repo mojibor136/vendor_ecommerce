@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\Backend\Payment\OrderPaymentController;
 use App\Http\Controllers\Admin\Backend\Payment\SubscriptionPaymentController;
 // Front-End Routes
 use App\Http\Controllers\FrontEnd\HomeController;
+use App\Http\Controllers\FrontEnd\SearchController;
 // CourierController Routes
 use App\Http\Controllers\Courier\CourierController;
 
@@ -295,5 +296,7 @@ Route::middleware(['visitor.track'])->group(function () {
         Route::get('/' , 'index')->name('home');
     });
 });
+
+Route::post('/search-data', [SearchController::class, 'getSearchData']);
 
 require __DIR__.'/auth.php';
