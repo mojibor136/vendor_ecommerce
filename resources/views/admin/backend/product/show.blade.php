@@ -105,21 +105,21 @@
                             {{ $product->order_count }}
                         </span>
                     </div>
-                    @if (!empty(json_decode($product->size)))
+                    @if (!empty(json_decode($product->product_size)))
                         <div class="flex justify-between">
                             <span class="font-semibold">Size:</span>
                             <span class="text-gray-600 capitalize">
-                                @foreach (json_decode($product->size, true) as $size)
+                                @foreach (json_decode($product->product_size, true) as $size)
                                     <span class="mr-1">{{ $size }}</span>
                                 @endforeach
                             </span>
                         </div>
                     @endif
-                    @if (!empty(json_decode($product->tag)))
+                    @if (!empty(json_decode($product->meta_tag)))
                         <div class="flex justify-between">
                             <span class="font-semibold">Tags:</span>
                             <span class="text-gray-600 capitalize">
-                                @foreach (json_decode($product->tag, true) as $tag)
+                                @foreach (json_decode($product->meta_tag, true) as $tag)
                                     <span class="mr-1">{{ $tag }}</span>
                                 @endforeach
                             </span>

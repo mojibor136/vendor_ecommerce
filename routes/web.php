@@ -294,6 +294,10 @@ Route::prefix('seller')->middleware('seller')->group(function(){
 Route::middleware(['visitor.track'])->group(function () {
     Route::controller(HomeController::class)->group(function(){
         Route::get('/' , 'index')->name('home');
+        Route::get('/products/{product}/{id}' , 'product')->name('frontend.products.show');
+        Route::get('/sellers/{seller}/{id}' , 'sellers')->name('frontend.sellers.show');
+        Route::get('/categories/{category}/{id}' , 'category')->name('frontend.categories.show');
+
     });
 });
 

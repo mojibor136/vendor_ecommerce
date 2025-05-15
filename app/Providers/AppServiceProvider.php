@@ -30,11 +30,19 @@ class AppServiceProvider extends ServiceProvider {
         ->take( 16 )
         ->get();
 
-        // Top active shops
-        $topShops = Seller::select( 'id', 'shop_logo', 'shop_name' )
+        // Only 1 active shop found
+        $shop = Seller::select( 'id', 'shop_logo', 'shop_name' )
         ->where( 'status', 'active' )
-        ->take( 16 )
-        ->get();
+        ->first();
+
+        $topShops = collect();
+
+        if ( $shop ) {
+            for ( $i = 0; $i < 16; $i++ ) {
+                $copy = clone $shop;
+                $topShops->push( $copy );
+            }
+        }
 
         View::share( 'topCategories', $topCategories );
         View::share( 'topShops', $topShops );

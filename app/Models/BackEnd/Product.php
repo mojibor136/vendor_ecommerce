@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Seller\Seller;
+use Illuminate\Support\Str;
 
 class Product extends Model {
     protected $fillable = [
@@ -45,6 +46,10 @@ class Product extends Model {
 
     public function approvedRatings() {
         return $this->hasMany( ProductRating::class )->where( 'is_approved', true );
+    }
+
+    public function getSlugAttribute() {
+        return Str::limit( Str::slug( $this->product_name ), 20, '' );
     }
 
     protected $casts = [

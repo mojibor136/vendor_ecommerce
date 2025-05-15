@@ -67,13 +67,6 @@
 
             <!-- Icons -->
             <div class="flex items-center gap-8 text-white">
-
-                <!-- Wishlist -->
-                <button class="relative hover:text-[#ffd700] transition">
-                    <i class="ri-heart-line text-xl"></i>
-                    <span class="absolute -top-2 -right-2 bg-red-600 text-white text-xs px-1.5 rounded-full">3</span>
-                </button>
-
                 <!-- Cart -->
                 <button class="relative hover:text-[#ffd700] transition">
                     <i class="ri-shopping-cart-line text-xl"></i>
@@ -109,37 +102,45 @@
     <nav id="navbar" class="bg-white shadow-sm md:block hidden shadow border-b border-gray-50">
         <div class="max-w-7xl mx-auto px-4 flex items-center gap-6 py-3 justify-between">
 
-            <div class="relative group">
-                <!-- Category Button -->
-                <div
-                    class="flex items-center gap-1 border border-[#0f4c81] text-[#0f4c81] px-3 py-1.5 rounded overflow-hidden cursor-pointer">
-                    <!-- Background Animation Layer -->
-                    <span
-                        class="absolute inset-0 w-0 bg-[#0f4c81] transition-all duration-300 group-hover:w-full rounded"></span>
-                    <div class="relative flex items-center gap-1 z-10 text-[#0f4c81] group-hover:text-white transition">
-                        <i class="ri-grid-fill text-base"></i>
-                        <span class="font-medium leading-none">Category</span>
-                        <i class="ri-arrow-down-s-line text-base"></i>
-                    </div>
-                </div>
-
-                <!-- Dropdown List -->
-                <div class="absolute mt-0 w-60">
+            <div class="relative">
+                <!-- Button with dropdown together in one group -->
+                <div class="group inline-block relative">
+                    <!-- Category Button -->
                     <div
-                        class="mt-3.5 bg-white shadow-lg border border-gray-100 rounded z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200">
-                        <ul class="text-gray-700 text-base">
-                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Electronics</li>
-                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Fashion</li>
-                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Home & Garden</li>
-                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Beauty</li>
-                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Sports</li>
-                        </ul>
+                        class="flex items-center gap-1 border border-[#0f4c81] text-[#0f4c81] px-3 py-1.5 rounded overflow-hidden cursor-pointer relative">
+                        <!-- Background Animation Layer -->
+                        <span
+                            class="absolute inset-0 w-0 bg-[#0f4c81] transition-all duration-300 group-hover:w-full rounded"></span>
+                        <div
+                            class="relative flex items-center gap-1 z-10 text-[#0f4c81] group-hover:text-white transition">
+                            <i class="ri-grid-fill text-base"></i>
+                            <span class="font-medium leading-none">Category</span>
+                            <i class="ri-arrow-down-s-line text-base"></i>
+                        </div>
+                    </div>
+
+                    <!-- Dropdown List -->
+                    <div
+                        class="absolute left-0 top-full w-60 z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200">
+                        <div class="mt-3.5 bg-white shadow-lg border border-gray-100 rounded">
+                            <ul class="text-gray-700 text-base">
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Electronics</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Fashion</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Home & Garden</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Beauty</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Sports</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
 
-
             <div class="hidden md:flex items-center gap-6 text-[#0f4c81] font-medium">
+                <a href="{{ url('/') }}" class="relative group hover:text-[#0056a3] transition">
+                    Home
+                    <span
+                        class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0056a3] transition-all duration-300 group-hover:w-full"></span>
+                </a>
                 <a href="#" class="relative group hover:text-[#0056a3] transition">
                     Shop
                     <span
@@ -152,11 +153,6 @@
                 </a>
                 <a href="#" class="relative group hover:text-[#0056a3] transition">
                     Hot Deals
-                    <span
-                        class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0056a3] transition-all duration-300 group-hover:w-full"></span>
-                </a>
-                <a href="#" class="relative group hover:text-[#0056a3] transition">
-                    New Arrivals
                     <span
                         class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0056a3] transition-all duration-300 group-hover:w-full"></span>
                 </a>
@@ -283,9 +279,18 @@
                         image.alt = item.name.length > 50 ? item.name.slice(0, 50) + '...' : item.name;
                         image.className = 'w-8 h-8 rounded object-cover';
 
+                        const rawName = item.name.length > 20 ? item.name.slice(0, 20) + '...' : item.name;
+
+                        const slug = rawName
+                            .toLowerCase()
+                            .replace(/\s+/g, '-')
+                            .replace(/[^\w\-]+/g, '')
+                            .replace(/\-\-+/g, '-')
+                            .replace(/^-+|-+$/g, '');
+
                         result.className =
                             'px-3 py-2 text-[14.5px] text-gray-700 hover:bg-gray-100 flex items-center gap-2';
-                        result.href = '#';
+                        result.href = `/${selectedModel}/${slug}/${item.id}`;
 
                         const span = document.createElement('span');
                         span.textContent = item.name.length > 50 ? item.name.slice(0, 50) + '...' : item.name;
