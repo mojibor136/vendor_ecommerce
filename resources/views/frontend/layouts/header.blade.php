@@ -21,6 +21,27 @@
 </style>
 
 <body>
+    <div class="bg-gray-50 text-sm text-gray-700 border-b hidden md:block">
+        <div class="max-w-7xl mx-auto px-4 py-1.5 flex items-center justify-between">
+            <!-- Left Info -->
+            <div class="flex items-center gap-3">
+                <span class="text-blue-600 font-medium"><i class="ri-phone-line mr-1"></i> +45 7142 1852</span>
+                <span class="hidden sm:block text-gray-500">|</span>
+                <span class="hidden sm:block text-gray-600">Welcome to our shop!</span>
+            </div>
+
+            <!-- Right Navigation -->
+            <div class="flex items-center gap-4">
+                <a href="#" class="hover:text-blue-600 transition">Reseller</a>
+                <a href="#" class="hover:text-blue-600 transition">Become a Seller</a>
+                <a href="#" class="hover:text-blue-600 transition">Help Center</a>
+                <a href="#" class="hover:text-blue-600 transition">Register</a>
+                <a href="#" class="hover:text-blue-600 transition">Login</a>
+
+                <span class="leading-[normal] text-sm">EN</span>
+            </div>
+        </div>
+    </div>
     <!-- Header -->
     <header class="bg-[#0f4c81] text-white py-4 shadow-md">
         <div class="max-w-7xl mx-auto px-4 flex items-center justify-between">
@@ -124,11 +145,30 @@
                         class="absolute left-0 top-full w-60 z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200">
                         <div class="mt-3.5 bg-white shadow-lg border border-gray-100 rounded">
                             <ul class="text-gray-700 text-base">
-                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Electronics</li>
-                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Fashion</li>
-                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Home & Garden</li>
-                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Beauty</li>
-                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Sports</li>
+                                @foreach ($categories as $category)
+                                    <li class="relative category-item group">
+                                        <a href="#"
+                                            class="flex justify-between items-center px-4 py-2 hover:bg-gray-200 cursor-pointer">
+                                            <span>{{ $category->category_name }}</span>
+                                            <i class="ri-arrow-right-s-line text-gray-400 text-lg"></i>
+                                        </a>
+
+                                        <!-- Subcategory Dropdown -->
+                                        @if ($category->subcategory->isNotEmpty())
+                                            <div
+                                                class="subcategory-menu absolute top-0 left-full w-60 bg-white shadow-lg border border-gray-100 rounded-r hidden">
+                                                <ul>
+                                                    @foreach ($category->subcategory as $subcategory)
+                                                        <a href="#"
+                                                            class="block px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                            <li>{{ $subcategory->subcategory_name }}</li>
+                                                        </a>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
+                                    </li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -171,6 +211,21 @@
 
         </div>
     </nav>
+    <script>
+        document.querySelectorAll('.category-item').forEach(function(item) {
+            const submenu = item.querySelector('.subcategory-menu');
+
+            if (submenu) {
+                item.addEventListener('mouseenter', function() {
+                    submenu.classList.remove('hidden');
+                });
+
+                item.addEventListener('mouseleave', function() {
+                    submenu.classList.add('hidden');
+                });
+            }
+        });
+    </script>
 
     <script>
         let hasScrolledAbove100 = null;

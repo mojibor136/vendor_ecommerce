@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\BackEnd\Slider;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class SliderController extends Controller {
     public function mainSliderIndex() {
@@ -62,7 +62,9 @@ class SliderController extends Controller {
                 'link' => 'nullable|string|max:255',
             ] );
 
-            $path = $request->file( 'image' )->store( 'sliders', 'public' );
+            $image = $request->file( 'image' );
+            $fileName = Str::random( 7 ) . '.' . $image->getClientOriginalExtension();
+            $path = $image->storeAs( 'sliders', $fileName, 'public' );
 
             Slider::create( [
                 'images' => $path,
@@ -118,7 +120,9 @@ class SliderController extends Controller {
                 'link' => 'nullable|string|max:255',
             ] );
 
-            $path = $request->file( 'image' )->store( 'sliders', 'public' );
+            $image = $request->file( 'image' );
+            $fileName = Str::random( 7 ) . '.' . $image->getClientOriginalExtension();
+            $path = $image->storeAs( 'sliders', $fileName, 'public' );
 
             Slider::create( [
                 'images' => $path,

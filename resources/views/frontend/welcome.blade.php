@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ asset('remixicon/remixicon.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
     <link
         href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
         rel="stylesheet">
@@ -38,33 +39,37 @@
         <!-- Desktop view with 3 banners -->
         <div class="hidden lg:block ">
             <div class="grid grid-cols-6 gap-2">
-                <div class="col-span-4">
-                    <!-- Main Banner -->
-                    <div class="rounded shadow-lg">
-                        <img src="{{ asset('banner/main.png') }}" alt="Main Banner"
-                            class="w-full h-full object-cover rounded-lg">
+                <div class="col-span-4 relative overflow-hidden">
+                    <div class="owl-carousel owl-theme banner-carousel">
+                        @foreach ($mainSliders as $banner)
+                            <a class="block rounded shadow-lg item" href="{{ $banner->link }}">
+                                <img src="{{ asset('storage/' . $banner->images) }}" alt="Main Banner"
+                                    class="w-full h-full object-cover rounded-lg">
+                            </a>
+                        @endforeach
                     </div>
                 </div>
                 <div class="col-span-2 flex flex-col gap-1">
-                    <!-- Sub Banner 1 -->
-                    <div class="rounded shadow-lg">
-                        <img src="{{ asset('banner/sub1.png') }}" alt="Sub Banner 1"
-                            class="w-full h-full object-cover rounded-lg">
-                    </div>
-                    <!-- Sub Banner 2 -->
-                    <div class="rounded shadow-lg">
-                        <img src="{{ asset('banner/sub.png') }}" alt="Sub Banner 2"
-                            class="w-full h-full object-cover rounded-lg">
-                    </div>
+                    @foreach ($subSliders as $banner)
+                        <div class="rounded shadow-lg">
+                            <img src="{{ asset('storage/' . $banner->images) }}" alt="Sub Banner 1"
+                                class="w-full h-full object-cover rounded-lg">
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Mobile view with 1 banner -->
-    <div class="lg:hidden grid grid-cols-1 gap-2 px-2 py-2">
-        <div class="h-60 rounded shadow-lg">
-            <img src="{{ asset('banner/main.png') }}" alt="Main Banner" class="w-full h-full object-cover rounded-lg">
+    <div class="lg:hidden grid grid-cols-1 gap-2 px-2 py-2 relative">
+        <div class="owl-carousel owl-theme banner-carousel">
+            @foreach ($mainSliders as $banner)
+                <a class="block h-60 rounded shadow-lg item" href="{{ $banner->link }}">
+                    <img src="{{ asset('storage/' . $banner->images) }}" alt="Main Banner"
+                        class="w-full h-full object-cover rounded-lg">
+                </a>
+            @endforeach
         </div>
     </div>
 
@@ -194,30 +199,17 @@
         </div>
 
         <!-- Scrollable Wrapper -->
-        <div class="relative">
-            <!-- Left Button -->
-            <button id="scrollLeft"
-                class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-md w-10 h-10 rounded-full flex items-center justify-center opacity-70 hover:opacity-100 transition-all duration-300 transform hover:scale-110 active:scale-95">
-                <i class="ri-arrow-left-s-line text-xl text-gray-600"></i>
-            </button>
-
-            <!-- Right Button -->
-            <button id="scrollRight"
-                class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-md w-10 h-10 rounded-full flex items-center justify-center opacity-70 hover:opacity-100 transition-all duration-300 transform hover:scale-110 active:scale-95">
-                <i class="ri-arrow-right-s-line text-xl text-gray-600"></i>
-            </button>
-
-            <!-- Scrollable Card List -->
-            <div id="shopWrapper" class="flex overflow-x-auto scroll-smooth mb-10 scrollbar-hide">
-                @foreach ($topShops as $shop)
-                    <a href="#"
-                        class="min-w-[120px] flex-shrink-0 border-[0.5px] border-gray-100 bg-white shadow rounded p-4 flex flex-col items-center hover:shadow-lg transition duration-300">
+        <div class="owl-carousel owl-theme shop-carousel relative h-[125px] mb-8">
+            @foreach ($topShops as $shop)
+                <a href="#"
+                    class="border-[0.5px] border-gray-100 bg-white shadow rounded p-4 flex flex-col items-center hover:shadow-lg transition duration-300">
+                    <div class="w-16 h-16 mb-2">
                         <img src="{{ asset('storage/' . $shop->shop_logo) }}" alt="{{ $shop->shop_name }}"
-                            class="w-16 h-16 object-cover rounded-full mb-2" loading="lazy">
-                        <p class="text-center font-medium text-gray-800 text-sm">{{ $shop->shop_name }}</p>
-                    </a>
-                @endforeach
-            </div>
+                            class="w-full h-full object-cover rounded-full" loading="lazy">
+                    </div>
+                    <p class="text-center font-medium text-gray-800 text-sm">{{ $shop->shop_name }}</p>
+                </a>
+            @endforeach
         </div>
 
         <!-- Categories grid section -->
@@ -289,60 +281,66 @@
 
 </html>
 @include('frontend.layouts.footer')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const shopWrapper = document.getElementById('shopWrapper');
-        const scrollLeftBtn = document.getElementById('scrollLeft');
-        const scrollRightBtn = document.getElementById('scrollRight');
-        const scrollAmount = 200;
-
-        scrollLeftBtn.style.display = 'none';
-
-        function updateButtons() {
-            if (shopWrapper.scrollLeft > 0) {
-                scrollLeftBtn.style.display = 'flex';
-            } else {
-                scrollLeftBtn.style.display = 'none';
-            }
-
-            if (shopWrapper.scrollLeft + shopWrapper.clientWidth < shopWrapper.scrollWidth - 1) {
-                scrollRightBtn.style.display = 'flex';
-            } else {
-                scrollRightBtn.style.display = 'none';
-            }
-        }
-
-        scrollLeftBtn.addEventListener('click', () => {
-            shopWrapper.scrollBy({
-                left: -scrollAmount,
-                behavior: 'smooth'
-            });
+    $(document).ready(function() {
+        $('.banner-carousel').owlCarousel({
+            loop: true,
+            margin: 10,
+            nav: true,
+            dots: false,
+            autoplay: true,
+            autoplayTimeout: 5000,
+            autoplaySpeed: 1000,
+            smartSpeed: 1000,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                600: {
+                    items: 1
+                },
+                1000: {
+                    items: 1
+                }
+            },
+            navText: [
+                '<button class="bg-black/30 text-gray-400 flex items-center justify-center w-10 h-10 rounded-full absolute left-2 top-1/2 -translate-y-1/2 z-10 hover:bg-black/60 transition"><i class="ri-arrow-left-s-line text-2xl"></i></button>',
+                '<button class="bg-black/30 text-gray-400 flex items-center justify-center w-10 h-10 rounded-full absolute right-2 top-1/2 -translate-y-1/2 z-10 hover:bg-black/60 transition"><i class="ri-arrow-right-s-line text-2xl"></i></button>'
+            ]
         });
 
-        scrollRightBtn.addEventListener('click', () => {
-            shopWrapper.scrollBy({
-                left: scrollAmount,
-                behavior: 'smooth'
-            });
+        $('.shop-carousel').owlCarousel({
+            loop: true,
+            margin: 0,
+            nav: true,
+            dots: false,
+            autoplay: true,
+            autoplayTimeout: 5000,
+            autoplaySpeed: 2000,
+            smartSpeed: 1000,
+            autoplayHoverPause: true,
+            responsive: {
+                0: {
+                    items: 3
+                },
+                480: {
+                    items: 4
+                },
+                768: {
+                    items: 8
+                },
+                1024: {
+                    items: 10
+                }
+            },
+            navText: [
+                '<button class="bg-black/10 text-gray-200 flex items-center justify-center w-10 h-10 rounded-full absolute left-2 top-1/2 -translate-y-1/2 z-10 hover:bg-black/30 transition"><i class="ri-arrow-left-s-line text-2xl"></i></button>',
+                '<button class="bg-black/10 text-gray-200 flex items-center justify-center w-10 h-10 rounded-full absolute right-2 top-1/2 -translate-y-1/2 z-10 hover:bg-black/30 transition"><i class="ri-arrow-right-s-line text-2xl"></i></button>'
+            ]
         });
 
-        setInterval(() => {
-            if (shopWrapper.scrollLeft + shopWrapper.clientWidth >= shopWrapper.scrollWidth - 1) {
-                shopWrapper.scrollTo({
-                    left: 0,
-                    behavior: 'smooth'
-                });
-            } else {
-                shopWrapper.scrollBy({
-                    left: scrollAmount,
-                    behavior: 'smooth'
-                });
-            }
-        }, 3000);
-
-        shopWrapper.addEventListener('scroll', updateButtons);
-
-        updateButtons();
     });
 </script>
 

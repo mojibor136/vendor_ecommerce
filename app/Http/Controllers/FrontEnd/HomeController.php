@@ -5,6 +5,7 @@ namespace App\Http\Controllers\FrontEnd;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\BackEnd\Product;
+use App\Models\BackEnd\Slider;
 
 class HomeController extends Controller {
     public function index() {
@@ -18,7 +19,22 @@ class HomeController extends Controller {
                 $products->push( $copy );
             }
         }
-        return view( 'frontend.welcome', compact( 'products' ) );
+
+        $mainSliders = Slider::where( 'type', 'main' )
+        ->where( 'status', 1 )
+        ->where( 'author_type', Slider::AUTHOR_TYPE_ADMIN )
+        ->latest()
+        ->take( 5 )
+        ->get();
+
+        $subSliders = Slider::where( 'type', 'sub' )
+        ->where( 'status', 1 )
+        ->where( 'author_type', Slider::AUTHOR_TYPE_ADMIN )
+        ->latest()
+        ->take( 5 )
+        ->get();
+
+        return view( 'frontend.welcome', compact( 'products', 'mainSliders', 'subSliders' ) );
     }
 
     public function product( $product, $id ) {

@@ -25,10 +25,14 @@ class AppServiceProvider extends ServiceProvider {
         Paginator::useTailwind();
 
         // Top categories with most products
-        $topCategories = Category::withCount( 'products' )
+        $topCategories = Category::with( 'subcategory' )
+        ->withCount( 'products' )
         ->orderBy( 'products_count', 'desc' )
         ->take( 16 )
         ->get();
+
+        // Random 10 categories from the above ( only id and category_name )
+        $categories = $topCategories->shuffle()->take( 10 );
 
         // Only 1 active shop found
         $shop = Seller::select( 'id', 'shop_logo', 'shop_name' )
@@ -44,8 +48,9 @@ class AppServiceProvider extends ServiceProvider {
             }
         }
 
+        // Share data to all views
         View::share( 'topCategories', $topCategories );
+        View::share( 'categories', $categories );
         View::share( 'topShops', $topShops );
     }
-
 }
