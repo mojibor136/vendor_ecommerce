@@ -159,6 +159,7 @@
                     <label for="image" class="block text-gray-700 font-medium">Image<span class="text-red-400">
                             *</span></label>
                     <input type="file" id="product_image" class="w-full mt-2 p-2 border rounded">
+                    <small class="text-gray-500 text-xs">You can upload single images.</small>
                     @error('image')
                         <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                     @enderror
@@ -173,7 +174,7 @@
                     </label>
                     <input type="file" id="multiple_image" class="w-full mt-2 p-2 border rounded" multiple
                         accept="image/*">
-
+                    <small class="text-gray-500 text-xs">You can upload multiple images.</small>
                     @error('multiple_image.*')
                         <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                     @enderror

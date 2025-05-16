@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\Backend\Payment\PaymentGatewayController;
 use App\Http\Controllers\Admin\Backend\Payment\SellerPaymentController;
 use App\Http\Controllers\Admin\Backend\Payment\OrderPaymentController;
 use App\Http\Controllers\Admin\Backend\Payment\SubscriptionPaymentController;
+use App\Http\Controllers\Admin\Backend\Slider\SliderController;
 // Front-End Routes
 use App\Http\Controllers\FrontEnd\HomeController;
 use App\Http\Controllers\FrontEnd\SearchController;
@@ -231,7 +232,20 @@ Route::prefix('admin')->middleware('admin')->group(function(){
         Route::get('/sales/report/data' , 'getSellersData')->name('sales.report.data');
         Route::get('/seller/orders/{shop_name}/{shop_id}', 'showSellerOrders')->name('seller.orders');
     });
-            
+    
+    // 🔹 SliderController CRUD Routes
+    Route::controller(SliderController::class)->prefix('slider')->group(function () {
+        // Main Slider Routes
+        Route::get('/main', 'mainSliderIndex')->name('slider.main.index');
+        Route::get('/main/create', 'mainSliderCreate')->name('slider.main.create');
+        Route::post('/main/store', 'mainSliderStore')->name('slider.main.store');
+        Route::get('/main/image-delete/{slider}', 'deleteMainImage')->name('slider.main.image.delete');
+        // Sub Slider Routes
+        Route::get('/sub', 'subSliderIndex')->name('slider.sub.index');
+        Route::get('/sub/create', 'subSliderCreate')->name('slider.sub.create');
+        Route::post('/sub/store', 'subSliderStore')->name('slider.sub.store');
+        Route::get('/sub/image-delete/{slider}', 'deleteSubImage')->name('slider.sub.image.delete');
+    });
 });
 
 // 🛡️ Seller Routes Group (Only accessible if seller is authenticated)

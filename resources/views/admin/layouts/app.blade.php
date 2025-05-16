@@ -179,6 +179,30 @@
                                 </li>
                             </ul>
                         </li>
+                        <!-- Sliders Menu -->
+                        <li>
+                            <a href="#"
+                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 text-gray-800 hover:bg-blue-500 hover:text-white rounded transition duration-200 submenu-toggle {{ request()->is('slider*') ? 'active' : '' }}"
+                                data-menu-key="slider">
+                                <i class="ri-slideshow-line mr-1"></i>
+                                <span class="text-[15px]">Slider</span>
+                                <i class="ri-arrow-down-s-line ml-auto mr-4 transition-transform duration-200"></i>
+                            </a>
+                            <ul class="submenu pl-2 {{ request()->is('slider*') ? 'open' : '' }}">
+                                <li>
+                                    <a href="{{ route('slider.main.index') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('slider.main.index', 'slider.main.create') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        Main Slider
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('slider.sub.index') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('slider.sub.index', 'slider.sub.create') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        Sub Slider
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
 
                         <!-- Payment -->
                         <li>
@@ -412,6 +436,7 @@
     </div>
 
     @stack('scripts')
+    <!-- SweetAlert2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

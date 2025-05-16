@@ -5,6 +5,7 @@ namespace App\Models\Seller;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use App\Models\BackEnd\Product;
 use Carbon\Carbon;
 use App\Models\Seller\SellerSubscription;
@@ -22,6 +23,10 @@ class Seller extends Authenticatable {
         'shop_address', 'country_id', 'division_id', 'district_id', 'shop_logo', 'shop_image', 'shop_banner', 'phone_verification',
         'nid_front_image', 'nid_back_image', 'verification_status', 'status', 'total_amount',
     ];
+
+    public function sliders(): MorphMany {
+        return $this->morphMany( Slider::class, 'author' );
+    }
 
     public function country() {
         return $this->belongsTo( Country::class );

@@ -24,20 +24,31 @@
         </div>
 
         <!-- Product Details -->
-        <div class="bg-white shadow-md rounded-lg p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        <div class="mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
                 <!-- Product Image -->
-                <div class="flex justify-center">
-                    @if ($product->product_image)
-                        <img src="{{ asset('storage/' . $product->product_image) }}"
-                            class="w-52 h-52 object-cover rounded-lg shadow-lg">
-                    @else
-                        <img src="https://via.placeholder.com/150" class="w-52 h-52 object-cover rounded-lg shadow-lg">
-                    @endif
+                <div class="flex flex-col md:gap-3 pb-3 gap-1 bg-white shadow-md rounded-lg">
+                    <img id="mainImg" src="{{ asset('storage/' . $product->product_image) }}"
+                        class="w-auto h-auto object-cover">
+                    <!-- Thumbnails -->
+                    <div class="flex flex-row justify-center gap-4 relative md:p-0 p-2">
+                        @if (!empty(json_decode($product->multiple_image)))
+                            <div id="thumbnailContainer"
+                                class="flex overflow-hidden gap-4 transition-transform duration-300 ease-in-out">
+                                @foreach (json_decode($product->multiple_image, true) as $image)
+                                    <img src="{{ asset('storage/' . $image) }}" loading="lazy"
+                                        data-src="{{ asset('storage/' . $image) }}" alt="Thumbnail"
+                                        class="rounded cursor-pointer hover:border h-20 w-20 border-2">
+                                @endforeach
+                            </div>
+                        @else
+                            <span class="text-center block text-sm text-gray-700">Single Products</span>
+                        @endif
+                    </div>
                 </div>
 
                 <!-- Product Information -->
-                <div class="flex flex-col gap-4 text-gray-700">
+                <div class="flex flex-col gap-4 text-gray-700 bg-white shadow-md rounded-lg p-3">
                     <div class="flex flex-col">
                         <span class="font-semibold">Name:</span>
                         <span class="text-gray-600">{{ $product->product_name }}</span>
@@ -138,3 +149,19 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script>
+        const mainImg = document.getElementById("mainImg");
+        const thumbnails = document.querySelectorAll("#thumbnailContainer img");
+
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener("click", function() {
+                mainImg.src = this.dataset.src;
+
+                thumbnails.forEach(img => img.classList.remove("border-blue-500"));
+
+                this.classList.add("border-blue-500");
+            });
+        });
+    </script>
+@endpush
