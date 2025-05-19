@@ -311,7 +311,6 @@ Route::middleware(['visitor.track'])->group(function () {
         Route::get('/products/{product}/{id}' , 'product')->name('frontend.products.show');
         Route::get('/sellers/{seller}/{id}' , 'sellers')->name('frontend.sellers.show');
         Route::get('/categories/{category}/{id}' , 'category')->name('frontend.categories.show');
-
     });
 });
 

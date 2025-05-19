@@ -4,11 +4,9 @@ namespace App\Models\BackEnd;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use App\Models\Seller\Seller;
 
 class Slider extends Model {
-
-    const AUTHOR_TYPE_ADMIN = 'App\Models\Admin\Admin';
-    const AUTHOR_TYPE_SELLER = 'App\Models\Seller\Seller';
 
     protected $fillable = [
         'images',
@@ -19,7 +17,16 @@ class Slider extends Model {
         'status',
     ];
 
-    public function author(): MorphTo {
-        return $this->morphTo();
+    public function getAuthorNameAttribute() {
+        if ( $this->author_type === 'admin' ) {
+            return 'Admin';
+        }
+
+        if ( $this->author_type === 'seller' ) {
+            $seller = Seller::find( $this->author_id );
+            return $seller ? $seller->shop_name : 'Unknown Seller';
+        }
+
+        return 'Unknown';
     }
 }

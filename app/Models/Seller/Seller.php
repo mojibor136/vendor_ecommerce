@@ -15,6 +15,7 @@ use App\Models\Backend\Location\District;
 use App\Models\Order\Order;
 use App\Models\Payment\SellerPayment;
 use App\Models\Payment\SubscriptionPayment;
+use App\Models\BackEnd\Slider;
 
 class Seller extends Authenticatable {
     protected $fillable = [

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\BackEnd\Product;
 use App\Models\BackEnd\Slider;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller {
     public function index() {

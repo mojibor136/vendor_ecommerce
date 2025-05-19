@@ -34,14 +34,14 @@
                         @forelse($sliders as $slider)
                             <tr class="border-b hover:bg-gray-100">
                                 <td class="px-6 py-3 text-sm text-gray-700">{{ $slider->id }}</td>
-                                <td class="px-6 py-3 text-sm text-gray-700">{{ $slider->author?->name ?? 'Unknown' }}</td>
+                                <td class="px-6 py-3 text-sm text-gray-700">{{ $slider->author_name }}</td>
                                 <td class="px-6 py-3">
                                     <a href="{{ $slider->link }}" class="block">
                                         <img src="{{ asset('storage/' . $slider->images) }}" alt="Slider Image"
                                             class="w-24 h-16 object-cover rounded" />
                                     </a>
                                 </td>
-                                <td class="px-6 py-3 text-sm text-gray-700">{{ $slider->author_type }}</td>
+                                <td class="px-6 py-3 text-sm text-gray-700 capitalize">{{ $slider->author_type }}</td>
                                 <td class="px-6 py-3 text-sm text-gray-700 text-center">
                                     @if ($slider->status == 1)
                                         <span

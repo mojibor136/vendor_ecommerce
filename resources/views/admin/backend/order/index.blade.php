@@ -85,7 +85,13 @@
 
     @if (session('response'))
         @php
-            $response = session('response');
+            $response = session('response', []);
+            $couriers = collect($response['courierData'] ?? [])->except('summary');
+
+            $totalParcels = $couriers->sum('total_parcel');
+            $totalSuccess = $couriers->sum('success_parcel');
+            $totalCancel = $couriers->sum('cancelled_parcel');
+            $successRate = $totalParcels > 0 ? round(($totalSuccess / $totalParcels) * 100, 1) : 0;
         @endphp
         <div id="popup" class="fixed inset-0 bg-black bg-opacity-50 p-2 sm:p-3 hidden items-center justify-center z-50">
             <div class="p-4 sm:p-8 pt-6 bg-white rounded-lg shadow-lg w-full max-w-4xl">
@@ -107,16 +113,16 @@
                 <!-- Order Summary -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 text-center">
                     <div class="bg-blue-100 rounded-md py-2 sm:py-4">
-                        <p class="text-lg sm:text-xl font-bold text-blue-700">{{ $response['total_orders'] ?? '0' }}</p>
+                        <p class="text-lg sm:text-xl font-bold text-blue-700">{{ $totalParcels }}</p>
                         <p class="text-blue-600 font-medium text-xs sm:text-sm">TOTAL ORDER</p>
                     </div>
                     <div class="bg-green-100 rounded-md py-2 sm:py-4">
                         <p class="text-lg sm:text-xl font-bold text-green-700">
-                            {{ $response['total_deliveries'] ?? '0' }}</p>
+                            {{ $totalSuccess }}</p>
                         <p class="text-green-600 font-medium text-xs sm:text-sm">TOTAL DELIVERY</p>
                     </div>
                     <div class="bg-red-100 rounded-md py-2 sm:py-4">
-                        <p class="text-lg sm:text-xl font-bold text-red-700">{{ $response['total_cancels'] ?? '0' }}</p>
+                        <p class="text-lg sm:text-xl font-bold text-red-700">{{ $totalCancel }}</p>
                         <p class="text-red-600 font-medium text-xs sm:text-sm">TOTAL CANCEL</p>
                     </div>
                 </div>
@@ -136,35 +142,38 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if (empty($response['couriers']) || count($response['couriers']) == 0)
+                            @if (empty($response['courierData']) || count($response['courierData']) == 0)
                                 <tr>
                                     <td colspan="5" class="pt-8 text-center text-gray-500">
                                         No data found
                                     </td>
                                 </tr>
                             @else
-                                @foreach ($response['couriers'] as $courier)
-                                    <tr class="border-t hover:bg-blue-50 transition-colors">
-                                        <td
-                                            class="p-2 sm:p-3 bg-blue-100 font-semibold text-blue-700 rounded-l-lg border border-blue-300">
-                                            {{ $courier['name'] }}
-                                        </td>
-                                        <td
-                                            class="p-2 sm:p-3 text-center bg-green-100 text-green-700 border border-gray-300">
-                                            {{ $courier['orders'] ?? 0 }}
-                                        </td>
-                                        <td
-                                            class="p-2 sm:p-3 text-center bg-yellow-100 text-yellow-700 border border-gray-300">
-                                            {{ $courier['deliveries'] ?? 0 }}
-                                        </td>
-                                        <td class="p-2 sm:p-3 text-center bg-red-100 text-red-700 border border-gray-300">
-                                            {{ $courier['cancels'] ?? 0 }}
-                                        </td>
-                                        <td
-                                            class="p-2 sm:p-3 text-center bg-purple-100 text-purple-700 border border-gray-300 rounded-r-lg">
-                                            {{ $courier['success_rate'] ?? 'N/A' }}
-                                        </td>
-                                    </tr>
+                                @foreach ($response['courierData'] as $name => $courier)
+                                    @if ($name !== 'summary')
+                                        <tr class="border-t hover:bg-blue-50 transition-colors">
+                                            <td
+                                                class="p-2 sm:p-3 bg-blue-100 font-semibold text-blue-700 rounded-l-lg border border-blue-300">
+                                                {{ ucfirst($name) }}
+                                            </td>
+                                            <td
+                                                class="p-2 sm:p-3 text-center bg-green-100 text-green-700 border border-gray-300">
+                                                {{ $courier['total_parcel'] ?? 0 }}
+                                            </td>
+                                            <td
+                                                class="p-2 sm:p-3 text-center bg-yellow-100 text-yellow-700 border border-gray-300">
+                                                {{ $courier['success_parcel'] ?? 0 }}
+                                            </td>
+                                            <td
+                                                class="p-2 sm:p-3 text-center bg-red-100 text-red-700 border border-gray-300">
+                                                {{ $courier['cancelled_parcel'] ?? 0 }}
+                                            </td>
+                                            <td
+                                                class="p-2 sm:p-3 text-center bg-purple-100 text-purple-700 border border-gray-300 rounded-r-lg">
+                                                {{ $courier['success_ratio'] ?? 'N/A' }}%
+                                            </td>
+                                        </tr>
+                                    @endif
                                 @endforeach
                             @endif
                         </tbody>

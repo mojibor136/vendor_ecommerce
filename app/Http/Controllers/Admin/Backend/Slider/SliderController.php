@@ -71,7 +71,7 @@ class SliderController extends Controller {
                 'type' => 'main',
                 'link' => $request->link,
                 'author_id' => auth()->guard( 'admin' )->id(),
-                'author_type' => get_class( auth()->guard( 'admin' )->user() ),
+                'author_type' => 'admin',
                 'status' => 1,
             ] );
 
@@ -129,7 +129,7 @@ class SliderController extends Controller {
                 'type' => 'sub',
                 'link' => $request->link,
                 'author_id' => auth()->guard( 'admin' )->id(),
-                'author_type' => get_class( auth()->guard( 'admin' )->user() ),
+                'author_type' => 'admin',
                 'status' => 1,
             ] );
 
