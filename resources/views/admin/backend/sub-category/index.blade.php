@@ -87,8 +87,8 @@
                         const row = `
                             <tr class="border-b hover:bg-gray-100">
                                 <td class="px-6 py-2 text-gray-700 text-sm">${subcategory.id}</td>
-                                <td class="px-6 py-2 text-gray-700 text-sm">${subcategory.subcategory_name}</td>
-                                <td class="px-6 py-2 text-gray-700 text-sm">${subcategory.category.category_name}</td>
+                                <td class="px-6 py-2 text-gray-700 text-sm capitalize">${subcategory.subcategory_name}</td>
+                                <td class="px-6 py-2 text-gray-700 text-sm capitalize">${subcategory.category.category_name}</td>
                                 <td class="px-6 py-2 text-gray-700 text-sm text-center">${subcategory.product_count}</td>
                                 <td class="px-6 py-2 text-center">
                                     <div class="flex justify-center items-center gap-3">

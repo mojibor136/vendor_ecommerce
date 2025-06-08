@@ -46,30 +46,57 @@
 <body class="bg-[#f5f6f8]">
     <div class="flex flex-col h-screen relative">
         <!-- Header Section -->
-        <div
-            class="header border-b md:h-[70px] h-[60px] w-full py-3 md:px-6 px-3 bg-[#38414a] z-10 flex items-center fixed top-0 left-0 right-0">
-            <div class="flex justify-between w-full items-center">
-                <div class="logo flex flex-row gap-16 hidden md:block">
-                    <div class="flex flex-row gap-2 items-center">
-                        <span class="font-bold text-white text-xl tracking-wide uppercase">e-commerce</span>
+        <div class="header border-b w-full bg-[#38414a] z-10 flex items-center fixed top-0 left-0 right-0">
+            <div class="md:h-[70px] h-[60px] w-full py-3 md:px-6 px-3 relative">
+                <div class="flex justify-between w-full items-center">
+                    <div class="logo flex flex-row gap-16 hidden md:block">
+                        <div class="flex flex-row gap-2 items-center">
+                            <span class="font-bold text-white text-xl tracking-wide uppercase">e-commerce</span>
+                        </div>
+                    </div>
+                    <i id="menuBtn" class="ri-menu-line md:hidden block text-white text-xl font-medium"></i>
+                    <div class="flex flex-row items-center gap-5">
+                        <div class="relative">
+                            <div
+                                class="absolute -right-1 -top-0 w-4 h-4 rounded-full bg-red-500 flex items-center justify-center">
+                                <span class="text-white text-[10px] leading-none">2</span>
+                            </div>
+                            <i
+                                class="ri-notification-2-line cursor-pointer text-white/80 hover:text-white text-[21px]"></i>
+                        </div>
+                        <i class="ri-moon-line text-white/80 cursor-pointer hover:text-white text-[21px]"></i>
+                        <div id="profile_menu_btn" class="flex items-center flex-row gap-2 cursor-pointer">
+                            <img src="{{ asset('upload/admin.png') }}" alt="Admin" class="w-10 h-10 rounded-full">
+                            <span class="text-white/80 text-[15px]">Admin</span>
+                            <i class="ri-arrow-down-s-line text-white/80"></i>
+                        </div>
+                        <i class="ri-settings-2-line cursor-pointer text-white/80 hover:text-white text-[21px]"></i>
                     </div>
                 </div>
-                <i id="menuBtn" class="ri-menu-line md:hidden block text-white text-xl font-medium"></i>
-                <div class="flex flex-row items-center gap-5">
-                    <div class="relative">
-                        <div
-                            class="absolute -right-1 -top-0 w-4 h-4 rounded-full bg-red-500 flex items-center justify-center">
-                            <span class="text-white text-[10px] leading-none">2</span>
-                        </div>
-                        <i class="ri-notification-2-line cursor-pointer text-white/80 hover:text-white text-[21px]"></i>
-                    </div>
-                    <i class="ri-moon-line text-white/80 cursor-pointer hover:text-white text-[21px]"></i>
-                    <div class="flex items-center flex-row gap-2 cursor-pointer">
-                        <img src="{{ asset('upload/admin.png') }}" alt="Admin" class="w-10 h-10 rounded-full">
-                        <span class="text-white/80 text-[15px]">Admin</span>
-                        <i class="ri-arrow-down-s-line text-white/80"></i>
-                    </div>
-                    <i class="ri-settings-2-line cursor-pointer text-white/80 hover:text-white text-[21px]"></i>
+                <!-- Dropdown Menu -->
+                <div id="profile_menu"
+                    class="absolute top-full mt-0 right-0 w-60 bg-white hidden rounded-b-lg overflow-hidden shadow-lg border border-gray-200">
+                    <a href="#"
+                        class="flex items-center gap-3 px-4 py-2 transition duration-300 hover:bg-[#38414a] group">
+                        <i
+                            class="ri-user-line text-lg text-gray-600 group-hover:text-white transition duration-300"></i>
+                        <span
+                            class="text-gray-800 font-medium group-hover:text-white transition duration-300">Profile</span>
+                    </a>
+                    <a href="#"
+                        class="flex items-center gap-3 px-4 py-2 transition duration-300 hover:bg-[#38414a] group">
+                        <i
+                            class="ri-logout-box-r-line text-lg text-gray-600 group-hover:text-white transition duration-300"></i>
+                        <span
+                            class="text-gray-800 font-medium group-hover:text-white transition duration-300">Logout</span>
+                    </a>
+                    <a href="#"
+                        class="flex items-center gap-3 px-4 py-2 transition duration-300 hover:bg-[#38414a] group">
+                        <i
+                            class="ri-settings-3-line text-lg text-gray-600 group-hover:text-white transition duration-300"></i>
+                        <span class="text-gray-800 font-medium group-hover:text-white transition duration-300">Site
+                            Setting</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -93,17 +120,6 @@
                             </a>
                         </li>
 
-                        <!-- Company -->
-                        <li class="group">
-                            <a href="{{ route('company.index') }}"
-                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 rounded transition duration-200
-                                                   {{ request()->routeIs('company.index', 'company.show', 'company.create', 'company.edit') ? 'bg-blue-500 text-white' : 'text-gray-800 group-hover:text-white group-hover:bg-blue-500' }}">
-                                <i
-                                    class="ri-global-line mr-1 {{ request()->routeIs('company.index', 'company.show', 'company.create', 'company.edit') ? 'text-white' : 'text-gray-700 group-hover:text-white' }}"></i>
-                                <span class="text-[15px]">Company</span>
-                            </a>
-                        </li>
-
                         <!-- Ecommerce  -->
                         <li>
                             <a href="#"
@@ -116,20 +132,20 @@
                             <ul class="submenu pl-2 {{ request()->is('ecommerce/*') ? 'open' : '' }}">
                                 <li>
                                     <a href="{{ route('products.index') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('products.index') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
 
                                         Products
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('categories.index') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('categories.index') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Categories
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('subcategories.index') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('subcategories.index') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Subcategories
                                     </a>
                                 </li>
@@ -148,32 +164,32 @@
                             <ul class="submenu pl-2 {{ request()->is('order/*') ? 'open' : '' }}">
                                 <li>
                                     <a href="{{ route('order.index') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('order.index') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
 
                                         All Order
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('processing.order') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('processing.order') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Processing Order
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('shipping.order') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('shipping.order') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Shipping Order
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('delivered.order') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('delivered.order') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Delivered Order
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('cancel.order') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.size') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('cancel.order') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Cancel Order
                                     </a>
                                 </li>
@@ -216,19 +232,19 @@
                             <ul class="submenu pl-2 {{ request()->is('payment/*') ? 'open' : '' }}">
                                 <li>
                                     <a href="{{ route('seller.payment.index') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('seller.payment.index') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Seller payment
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('order.payment.index') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('order.payment.index') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Order payment
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('subscription.payment.index') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('subscription.payment.index') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Subscription payment
                                     </a>
                                 </li>
@@ -247,19 +263,19 @@
                             <ul class="submenu pl-2 {{ request()->is('subscription/*') ? 'open' : '' }}">
                                 <li>
                                     <a href="{{ route('subscription.index') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('subscription.index') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         All Subscription
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('subscription.monthly') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('subscription.monthly') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Monthly Subscription
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('subscription.yearly') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('subscription.yearly') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Yearly Subscription
                                     </a>
                                 </li>
@@ -313,18 +329,6 @@
                                         All User
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="{{ route('active.seller.api') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
-                                        Active User
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('inactive.seller.api') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
-                                        Inactive User
-                                    </a>
-                                </li>
                             </ul>
                         </li>
 
@@ -340,19 +344,19 @@
                             <ul class="submenu pl-2 {{ request()->is('location/*') ? 'open' : '' }}">
                                 <li>
                                     <a href="{{ route('country.index') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('country.index') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Country
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('division.index') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('division.index') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Division
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('district.index') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.size') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('district.index') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         District
                                     </a>
                                 </li>
@@ -371,20 +375,69 @@
                             <ul class="submenu pl-2 {{ request()->is('analytics/*') ? 'open' : '' }}">
                                 <li>
                                     <a href="{{ route('sales.report') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('sales.report') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Sales Report
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('sales.location') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('sales.location') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Sales Location
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('seller.location') }}"
-                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.size') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('seller.location') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
                                         Seller Location
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- API Integration -->
+                        <li>
+                            <a href="#"
+                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 text-gray-800 hover:bg-blue-500 hover:text-white rounded transition duration-200 submenu-toggle {{ request()->is('setting/*') ? 'active' : '' }}"
+                                data-menu-key="api">
+                                <i class="ri-bar-chart-line mr-1"></i>
+                                <span class="text-[15px]">API Integration</span>
+                                <i class="ri-arrow-down-s-line ml-auto mr-4 transition-transform duration-200"></i>
+                            </a>
+                            <ul class="submenu pl-2 {{ request()->is('api/*') ? 'open' : '' }}">
+                                <li>
+                                    <a href="{{ route('payment.integration') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('payment.integration') ? 'text-blue-600' : 'text-gray-800' }} hover:text-blue-600 transition duration-200">
+                                        Payment Integration
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('courier.integration') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('courier.integration') ? 'text-blue-600' : 'text-gray-800' }} hover:text-blue-600 transition duration-200">
+                                        Courier Integration
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('pixel.integration') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('pixel.integration') ? 'text-blue-600' : 'text-gray-800' }} hover:text-blue-600 transition duration-200">
+                                        Facebook Pixel Integration
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('gtag.integration') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('gtag.integration') ? 'text-blue-600' : 'text-gray-800' }} hover:text-blue-600 transition duration-200">
+                                        Google Tag Integration
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('sms.integration') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('sms.integration') ? 'text-blue-600' : 'text-gray-800' }} hover:text-blue-600 transition duration-200">
+                                        SMS Integration
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('email.integration') }}"
+                                        class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('email.integration') ? 'text-blue-600' : 'text-gray-800' }} hover:text-blue-600 transition duration-200">
+                                        Email Integration
                                     </a>
                                 </li>
                             </ul>
@@ -401,35 +454,25 @@
                             </a>
                             <ul class="submenu pl-2 {{ request()->is('settings/*') ? 'open' : '' }}">
                                 <li>
-                                    <a href="{{ route('payment-gateway.index') }}"
+                                    <a href=""
                                         class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
-                                        Payment gateway
+                                        Profile
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('sales.location') }}"
+                                    <a href=""
                                         class="flex text-[15px] items-center py-2 pl-6 {{ request()->routeIs('all.color') ? 'text-blue-600' : 'text-gray-800' }} rounded-lg hover:text-blue-600 transition duration-200">
-                                        Email configuration
+                                        Site Setting
                                     </a>
                                 </li>
                             </ul>
-                        </li>
-
-                        <!-- Logout -->
-                        <li class="group">
-                            <a href="{{ route('admin.logout') }}"
-                                class="mb-1 flex text-[17px] items-center pl-4 py-2.5 rounded transition duration-200
-                                       text-gray-800 group-hover:text-white group-hover:bg-blue-500">
-                                <i class="ri-logout-box-r-line mr-1 text-gray-700 group-hover:text-white"></i>
-                                <span class="text-[15px]">Logout</span>
-                            </a>
                         </li>
                     </ul>
                 </div>
             </div>
 
             <!-- Main Content Section -->
-            <div class="flex-1 md:ml-[210px] lg:ml-[240px] md:px-4 px-2 md:pt-8 pt-4 overflow-y-auto">
+            <div class="flex-1 md:ml-[210px] lg:ml-[240px] md:px-4 px-2 md:pt-8 mb-6 pt-4 overflow-y-auto">
                 @yield('content')
             </div>
         </div>
@@ -438,6 +481,9 @@
     @stack('scripts')
     <!-- SweetAlert2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        profile_menu_btn.onclick = () => profile_menu.classList.toggle('hidden');
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const submenuToggles = document.querySelectorAll('.submenu-toggle');

@@ -11,8 +11,6 @@ class District extends Model {
         'division_id',
     ];
 
-    // Relationship: District belongs to Division
-
     public function division() {
         return $this->belongsTo( Division::class );
     }

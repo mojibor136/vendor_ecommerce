@@ -12,13 +12,10 @@ class Division extends Model {
         'district_count'
     ];
 
-    // Relationship: Division belongs to Country
 
     public function country() {
         return $this->belongsTo( Country::class );
     }
-
-    // Relationship: Division has many Districts
 
     public function districts() {
         return $this->hasMany( District::class );

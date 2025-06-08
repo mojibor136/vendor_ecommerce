@@ -94,7 +94,7 @@
                                         ? `<img src="/storage/${category.category_img}" class="w-12 h-12 object-cover rounded">`
                                         : `<span>No Image</span>`}
                                 </td>
-                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap">${category.category_name}</td>
+                                <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap capitalize">${category.category_name}</td>
                                 <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap text-center">${category.subcategory_count}</td>
                                 <td class="px-6 py-1 text-gray-700 text-sm whitespace-nowrap text-center">${category.product_count}</td>
                                 <td class="px-6 py-2 text-center">

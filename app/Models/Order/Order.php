@@ -31,7 +31,7 @@ class Order extends Model {
         return $this->hasOne( Shipping::class );
     }
 
-    public function products() {
+    public function product() {
         return $this->hasManyThrough( Product::class, OrderItem::class );
     }
 

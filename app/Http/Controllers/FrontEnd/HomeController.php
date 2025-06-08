@@ -23,14 +23,14 @@ class HomeController extends Controller {
 
         $mainSliders = Slider::where( 'type', 'main' )
         ->where( 'status', 1 )
-        ->where( 'author_type', Slider::AUTHOR_TYPE_ADMIN )
+        ->where( 'author_type', 'Admin' )
         ->latest()
         ->take( 5 )
         ->get();
 
         $subSliders = Slider::where( 'type', 'sub' )
         ->where( 'status', 1 )
-        ->where( 'author_type', Slider::AUTHOR_TYPE_ADMIN )
+        ->where( 'author_type', 'Admin' )
         ->latest()
         ->take( 5 )
         ->get();

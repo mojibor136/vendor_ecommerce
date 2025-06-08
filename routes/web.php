@@ -12,7 +12,6 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\Backend\Category\CategoryController;
 use App\Http\Controllers\Admin\Backend\SubCategory\SubCategoryController;
 use App\Http\Controllers\Admin\Backend\Product\ProductController;
-use App\Http\Controllers\Admin\Backend\Company\CompanyController;
 use App\Http\Controllers\Admin\Backend\User\UserController;
 use App\Http\Controllers\Admin\BackEnd\Subscription\SubscriptionController;
 use App\Http\Controllers\Admin\BackEnd\Order\OrderController;
@@ -21,10 +20,10 @@ use App\Http\Controllers\Admin\Backend\Location\DivisionController;
 use App\Http\Controllers\Admin\Backend\Location\DistrictController;
 use App\Http\Controllers\Admin\Backend\Location\CountryController;
 use App\Http\Controllers\Admin\Backend\Analytics\AnalyticsController;
-use App\Http\Controllers\Admin\Backend\Payment\PaymentGatewayController;
 use App\Http\Controllers\Admin\Backend\Payment\SellerPaymentController;
 use App\Http\Controllers\Admin\Backend\Payment\OrderPaymentController;
 use App\Http\Controllers\Admin\Backend\Payment\SubscriptionPaymentController;
+use App\Http\Controllers\Admin\Backend\Api\ApiController;
 use App\Http\Controllers\Admin\Backend\Slider\SliderController;
 // Front-End Routes
 use App\Http\Controllers\FrontEnd\HomeController;
@@ -38,10 +37,11 @@ require __DIR__.'/auth.php';
 // 🛡️ Admin Routes Group (Only accessible if admin is authenticated)
 Route::prefix('admin')->middleware('admin')->controller(AdminController::class)->group(function () {
     Route::get('/dashboard', 'index')->name('admin.index');
-    Route::get('/{id}/edit', 'edit')->name('admin.edit');
-    Route::put('/{id}', 'update')->name('admin.update');
-    Route::delete('/{id}', 'destroy')->name('admin.destroy');
 });
+
+Route::get('admin/sales/weekly', [AdminController::class, 'getOneWeeklySalesData']);
+Route::get('admin/sales/monthly', [AdminController::class, 'getMonthlySalesData']);
+Route::get('admin/sales/yearly', [AdminController::class, 'getYearlySalesData']);
 
 Route::prefix('admin')->middleware('admin')->group(function(){
     // 🔹 CategoryController CRUD Routes
@@ -84,18 +84,6 @@ Route::prefix('admin')->middleware('admin')->group(function(){
         Route::get('/products/destroy/{id}', 'destroy')->name('products.destroy');
     });
 
-    // 🔹 CompanyController CRUD Routes
-    Route::controller(CompanyController::class)->group(function () {
-        Route::get('/company/api' , 'api')->name('company.api');
-        Route::get('/company', 'index')->name('company.index');
-        Route::get('/company/create', 'create')->name('company.create');
-        Route::post('/company/store', 'store')->name('company.store');
-        Route::get('/company/edit/{id}' , 'edit')->name('company.edit');
-        Route::get('/company/show/{id}', 'show')->name('company.show');
-        Route::post('/company/update', 'update')->name('company.update');
-        Route::get('/company/destroy/{id}', 'destroy')->name('company.destroy');
-    }); 
-
     // 🔹 SubscriptionController CRUD Routes
     Route::controller(SubscriptionController::class)->group(function () {
         Route::get('/subscription/api' , 'api')->name('subscription.api');
@@ -131,15 +119,14 @@ Route::prefix('admin')->middleware('admin')->group(function(){
         Route::get('/order/destroy/{id}', 'destroy')->name('order.destroy');
     });
 
-    
-    // 🔹 PaymentGatewayController CRUD Routes
-    Route::controller(PaymentGatewayController::class)->group(function () {
-        Route::get('/payment-gateway', 'index')->name('payment-gateway.index');
-        Route::get('/payment-gateway/create', 'create')->name('payment-gateway.create');
-        Route::post('/payment-gateway/store', 'store')->name('payment-gateway.store');
-        Route::get('/payment-gateway/edit/{id}', 'edit')->name('payment-gateway.edit');
-        Route::post('/payment-gateway/update', 'update')->name('payment-gateway.update');
-        Route::get('/payment-gateway/destroy/{id}', 'destroy')->name('payment-gateway.destroy');
+    // 🔹 ApiController CRUD Routes
+    Route::controller(ApiController::class)->group(function () {
+        Route::get('/payment-integration', 'paymentIntegration')->name('payment.integration');
+        Route::get('/courier-integration', 'courierIntegration')->name('courier.integration');
+        Route::get('/pixel-integration', 'pixelIntegration')->name('pixel.integration');
+        Route::get('/gtag-integration', 'gtagIntegration')->name('gtag.integration');
+        Route::get('/sms-integration', 'smsIntegration')->name('sms.integration');
+        Route::get('/email-integration', 'emailIntegration')->name('email.integration');
     });
 
     // 🔹 SellerPaymentController CRUD Routes

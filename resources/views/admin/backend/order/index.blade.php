@@ -2,6 +2,207 @@
 @section('title', 'All Order')
 
 @section('content')
+    <style>
+        /* Overlay */
+        .popup-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 16px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        /* Box */
+        .popup-box {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            width: 100%;
+            max-width: 1000px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Header */
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f3f4f6;
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .popup-title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .popup-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .popup-subtitle {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .popup-close-btn {
+            padding: 8px 16px;
+            background: #4b5563;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .popup-close-btn:hover {
+            background: #374151;
+        }
+
+        /* Summary Cards */
+        .summary-cards {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .summary-card {
+            flex: 1;
+            min-width: 100px;
+            border-radius: 6px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .summary-card p {
+            margin: 0;
+        }
+
+        .summary-number {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .summary-label {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 16px;
+        }
+
+        .courier-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        .courier-table th,
+        .courier-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        .no-data {
+            padding: 16px;
+            text-align: center;
+            color: #9ca3af;
+        }
+
+        .courier-row:hover {
+            background-color: #e0f2fe;
+            transition: background 0.3s;
+        }
+
+        /* Utility Colors */
+        .bg-blue {
+            background: #3b82f6;
+        }
+
+        .bg-green {
+            background: #22c55e;
+        }
+
+        .bg-yellow {
+            background: #eab308;
+        }
+
+        .bg-red {
+            background: #ef4444;
+        }
+
+        .bg-purple {
+            background: #a855f7;
+        }
+
+        .bg-blue-light {
+            background: #dbeafe;
+        }
+
+        .bg-green-light {
+            background: #dcfce7;
+        }
+
+        .bg-yellow-light {
+            background: #fef9c3;
+        }
+
+        .bg-red-light {
+            background: #fee2e2;
+        }
+
+        .bg-purple-light {
+            background: #f3e8ff;
+        }
+
+        .text-white {
+            color: #ffffff;
+        }
+
+        .text-blue {
+            color: #2563eb;
+        }
+
+        .text-green {
+            color: #16a34a;
+        }
+
+        .text-yellow {
+            color: #ca8a04;
+        }
+
+        .text-red {
+            color: #dc2626;
+        }
+
+        .text-purple {
+            color: #9333ea;
+        }
+
+        .border-left {
+            border-left: 3px solid #3b82f6;
+            border-radius: 6px 0 0 6px;
+        }
+
+        .border-right {
+            border-right: 3px solid #a855f7;
+            border-radius: 0 6px 6px 0;
+        }
+    </style>
+
     <div class="bg-white w-full h-full flex flex-col gap-3">
         <!-- Page Heading -->
         <div class="px-4 pt-6 flex flex-col gap-1">
@@ -93,85 +294,63 @@
             $totalCancel = $couriers->sum('cancelled_parcel');
             $successRate = $totalParcels > 0 ? round(($totalSuccess / $totalParcels) * 100, 1) : 0;
         @endphp
-        <div id="popup" class="fixed inset-0 bg-black bg-opacity-50 p-2 sm:p-3 hidden items-center justify-center z-50">
-            <div class="p-4 sm:p-8 pt-6 bg-white rounded-lg shadow-lg w-full max-w-4xl">
+        <div id="popup" class="popup-overlay">
+            <div class="popup-box">
                 <!-- Header -->
-                <div
-                    class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-gray-100 rounded-md mb-4 shadow">
-                    <div class="flex flex-col gap-1 sm:gap-2">
-                        <span class="text-lg sm:text-xl font-semibold text-gray-700">Courier Information</span>
-                        <span class="text-sm text-gray-500">
-                            Mobile: <span class="text-green-600">{{ $response['phone'] ?? 'N/A' }}</span>
+                <div class="popup-header">
+                    <div class="popup-title-group">
+                        <span class="popup-title">Courier Information</span>
+                        <span class="popup-subtitle">
+                            Mobile: <span class="text-green">{{ $response['phone'] ?? 'N/A' }}</span>
                         </span>
                     </div>
-                    <button onclick="togglePopup()"
-                        class="mt-2 sm:mt-0 py-1 px-4 sm:py-2 sm:px-6 bg-gray-600 text-white rounded hover:bg-gray-700">
-                        Close
-                    </button>
+                    <button onclick="togglePopup()" class="popup-close-btn">Close</button>
                 </div>
 
                 <!-- Order Summary -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 text-center">
-                    <div class="bg-blue-100 rounded-md py-2 sm:py-4">
-                        <p class="text-lg sm:text-xl font-bold text-blue-700">{{ $totalParcels }}</p>
-                        <p class="text-blue-600 font-medium text-xs sm:text-sm">TOTAL ORDER</p>
+                <div class="summary-cards">
+                    <div class="summary-card blue">
+                        <p class="summary-number">{{ $totalParcels }}</p>
+                        <p class="summary-label">TOTAL ORDER</p>
                     </div>
-                    <div class="bg-green-100 rounded-md py-2 sm:py-4">
-                        <p class="text-lg sm:text-xl font-bold text-green-700">
-                            {{ $totalSuccess }}</p>
-                        <p class="text-green-600 font-medium text-xs sm:text-sm">TOTAL DELIVERY</p>
+                    <div class="summary-card green">
+                        <p class="summary-number">{{ $totalSuccess }}</p>
+                        <p class="summary-label">TOTAL DELIVERY</p>
                     </div>
-                    <div class="bg-red-100 rounded-md py-2 sm:py-4">
-                        <p class="text-lg sm:text-xl font-bold text-red-700">{{ $totalCancel }}</p>
-                        <p class="text-red-600 font-medium text-xs sm:text-sm">TOTAL CANCEL</p>
+                    <div class="summary-card red">
+                        <p class="summary-number">{{ $totalCancel }}</p>
+                        <p class="summary-label">TOTAL CANCEL</p>
                     </div>
                 </div>
 
                 <!-- Courier Data Table -->
-                <div class="mt-4 sm:mt-6 overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
+                <div class="table-container">
+                    <table class="courier-table">
                         <thead>
                             <tr>
-                                <th class="p-2 sm:p-3 bg-blue-500 text-white font-semibold rounded-tl-md">Courier Name
-                                </th>
-                                <th class="p-2 sm:p-3 bg-green-500 text-white text-center font-semibold">Order</th>
-                                <th class="p-2 sm:p-3 bg-yellow-500 text-white text-center font-semibold">Delivery</th>
-                                <th class="p-2 sm:p-3 bg-red-500 text-white text-center font-semibold">Cancel</th>
-                                <th class="p-2 sm:p-3 bg-purple-500 text-white text-center font-semibold rounded-tr-md">
-                                    Success Rate</th>
+                                <th class="bg-blue text-white">Courier Name</th>
+                                <th class="bg-green text-white">Order</th>
+                                <th class="bg-yellow text-white">Delivery</th>
+                                <th class="bg-red text-white">Cancel</th>
+                                <th class="bg-purple text-white">Success Rate</th>
                             </tr>
                         </thead>
                         <tbody>
                             @if (empty($response['courierData']) || count($response['courierData']) == 0)
                                 <tr>
-                                    <td colspan="5" class="pt-8 text-center text-gray-500">
-                                        No data found
-                                    </td>
+                                    <td colspan="5" class="no-data">No data found</td>
                                 </tr>
                             @else
                                 @foreach ($response['courierData'] as $name => $courier)
                                     @if ($name !== 'summary')
-                                        <tr class="border-t hover:bg-blue-50 transition-colors">
-                                            <td
-                                                class="p-2 sm:p-3 bg-blue-100 font-semibold text-blue-700 rounded-l-lg border border-blue-300">
-                                                {{ ucfirst($name) }}
+                                        <tr class="courier-row">
+                                            <td class="bg-blue-light text-blue border-left">{{ ucfirst($name) }}</td>
+                                            <td class="bg-green-light text-green">{{ $courier['total_parcel'] ?? 0 }}</td>
+                                            <td class="bg-yellow-light text-yellow">{{ $courier['success_parcel'] ?? 0 }}
                                             </td>
-                                            <td
-                                                class="p-2 sm:p-3 text-center bg-green-100 text-green-700 border border-gray-300">
-                                                {{ $courier['total_parcel'] ?? 0 }}
-                                            </td>
-                                            <td
-                                                class="p-2 sm:p-3 text-center bg-yellow-100 text-yellow-700 border border-gray-300">
-                                                {{ $courier['success_parcel'] ?? 0 }}
-                                            </td>
-                                            <td
-                                                class="p-2 sm:p-3 text-center bg-red-100 text-red-700 border border-gray-300">
-                                                {{ $courier['cancelled_parcel'] ?? 0 }}
-                                            </td>
-                                            <td
-                                                class="p-2 sm:p-3 text-center bg-purple-100 text-purple-700 border border-gray-300 rounded-r-lg">
-                                                {{ $courier['success_ratio'] ?? 'N/A' }}%
-                                            </td>
+                                            <td class="bg-red-light text-red">{{ $courier['cancelled_parcel'] ?? 0 }}</td>
+                                            <td class="bg-purple-light text-purple border-right">
+                                                {{ $courier['success_ratio'] ?? 'N/A' }}%</td>
                                         </tr>
                                     @endif
                                 @endforeach
