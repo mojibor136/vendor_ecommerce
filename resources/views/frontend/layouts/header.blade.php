@@ -135,7 +135,7 @@
                         <div
                             class="relative flex items-center gap-1 z-10 text-[#0f4c81] group-hover:text-white transition">
                             <i class="ri-grid-fill text-base"></i>
-                            <span class="font-medium leading-none">Category</span>
+                            <span class="font-medium leading-none text-sm">All Categories</span>
                             <i class="ri-arrow-down-s-line text-base"></i>
                         </div>
                     </div>
@@ -148,9 +148,17 @@
                                 @foreach ($categories as $category)
                                     <li class="relative category-item group">
                                         <a href="#"
-                                            class="flex justify-between items-center px-4 py-2 hover:bg-gray-200 cursor-pointer">
-                                            <span>{{ $category->category_name }}</span>
-                                            <i class="ri-arrow-right-s-line text-gray-400 text-lg"></i>
+                                            class="flex items-center justify-between gap-3 px-4 py-2 hover:bg-gray-200 cursor-pointer transition">
+                                            <div class="flex items-center gap-2">
+                                                <div
+                                                    class="w-8 h-8 rounded-full overflow-hidden bg-white flex-shrink-0">
+                                                    <img src="{{ asset('storage/' . $category->category_img) }}"
+                                                        alt="Category" class="w-full h-full object-cover">
+                                                </div>
+                                                <span
+                                                    class="text-gray-800 font-medium">{{ $category->category_name }}</span>
+                                            </div>
+                                            <i class="ri-arrow-right-s-line text-gray-400 text-lg flex-shrink-0"></i>
                                         </a>
 
                                         <!-- Subcategory Dropdown -->
@@ -175,7 +183,7 @@
                 </div>
             </div>
 
-            <div class="hidden md:flex items-center gap-6 text-[#0f4c81] font-medium">
+            <div class="hidden md:flex items-center gap-6 text-[#0f4c81] font-medium text-sm">
                 <a href="{{ url('/') }}" class="relative group hover:text-[#0056a3] transition">
                     Home
                     <span
@@ -205,7 +213,7 @@
 
             <!-- Become a Seller Button -->
             <a href="#"
-                class="bg-[#0f4c81] text-white font-medium px-4 py-2 rounded hover:bg-[#0056a3] transition">
+                class="bg-[#0f4c81] text-white text-sm font-medium px-4 py-2 rounded hover:bg-[#0056a3] transition">
                 Become a Seller
             </a>
 
